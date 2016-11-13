@@ -17,25 +17,23 @@ public class ChronoTool
 		Drive drive = new Drive(username);
 
 		// Detalhes do útilizador
-		//new UserDetails(username);
-		//System.out.println("");
-
+		System.out.println("The user e-mail is " + drive.getUserMail() + " and the drive version is " +drive.getDriveVersion() + ".");
+		System.out.println("");
+		
 		// Percentagem de ficheiros modificados pela última vez a cada altura do dia
-		Timestamps tmstp = new Timestamps(username);
-		ArrayList<Integer> lista = tmstp.getTimestamps();
-		tmstp.getTimes(lista);
+		drive.getTimes();
 		System.out.println("");
 
 		// Ver o nome dos ficheiros e/ou pastas numa determinada pasta
 
 		String path = "root/CSF";
-		System.out.println("Ficheiros dentro da pasta " + path); //Esta funcao tem de se definir na drive
-		String doc_id = drive.getDirectoryDocIdByPath(path);     //Para usar o for debaixo la
+		System.out.println("Ficheiros dentro da pasta " + path);
+		List<DatabaseSnapshotEntry> files = drive.getFilesWithinFolder(path);
 
-		//for(DatabaseEntry entry: database_schema.get(doc_id)){
-		//	System.out.println("Type: " + entry.getResourceType() + " -> Name: " + entry.getFilename());
-		//}
-		//System.out.println("");
+		for(DatabaseSnapshotEntry entry: files){
+			System.out.println("Type: " + entry.getResourceType() + " -> Name: " + entry.getFilename());
+		}
+		System.out.println("");
 
 		// Ver as extensões de todos os ficheiros que se encontram numa dada pasta e suas filhas
 		

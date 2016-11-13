@@ -10,26 +10,30 @@ public class PopulateDatabase {
 	private DatabaseSyncConfigEntry _user_details = null;
 	
 	private Connection _snapshot = null;
+	private Connection _sync_config = null;
 	private Statement _stmt1 = null;
 	private Statement _stmt2 = null;
 	private Statement _stmt3 = null;
-	private String _parent_doc_id = "null";
-	private Connection _sync_config = null;
 	private Statement _stmt4 = null;
+	
+	private String _parent_doc_id = "null";
 	
 
 	public PopulateDatabase(String username){
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
+			
 			_snapshot = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Local/Google/Drive/user_default/snapshot.db");
 			_snapshot.setAutoCommit(false);
+			
 			_stmt1 = _snapshot.createStatement();
 			_stmt2 = _snapshot.createStatement();
 			_stmt3 = _snapshot.createStatement();
 			
 			ResultSet rs1 = _stmt1.executeQuery("SELECT * FROM cloud_entry;");
 			ResultSet rs2 = _stmt2.executeQuery("SELECT * FROM cloud_relations;");
+			
 			while (rs1.next() && rs2.next()) {
 				
 				String doc_id = rs1.getString("doc_id");
@@ -142,8 +146,8 @@ public class PopulateDatabase {
 			_stmt4 = _sync_config.createStatement();
 
 			ResultSet rs4 = _stmt4.executeQuery("SELECT data_value FROM data WHERE entry_key = 'user_email';");
-			ResultSet rs5 = _stmt4.executeQuery("SELECT data_value FROM data WHERE entry_key = 'highest_app_version';");
 			String email = rs4.getString("data_value");
+			ResultSet rs5 = _stmt4.executeQuery("SELECT data_value FROM data WHERE entry_key = 'highest_app_version';");
 			String version = rs5.getString("data_value");
 			
 			_user_details = new DatabaseSyncConfigEntry(email, version);
