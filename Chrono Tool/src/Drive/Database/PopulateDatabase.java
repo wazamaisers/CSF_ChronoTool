@@ -11,6 +11,7 @@ public class PopulateDatabase {
 	
 	private Connection _snapshot = null;
 	private Connection _sync_config = null;
+	
 	private Statement _stmt1 = null;
 	private Statement _stmt2 = null;
 	private Statement _stmt3 = null;
@@ -23,6 +24,8 @@ public class PopulateDatabase {
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
+			
+			////////////////////////////////////// SNAPSHOT DATABASE ////////////////////////////////////
 			
 			_snapshot = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Local/Google/Drive/user_default/snapshot.db");
 			_snapshot.setAutoCommit(false);
@@ -140,6 +143,7 @@ public class PopulateDatabase {
 			_stmt2.close();
 			_snapshot.close();
 			
+			//////////////////////////// SYNC_CONFIG DATABASE //////////////////////////////////
 			
 			_sync_config = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Local/Google/Drive/user_default/sync_config.db");
 			_sync_config.setAutoCommit(false);

@@ -3,6 +3,7 @@ import java.util.*;
 
 import Drive.*;
 import Drive.Database.DatabaseSnapshotEntry;
+import Skype.Skype;
 
 public class ChronoTool
 {
@@ -12,9 +13,11 @@ public class ChronoTool
 
 		// Simulação de username
 		String username = "Tiago";
+		String skypeid = "tiago.mousinho.martins";
 
 		// Importação da base de dados do ficheiro BD para o programa
 		Drive drive = new Drive(username);
+		Skype skype = new Skype(username, skypeid);
 
 		// Detalhes do útilizador
 		System.out.println("The user e-mail is " + drive.getUserMail() + " and the drive version is " +drive.getDriveVersion() + ".");

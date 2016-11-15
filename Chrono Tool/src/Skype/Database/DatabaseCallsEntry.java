@@ -8,10 +8,9 @@ public class DatabaseCallsEntry {
 	private String _guid = null;
 	private Integer _start_timestamp = null;
 	private Integer _creation_timestamp = null;
-	private Integer _duration = null;
 
 	public DatabaseCallsEntry(String identity, String dispname, String type, String guid, 
-			Integer start_timestamp, Integer creation_timestamp, Integer duration){
+			Integer start_timestamp, Integer creation_timestamp){
 		
 		_identity = identity;
 		_dispname = dispname;
@@ -19,7 +18,6 @@ public class DatabaseCallsEntry {
 		_guid = guid;
 		_start_timestamp = start_timestamp;
 		_creation_timestamp = creation_timestamp;
-		_duration = duration;
 	}
 	
 	public String getIdentity(){
@@ -44,9 +42,5 @@ public class DatabaseCallsEntry {
 	
 	public Integer getCreationTimestamp(){
 		return _creation_timestamp;
-	}
-	
-	public Integer getDuration(){
-		return _duration;
 	}
 }
