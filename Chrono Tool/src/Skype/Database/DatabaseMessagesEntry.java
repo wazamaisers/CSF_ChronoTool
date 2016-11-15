@@ -2,7 +2,7 @@ package Skype.Database;
 
 public class DatabaseMessagesEntry {
 
-	private String _convo_id = null;
+	private Integer _convo_id = null;
 	private String _chatname = null;
 	private String _author = null;
 	private String _from_dispname = null;
@@ -11,7 +11,7 @@ public class DatabaseMessagesEntry {
 	private String _identities = null;
 	private String _reason = null;
 
-	public DatabaseMessagesEntry(String convo_id, String chatname, String author, String from_dispname, 
+	public DatabaseMessagesEntry(Integer convo_id, String chatname, String author, String from_dispname, 
 			Integer timestamp, String body_xml, String identities, String reason){
 		
 		_convo_id = convo_id;
@@ -24,7 +24,7 @@ public class DatabaseMessagesEntry {
 		_reason = reason;
 	}
 	
-	public String getConvoId(){
+	public Integer getConvoId(){
 		return _convo_id;
 	}
 	

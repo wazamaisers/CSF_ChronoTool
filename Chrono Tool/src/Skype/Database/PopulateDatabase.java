@@ -2,13 +2,15 @@ package Skype.Database;
 import java.sql.*;
 import java.util.*;
 
+import Drive.Database.DatabaseSnapshotEntry;
+
 public class PopulateDatabase {
 	
 	private HashMap<String,DatabaseSharedLinksEntry> _shared_links = new HashMap<String,DatabaseSharedLinksEntry>();
 	private HashMap<String,DatabaseSharedFilesStoredEntry> _shared_files = new HashMap<String,DatabaseSharedFilesStoredEntry>();
 	private HashMap<String,DatabaseContactsEntry> _contacts = new HashMap<String,DatabaseContactsEntry>();
-	private HashMap<String,DatabaseMessagesEntry> _messages = new HashMap<String,DatabaseMessagesEntry>();
-	private HashMap<String,DatabaseCallsEntry> _calls = new HashMap<String,DatabaseCallsEntry>();
+	private HashMap<Integer,DatabaseMessagesEntry> _messages = new HashMap<Integer,DatabaseMessagesEntry>();
+	private HashMap<String,ArrayList<DatabaseCallsEntry>> _calls = new HashMap<String,ArrayList<DatabaseCallsEntry>>();
 	
 	private Connection _sh_links = null;
 	private Connection _sh_files = null;
@@ -43,7 +45,7 @@ public class PopulateDatabase {
 			while (rs1.next()) {
 				String key = rs1.getString("key");
 				String sub_key = rs1.getString("sub_key");
-				Integer access_time = rs1.getInt("access_time");
+				Integer access_time = Integer.parseInt((rs1.getString("access_time")).substring(0, 10));
 				Integer size = rs1.getInt("actual_size");
 				
 				DatabaseSharedLinksEntry database_entry = new DatabaseSharedLinksEntry(key,sub_key,access_time,size);
@@ -131,8 +133,6 @@ public class PopulateDatabase {
 				String hashed_emails = rs5.getString("hashed_emails");
 				String homepage = rs5.getString("homepage");
 				String about = rs5.getString("about");
-
-				System.out.println("\n" +skypename);
 				
 				ResultSet rs6 = _stmt6.executeQuery("SELECT * FROM fullobjects WHERE NickName = '" + skypename + "';");
 				String avatar_image = "";
@@ -176,7 +176,7 @@ public class PopulateDatabase {
 			ResultSet rs7 = _stmt7.executeQuery("SELECT * FROM Messages;");
 			
 			while (rs7.next()) {
-				String convo_id = rs7.getString("convo_id");
+				Integer convo_id = rs7.getInt("convo_id");
 				String chatname = rs7.getString("chatname");
 				String author = rs7.getString("author");
 				String from_dispname = rs7.getString("from_dispname");
@@ -206,6 +206,7 @@ public class PopulateDatabase {
 			while (rs8.next()) {
 				String identity = rs8.getString("identity");
 				String dispname = rs8.getString("dispname");
+				System.out.println(dispname);
 				String type = rs8.getString("type");
 				String guid = rs8.getString("guid");
 				Integer start_timestamp = rs8.getInt("start_timestamp");
@@ -213,7 +214,18 @@ public class PopulateDatabase {
 				
 				DatabaseCallsEntry database_entry = new DatabaseCallsEntry(identity, dispname, type, guid, start_timestamp, 
 						creation_timestamp);
-				_calls.put(identity,database_entry); //Isto se calhar tem de ser revisto
+				
+				if(_calls.containsKey(identity)){
+					ArrayList<DatabaseCallsEntry> list = _calls.get(identity);
+					list.add(database_entry);
+					_calls.put(identity, list);
+				}
+				
+				if(!_calls.containsKey(identity)){
+					ArrayList<DatabaseCallsEntry> list = new ArrayList<DatabaseCallsEntry>();
+					list.add(database_entry);
+					_calls.put(identity, list);
+				}
 			}
 			
 			_stmt8.close();
@@ -238,11 +250,11 @@ public class PopulateDatabase {
 		return _contacts;
 	}
 	
-	public HashMap<String,DatabaseMessagesEntry> getMessages(){
+	public HashMap<Integer,DatabaseMessagesEntry> getMessages(){
 		return _messages;
 	}
 	
-	public HashMap<String,DatabaseCallsEntry> getCalls(){
+	public HashMap<String,ArrayList<DatabaseCallsEntry>> getCalls(){
 		return _calls;
 	}
 }
