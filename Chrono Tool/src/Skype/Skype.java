@@ -13,19 +13,25 @@ import Skype.Database.PopulateDatabase;
 
 public class Skype {
 	
+	boolean _databaseLoaded = false;
 	private HashMap<String,DatabaseSharedLinksEntry> _shared_links = new HashMap<String,DatabaseSharedLinksEntry>();
 	private HashMap<String,DatabaseSharedFilesStoredEntry> _shared_files = new HashMap<String,DatabaseSharedFilesStoredEntry>();
 	private HashMap<String,DatabaseContactsEntry> _contacts = new HashMap<String,DatabaseContactsEntry>();
-	private HashMap<Integer,DatabaseMessagesEntry> _messages = new HashMap<Integer,DatabaseMessagesEntry>();
+	private HashMap<String,ArrayList<DatabaseMessagesEntry>> _messages = new HashMap<String,ArrayList<DatabaseMessagesEntry>>();
 	private HashMap<String,ArrayList<DatabaseCallsEntry>> _calls = new HashMap<String,ArrayList<DatabaseCallsEntry>>();
 	
-	public Skype(String username, String skypeusername){
-		PopulateDatabase db = new PopulateDatabase(username, skypeusername);
+	public Skype(String path){
+		PopulateDatabase db = new PopulateDatabase(path);
+		_databaseLoaded = db.getDbCreated();
 		_shared_links = db.getSharedLinks();
 		_shared_files = db.getSharedFiles();
 		_contacts = db.getContacts();
 		_messages = db.getMessages();
 		_calls = db.getCalls();
+	}
+	
+	public boolean getDatabaseLoaded(){
+		return _databaseLoaded;
 	}
 	
 	public void testSkype(){
@@ -61,6 +67,16 @@ public class Skype {
 				System.out.println("Call with: " + entry.getDispname());
 				System.out.println("Skypename: " + entry.getIdentity());
 				System.out.println("Time: " + entry.getStartTimestamp() + "\n");
+			}
+		}
+System.out.println(" - - - Testes de mensagens - - - \n");
+		
+		for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> list: _messages.entrySet()){
+			System.out.println("Messages with: " + list.getKey());
+			for(DatabaseMessagesEntry entry: list.getValue()){
+				System.out.println("From: " + entry.getAuthor());
+				System.out.println("Time: " + entry.getTimestamp());
+				System.out.println("Message: " + entry.getMessage() + "\n");
 			}
 		}
 	}

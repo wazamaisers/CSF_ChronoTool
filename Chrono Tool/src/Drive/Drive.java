@@ -3,6 +3,10 @@ package Drive;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+
 import org.apache.commons.io.FilenameUtils;
 
 import Drive.Database.DatabaseSnapshotEntry;
@@ -11,19 +15,24 @@ import Drive.Database.PopulateDatabase;
 
 public class Drive {
 
+	boolean _databaseLoaded = false;
 	private HashMap<String,ArrayList<DatabaseSnapshotEntry>> _database_schema = new HashMap<String, ArrayList<DatabaseSnapshotEntry>>();
 	private ArrayList<DatabaseSnapshotEntry> _database_entrys = new ArrayList<DatabaseSnapshotEntry>();
 	private DatabaseSyncConfigEntry _user_details = null;
+	private ArrayList<DatabaseSnapshotEntry> _final_list = new ArrayList<DatabaseSnapshotEntry>();
 
-	public Drive(String username){
+	public Drive(String path){
 
-		PopulateDatabase db = new PopulateDatabase(username);
+		PopulateDatabase db = new PopulateDatabase(path);
+		_databaseLoaded = db.getDbCreated();
 		_database_schema = db.getDatabaseSchema();
 		_database_entrys = db.getDatabaseEntrys();
 		_user_details = db.getUserDetails();
 	}
-
-	private ArrayList<DatabaseSnapshotEntry> _final_list = new ArrayList<DatabaseSnapshotEntry>();
+	
+	public boolean getDatabaseLoaded(){
+		return _databaseLoaded;
+	}
 
 	public HashMap<String, Integer> getExtensions(String path){
 
@@ -209,5 +218,62 @@ public class Drive {
 		System.out.println("Night :" + getPercentage(total, _times.get("Night")) + "%");
 		
 		return _times;
+	}
+
+	public String getPathFromTreePath(TreePath tp){
+		
+		String list = tp.toString();
+		char[] list_ch = list.toCharArray();
+		List<Character> path_ch = new ArrayList<Character>();
+		int i = 0;
+		int n = list_ch.length;
+		while (i < n) {
+			if(list_ch[i] == ','){
+		    	path_ch.add('/');
+		    	i++;
+		    }
+			else if(list_ch[i] == '['){
+		    	i++;
+		    	continue;
+		    }
+			else if(list_ch[i] == ']'){
+		    	break;
+		    }
+			else{
+				path_ch.add(list_ch[i]);
+			}
+			i++;
+		}
+		StringBuilder builder = new StringBuilder(path_ch.size());
+	    for(Character ch: path_ch)
+	    {
+	        builder.append(ch);
+	    }
+	    String path = builder.toString();
+	    return path;
+	}
+
+	public DefaultMutableTreeNode buildTree(){
+
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+		return buildTreeAux("root", root);
+	}
+
+	public DefaultMutableTreeNode buildTreeAux (String parent_doc_id, 
+			DefaultMutableTreeNode node){
+
+		List<DatabaseSnapshotEntry> initial_list = _database_schema.get(parent_doc_id);
+		for(DatabaseSnapshotEntry entry: initial_list){
+			if(_database_schema.containsKey(entry.getDocId())){
+				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
+				buildTreeAux(entry.getDocId(),parent);
+				node.add(parent);
+			}
+			else{
+				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
+				node.add(parent);
+			}
+		}
+		return node;
 	}
 }

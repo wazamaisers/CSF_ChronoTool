@@ -9,7 +9,7 @@ public class PopulateDatabase {
 	private HashMap<String,DatabaseSharedLinksEntry> _shared_links = new HashMap<String,DatabaseSharedLinksEntry>();
 	private HashMap<String,DatabaseSharedFilesStoredEntry> _shared_files = new HashMap<String,DatabaseSharedFilesStoredEntry>();
 	private HashMap<String,DatabaseContactsEntry> _contacts = new HashMap<String,DatabaseContactsEntry>();
-	private HashMap<Integer,DatabaseMessagesEntry> _messages = new HashMap<Integer,DatabaseMessagesEntry>();
+	private HashMap<String,ArrayList<DatabaseMessagesEntry>> _messages = new HashMap<String,ArrayList<DatabaseMessagesEntry>>();
 	private HashMap<String,ArrayList<DatabaseCallsEntry>> _calls = new HashMap<String,ArrayList<DatabaseCallsEntry>>();
 	
 	private Connection _sh_links = null;
@@ -27,16 +27,17 @@ public class PopulateDatabase {
 	private Statement _stmt6 = null;
 	private Statement _stmt7 = null;
 	private Statement _stmt8 = null;
+	
+	private boolean _dbCreated = false;
 
-	public PopulateDatabase(String username, String skypeusername){
+	public PopulateDatabase(String path){
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
 			
 			////////////////////////////////////// SHARED LINKS DATABASE ////////////////////////////////////
 			
-			_sh_links = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Roaming/Skype/" + skypeusername +
-					"/media_messaging/media_cache_v3/asyncdb/cache_db.db");
+			_sh_links = DriverManager.getConnection("jdbc:sqlite:"+ path + "/media_messaging/media_cache_v3/asyncdb/cache_db.db");
 			_sh_links.setAutoCommit(false);
 			_stmt1 = _sh_links.createStatement();
 			
@@ -58,8 +59,7 @@ public class PopulateDatabase {
 			
 			////////////////////////////////////// SHARED FILES STORED DATABASE ////////////////////////////////////
 			
-			_sh_files = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Roaming/Skype/" + skypeusername +
-					"/media_messaging/storage_db/asyncdb/storage_db.db");
+			_sh_files = DriverManager.getConnection("jdbc:sqlite:"+ path +"/media_messaging/storage_db/asyncdb/storage_db.db");
 			_sh_files.setAutoCommit(false);
 			
 			_stmt2 = _sh_files.createStatement();
@@ -93,12 +93,10 @@ public class PopulateDatabase {
 			
 			////////////////////////////////////// CONTACTS DATABASE ////////////////////////////////////
 			
-			_contacts1 = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Roaming/Skype/" + skypeusername +
-					"/main.db");
+			_contacts1 = DriverManager.getConnection("jdbc:sqlite:"+ path + "/main.db");
 			_contacts1.setAutoCommit(false);
 			
-			_contacts2 = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Roaming/Skype/" + skypeusername +
-					"/eascache.db");
+			_contacts2 = DriverManager.getConnection("jdbc:sqlite:"+ path + "/eascache.db");
 			_contacts2.setAutoCommit(false);
 			
 			_stmt5 = _contacts1.createStatement();
@@ -168,12 +166,11 @@ public class PopulateDatabase {
 			
 			////////////////////////////////////// MESSAGES DATABASE ////////////////////////////////////
 			
-			_msgs = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Roaming/Skype/" + skypeusername +
-					"/main.db");
+			_msgs = DriverManager.getConnection("jdbc:sqlite:"+ path + "/main.db");
 			_msgs.setAutoCommit(false);
 			
 			_stmt7 = _msgs.createStatement();
-			ResultSet rs7 = _stmt7.executeQuery("SELECT * FROM Messages;");
+			ResultSet rs7 = _stmt7.executeQuery("SELECT * FROM Messages ORDER BY timestamp ASC;");
 			
 			while (rs7.next()) {
 				Integer convo_id = rs7.getInt("convo_id");
@@ -187,7 +184,18 @@ public class PopulateDatabase {
 				
 				DatabaseMessagesEntry database_entry = new DatabaseMessagesEntry(convo_id, chatname, author, from_dispname,
 						timestamp, body_xml, identities, reason);
-				_messages.put(convo_id, database_entry); //Isto se calhar tem de ser revisto
+				
+				if(_messages.containsKey(chatname)){
+					ArrayList<DatabaseMessagesEntry> list = _messages.get(chatname);
+					list.add(database_entry);
+					_messages.put(chatname, list);
+				}
+				
+				if(!_messages.containsKey(chatname)){
+					ArrayList<DatabaseMessagesEntry> list = new ArrayList<DatabaseMessagesEntry>();
+					list.add(database_entry);
+					_messages.put(chatname, list);
+				}
 			}
 			
 			_stmt7.close();
@@ -196,8 +204,7 @@ public class PopulateDatabase {
 			
 			////////////////////////////////////// CALLS DATABASE ////////////////////////////////////
 			
-			_clls = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Roaming/Skype/" + skypeusername +
-					"/main.db");
+			_clls = DriverManager.getConnection("jdbc:sqlite:"+ path + "/main.db");
 			_clls.setAutoCommit(false);
 			
 			_stmt8 = _clls.createStatement();
@@ -231,11 +238,16 @@ public class PopulateDatabase {
 			_stmt8.close();
 			_clls.close();
 			rs8.close();
+			_dbCreated = true;
 			
 		} catch ( Exception e ) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-			System.exit(0);
+			//System.exit(0);
 		}
+	}
+	
+	public boolean getDbCreated(){
+		return _dbCreated;
 	}
 	
 	public HashMap<String,DatabaseSharedLinksEntry> getSharedLinks(){
@@ -250,7 +262,7 @@ public class PopulateDatabase {
 		return _contacts;
 	}
 	
-	public HashMap<Integer,DatabaseMessagesEntry> getMessages(){
+	public HashMap<String,ArrayList<DatabaseMessagesEntry>> getMessages(){
 		return _messages;
 	}
 	

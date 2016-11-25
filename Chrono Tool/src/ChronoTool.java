@@ -12,13 +12,15 @@ public class ChronoTool
 	{
 
 		// Simulação de username
-		String username = "Tiago";
-		String skypeid = "tiago.mousinho.martins";
-
+		String path_drive = "C:\\Users\\"+ "Tiago\\AppData\\Local\\Google\\Drive";
+		String path_skype = "C:\\Users\\" + "Tiago\\AppData\\Roaming\\Skype\\tiago.mousinho.martins";
+		System.out.println(path_drive);
+		System.out.println(path_skype);
 		// Importação da base de dados do ficheiro BD para o programa
-		Drive drive = new Drive(username);
-		Skype skype = new Skype(username, skypeid);
-
+		Drive drive = new Drive(path_drive);
+		Skype skype = new Skype(path_skype);
+		
+		/*
 		// Detalhes do útilizador
 		System.out.println("The user e-mail is " + drive.getUserMail() + " and the drive version is " +drive.getDriveVersion() + ".");
 		System.out.println("");
@@ -65,6 +67,6 @@ public class ChronoTool
 		//DROPBOX
 		
 		skype.testSkype();
-		
+		*/
 	}
 }

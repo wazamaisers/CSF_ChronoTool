@@ -19,15 +19,17 @@ public class PopulateDatabase {
 	
 	private String _parent_doc_id = "null";
 	
+	private boolean _dbCreated = false;
+	
 
-	public PopulateDatabase(String username){
+	public PopulateDatabase(String path){
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
 			
 			////////////////////////////////////// SNAPSHOT DATABASE ////////////////////////////////////
 			
-			_snapshot = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Local/Google/Drive/user_default/snapshot.db");
+			_snapshot = DriverManager.getConnection("jdbc:sqlite:" + path + "/user_default/snapshot.db");
 			_snapshot.setAutoCommit(false);
 			
 			_stmt1 = _snapshot.createStatement();
@@ -145,7 +147,7 @@ public class PopulateDatabase {
 			
 			//////////////////////////// SYNC_CONFIG DATABASE //////////////////////////////////
 			
-			_sync_config = DriverManager.getConnection("jdbc:sqlite:C:/Users/" + username + "/AppData/Local/Google/Drive/user_default/sync_config.db");
+			_sync_config = DriverManager.getConnection("jdbc:sqlite:" + path + "/user_default/sync_config.db");
 			_sync_config.setAutoCommit(false);
 			_stmt4 = _sync_config.createStatement();
 
@@ -160,11 +162,16 @@ public class PopulateDatabase {
 			rs5.close();
 			_stmt4.close();
 			_sync_config.close();
+			_dbCreated = true;
 
 		} catch ( Exception e ) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-			System.exit(0);
+			//System.exit(0);
 		}
+	}
+	
+	public boolean getDbCreated(){
+		return _dbCreated;
 	}
 	
 	public HashMap<String,ArrayList<DatabaseSnapshotEntry>> getDatabaseSchema(){
