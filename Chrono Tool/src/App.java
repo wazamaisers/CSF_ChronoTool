@@ -7,9 +7,13 @@ import Skype.Skype;
 import javax.swing.JFileChooser;
 import java.awt.Component;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -65,8 +69,15 @@ public class App {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);
+//		try {
+//			frame.setContentPane(new JLabel(new ImageIcon(ImageIO.read(
+//					new File(System.getProperty("user.dir") + "\\image.jpg")))));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		frame.pack();
 		frame.setVisible(true);
-		
+
 		//Chrono Tool Title
 		JLabel lblChronoTool = new JLabel("Chrono Tool");
 		lblChronoTool.setForeground(Color.WHITE);

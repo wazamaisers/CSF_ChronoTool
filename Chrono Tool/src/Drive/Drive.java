@@ -3,6 +3,7 @@ package Drive;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -275,5 +276,113 @@ public class Drive {
 			}
 		}
 		return node;
+	}
+
+	public String getLocalDriveSize(){
+		long bytes = 0L;
+		long kilo = 1024L;
+		long mega = 1048576L;
+		long giga = 10737418424L;
+		String size = null;
+		for(DatabaseSnapshotEntry entry: _database_entrys){
+			bytes = bytes + entry.getSize();
+		}
+		if(bytes < 1024){
+			size = "" + bytes + " bytes";
+		}
+		else if((kilo < bytes) && (bytes < mega)){
+			size = "" + (bytes/1024) + " Kbytes";
+		}
+		else if((mega < bytes) && (bytes < giga)){
+			size = "" + (bytes/(1024*1024)) + " Mbytes";
+		}
+		else{
+			size = "" + (bytes/(1024*1024*1024)) + " Gbytes";
+		}
+		return size;
+	}
+
+	public String getFileCount(String type, boolean sharedFlag){
+		String filecount = null;
+		long files = 0L;
+		long dirs = 0L;
+		long docs = 0L;
+		for(DatabaseSnapshotEntry entry: _database_entrys){
+			if (sharedFlag == false){
+				if (entry.getResourceType().equals("folder")){
+					dirs++;
+				}
+				else if (entry.getResourceType().equals("document")){
+					docs++;
+				}
+				else if (entry.getResourceType().equals("file")){
+					files++;
+				}
+			}
+			else{
+				if (entry.getResourceType().equals("folder") && entry.getShared() == 1){
+					dirs++;
+				}
+				else if (entry.getResourceType().equals("document") && entry.getShared() == 1){
+					docs++;
+				}
+				else if (entry.getResourceType().equals("file") && entry.getShared() == 1){
+					files++;
+				}
+			}
+			
+		}
+		if (type.equals("Files")){
+			filecount = "" + files;
+		}
+		else if (type.equals("Folders")){
+			filecount = "" + dirs;
+		}
+		else if (type.equals("Docs")){
+			filecount = "" + docs;
+		}
+		return filecount;
+	}
+
+	public HashMap <String,Integer> getChildrenExtensionsStatistics(String path){
+		HashMap <String,Integer> top3 = new HashMap <String,Integer>();
+		HashMap <String,Integer> extensions =  getChildrenExtensions("root");
+		String first = "";
+		String second = "";
+		String third = "";
+		Integer fst = 0;
+		Integer scd = 0;
+		Integer trd = 0;
+		Iterator<Entry<String, Integer>> it =extensions.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        if (((Integer) pair.getValue())>fst){
+	        	third = second;
+	        	second = first;
+	        	trd = scd;
+	        	scd = fst;
+	        	first = (String) pair.getKey();
+	        	fst = (Integer) pair.getValue();
+	        }
+	        else if (((Integer) pair.getValue())<fst && ((Integer) pair.getValue())>scd){
+	        	third = second;
+	        	trd = scd;
+	        	second = (String) pair.getKey();
+	        	scd = (Integer) pair.getValue();
+	        }
+	        else if (((Integer) pair.getValue())<scd && ((Integer) pair.getValue())>trd){
+	        	third = (String) pair.getKey();
+	        	trd = (Integer) pair.getValue();
+	        }
+	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	    top3.put(first, fst);
+	    System.out.println(first + " = " + fst);
+	    top3.put(second, scd);
+	    System.out.println(second + " = " + scd);
+	    top3.put(third, trd);
+	    System.out.println(third + " = " + trd);
+		return top3;
 	}
 }

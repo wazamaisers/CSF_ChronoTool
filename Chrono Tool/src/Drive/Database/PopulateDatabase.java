@@ -55,58 +55,58 @@ public class PopulateDatabase {
 				Integer original_size = rs1.getInt("original_size");
 				String original_checksum = rs1.getString("original_checksum");
 				
-				if (doc_id.equals(null)){
-					doc_id = "null";
-				}
-				
-				if (filename.equals(null)){
-					filename = "null";
-				}
-
-				if (modified.equals(0)){
-					modified = -1;
-				}
-				
-				if (created.equals(0)){
-					created = -1;
-				}
-								
-				if (acl_role.equals(0)){
-					acl_role = -1;
-				}
-				
-				if (doc_type.equals(0)){
-					doc_type = -1;
-				}
-				
-				if (removed.equals(0)){
-					removed = -1;
-				}
-				
-				if (size.equals(0)){
-					size = -1;
-				}
-				
-				if (checksum == null){
-					checksum = "null";
-					
-				}
-				
-				if (shared.equals(0)){
-					shared = -1;
-				}
-				
-				if (resource_type == null){
-					resource_type = "null";
-				}
-				
-				if (original_size.equals(0)){
-					original_size = -1;
-				}
-				
-				if (original_checksum == null){
-					original_checksum = "null";
-				}
+//				if (doc_id.equals(null)){
+//					doc_id = "null";
+//				}
+//				
+//				if (filename.equals(null)){
+//					filename = "null";
+//				}
+//
+//				if (modified.equals(0)){
+//					modified = -1;
+//				}
+//				
+//				if (created.equals(0)){
+//					created = -1;
+//				}
+//								
+//				if (acl_role.equals(0)){
+//					acl_role = -1;
+//				}
+//				
+//				if (doc_type.equals(0)){
+//					doc_type = -1;
+//				}
+//				
+//				if (removed.equals(0)){
+//					removed = -1;
+//				}
+//				
+//				if (size.equals(0)){
+//					size = -1;
+//				}
+//				
+//				if (checksum == null){
+//					checksum = "null";
+//					
+//				}
+//				
+//				if (shared.equals(0)){
+//					shared = -1;
+//				}
+//				
+//				if (resource_type == null){
+//					resource_type = "null";
+//				}
+//				
+//				if (original_size.equals(0)){
+//					original_size = -1;
+//				}
+//				
+//				if (original_checksum == null){
+//					original_checksum = "null";
+//				}
 				
 				
 				if(!"root".equals(doc_id)){
