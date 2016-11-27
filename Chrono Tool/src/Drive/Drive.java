@@ -162,7 +162,7 @@ public class Drive {
 		return _user_details.getVersion();
 	}
 	
-	public static float getPercentage(int questions, int correct) {
+	public float getPercentage(int questions, int correct) {
 	    float proportionCorrect = ((float) correct) / ((float) questions);
 	    return Math.round(proportionCorrect * 100);
 	}
@@ -353,9 +353,11 @@ public class Drive {
 		Integer fst = 0;
 		Integer scd = 0;
 		Integer trd = 0;
+		Integer total = 0;
 		Iterator<Entry<String, Integer>> it =extensions.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
+	        total = total + (Integer) pair.getValue();
 	        if (((Integer) pair.getValue())>fst){
 	        	third = second;
 	        	second = first;
@@ -378,11 +380,13 @@ public class Drive {
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
 	    top3.put(first, fst);
-	    System.out.println(first + " = " + fst);
 	    top3.put(second, scd);
-	    System.out.println(second + " = " + scd);
 	    top3.put(third, trd);
+	    top3.put("total", total);
+	    System.out.println(first + " = " + fst);
+	    System.out.println(second + " = " + scd);
 	    System.out.println(third + " = " + trd);
+	    System.out.println("total = " + total);
 		return top3;
 	}
 }

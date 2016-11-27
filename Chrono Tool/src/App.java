@@ -59,7 +59,10 @@ public class App {
 	}
 
 	public void mainMenuDrive(Drive drive){
-		MenuDrive menuDrive = new MenuDrive(drive);
+		new MenuDrive(drive);
+	}
+	public void mainMenuSkype(Skype skype){
+		new MenuSkype(skype);
 	}
 
 	public void inicialMenu(){
@@ -82,7 +85,7 @@ public class App {
 		JLabel lblChronoTool = new JLabel("Chrono Tool");
 		lblChronoTool.setForeground(Color.WHITE);
 		lblChronoTool.setHorizontalAlignment(SwingConstants.CENTER);
-		lblChronoTool.setFont(new Font("Snap ITC", Font.BOLD, 50));
+		lblChronoTool.setFont(new Font("Rockwell Extra Bold", Font.BOLD, 50));
 		lblChronoTool.setBounds(468, 65, 417, 90);
 		frame.getContentPane().add(lblChronoTool);
 
@@ -162,6 +165,8 @@ public class App {
 		btnStartApplication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (lblSkype.isVisible() && !lblDrive.isVisible()){
+					frame.setVisible(false);
+					mainMenuSkype(_skype);
 					System.out.println("Abre o Skype");
 				}
 				else if (!lblSkype.isVisible() && lblDrive.isVisible()){
