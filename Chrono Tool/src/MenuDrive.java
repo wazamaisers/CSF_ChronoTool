@@ -13,10 +13,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import javax.swing.JScrollPane;
 
@@ -33,10 +36,12 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
+import javax.swing.JTextField;
 
 public class MenuDrive {
 
 	private JFrame frame;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -97,76 +102,62 @@ public class MenuDrive {
 
 		java.awt.List list = new java.awt.List();
 		list.setFont(new Font("Arial", Font.BOLD, 12));
-		list.setBounds(745, 100, 169, 113);
+		list.setBounds(745, 100, 111, 113);
 		list.setVisible(false);
 		frame.getContentPane().add(list);
 
 		java.awt.List list_values = new java.awt.List();
 		list_values.setFont(new Font("Arial", Font.PLAIN, 12));
-		list_values.setBounds(913, 100, 169, 113);
+		list_values.setBounds(857, 100, 225, 113);
 		list_values.setVisible(false);
 		frame.getContentPane().add(list_values);
 
 		HashMap <String,Integer> top3 = drive.getChildrenExtensionsStatistics("root");
 
-		java.awt.List list_1 = new java.awt.List();
-		list_1.setBounds(745, 315, 169, 212);
-		list_1.setFont(new Font("Arial", Font.BOLD, 12));
-		list_1.add("Local Drive Size");
-		list_1.add("Folders");
-		list_1.add("Shared Folders");
-		list_1.add("Documents");
-		list_1.add("Shared Documents");
-		list_1.add("Files");
-		list_1.add("Shared Files");
-		Iterator<Entry<String, Integer>> it1 =top3.entrySet().iterator();
-		while (it1.hasNext()) {
-			Map.Entry pair = (Map.Entry)it1.next();
-			if(!pair.getKey().equals("total")){
-				list_1.add("TOP - " + pair.getKey());
-			}
-		}
-		frame.getContentPane().add(list_1);
+		java.awt.List listSize1 = new java.awt.List();
+		listSize1.setBounds(745, 315, 169, 28);
+		listSize1.setFont(new Font("Arial", Font.BOLD, 12));
+		listSize1.add("Local Drive Size");
+		frame.getContentPane().add(listSize1);
 
-		java.awt.List list_2 = new java.awt.List();
-		list_2.setBounds(913, 315, 169, 212);
-		list_2.setFont(new Font("Arial", Font.PLAIN, 12));
-		list_2.add(drive.getLocalDriveSize());
-		list_2.add(drive.getFileCount("Folders",false));
-		list_2.add(drive.getFileCount("Folders",true));
-		list_2.add(drive.getFileCount("Docs", false));
-		list_2.add(drive.getFileCount("Docs", true));
-		list_2.add(drive.getFileCount("Files", false));
-		list_2.add(drive.getFileCount("Files", true));
-		Iterator<Entry<String, Integer>> it2 =top3.entrySet().iterator();
-		while (it2.hasNext()) {
-			Map.Entry pair = (Map.Entry)it2.next();
-			if(!pair.getKey().equals("total")){
-				list_2.add("" + drive.getPercentage(top3.get("total"), (Integer) pair.getValue())+ "%");
-			}
-		}
-		frame.getContentPane().add(list_2);
+		java.awt.List listSize2 = new java.awt.List();
+		listSize2.setBounds(913, 315, 169, 28);
+		listSize2.setFont(new Font("Arial", Font.PLAIN, 12));
+		listSize2.add(drive.getLocalDriveSize());
+		frame.getContentPane().add(listSize2);
 
-		List list_3 = new List();
-		list_3.setBounds(842, 533, 144, 131);
-		list_3.setFont(new Font("Arial", Font.PLAIN, 12));
+		List listTimes = new List();
+		listTimes.setBounds(842, 533, 144, 131);
+		listTimes.setFont(new Font("Arial", Font.PLAIN, 12));
 		Integer total = drive.getTimes().get("Dawn") + drive.getTimes().get("Morning") + drive.getTimes().get("Afternoon") + drive.getTimes().get("Evening") +
 				drive.getTimes().get("Night");
-		list_3.add("Dawn :" + drive.getPercentage(total, drive.getTimes().get("Dawn")) + "%");
-		list_3.add("Morning :" + drive.getPercentage(total, drive.getTimes().get("Morning")) + "%");
-		list_3.add("Afternoon :" + drive.getPercentage(total, drive.getTimes().get("Afternoon")) + "%");
-		list_3.add("Evening :" + drive.getPercentage(total, drive.getTimes().get("Evening")) + "%");
-		list_3.add("Night :" + drive.getPercentage(total, drive.getTimes().get("Night")) + "%");
-		frame.getContentPane().add(list_3);
+		listTimes.add("Dawn :" + drive.getPercentage(total, drive.getTimes().get("Dawn")) + "%");
+		listTimes.add("Morning :" + drive.getPercentage(total, drive.getTimes().get("Morning")) + "%");
+		listTimes.add("Afternoon :" + drive.getPercentage(total, drive.getTimes().get("Afternoon")) + "%");
+		listTimes.add("Evening :" + drive.getPercentage(total, drive.getTimes().get("Evening")) + "%");
+		listTimes.add("Night :" + drive.getPercentage(total, drive.getTimes().get("Night")) + "%");
+		frame.getContentPane().add(listTimes);
 
-		Button button_1 = new Button("File Extensions");
-		button_1.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_1.addActionListener(new ActionListener() {
+		Button buttonPath1 = new Button("File Extensions");
+		buttonPath1.setFont(new Font("Arial", Font.PLAIN, 15));
+		buttonPath1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new DriveExtensionsByPath(drive, false);
 			}
 		});
-		button_1.setBounds(1194, 96, 158, 39);
-		frame.getContentPane().add(button_1);
+		buttonPath1.setBounds(1194, 96, 158, 39);
+		frame.getContentPane().add(buttonPath1);
+		
+		Button buttonPath2 = new Button("File Extensions (children)");
+		buttonPath2.setFont(new Font("Arial", Font.PLAIN, 12));
+		buttonPath2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveExtensionsByPath(drive, true);
+			}
+		});
+		buttonPath2.setBounds(1194, 141, 158, 39);
+		frame.getContentPane().add(buttonPath2);
+
 
 		JLabel lblSearchesByPath = new JLabel("Searches by Path");
 		lblSearchesByPath.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -177,18 +168,23 @@ public class MenuDrive {
 		JLabel lblSearchesByKeyword = new JLabel("Searches by");
 		lblSearchesByKeyword.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSearchesByKeyword.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblSearchesByKeyword.setBounds(1194, 291, 158, 33);
+		lblSearchesByKeyword.setBounds(1194, 211, 158, 33);
 		frame.getContentPane().add(lblSearchesByKeyword);
 
 		JLabel lblKeyword = new JLabel("KeyWord");
 		lblKeyword.setHorizontalAlignment(SwingConstants.CENTER);
 		lblKeyword.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblKeyword.setBounds(1194, 310, 158, 33);
+		lblKeyword.setBounds(1194, 230, 158, 33);
 		frame.getContentPane().add(lblKeyword);
 
 		Button button_2 = new Button("Filenames");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new DriveFilenamesByKw(drive);
+			}
+		});
 		button_2.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_2.setBounds(1194, 394, 158, 39);
+		button_2.setBounds(1194, 314, 158, 39);
 		frame.getContentPane().add(button_2);
 
 		Button button_3 = new Button("File Contents");
@@ -197,39 +193,29 @@ public class MenuDrive {
 			}
 		});
 		button_3.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_3.setBounds(1194, 439, 158, 39);
+		button_3.setBounds(1194, 359, 158, 39);
 		frame.getContentPane().add(button_3);
-
-		Button button_4 = new Button("Files");
-		button_4.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_4.setBounds(1194, 141, 158, 39);
-		frame.getContentPane().add(button_4);
-
-		Button button_5 = new Button("File Contents");
-		button_5.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_5.setBounds(1194, 186, 158, 39);
-		frame.getContentPane().add(button_5);
 
 		Button button_6 = new Button("File Extensions");
 		button_6.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_6.setBounds(1194, 349, 158, 39);
+		button_6.setBounds(1194, 269, 158, 39);
 		frame.getContentPane().add(button_6);
 
 		JLabel lblChronological = new JLabel("Chronological");
 		lblChronological.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChronological.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblChronological.setBounds(1194, 549, 158, 33);
+		lblChronological.setBounds(1194, 469, 158, 33);
 		frame.getContentPane().add(lblChronological);
 
 		JLabel lblTimeline = new JLabel("Timeline");
 		lblTimeline.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTimeline.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblTimeline.setBounds(1194, 566, 158, 33);
+		lblTimeline.setBounds(1194, 486, 158, 33);
 		frame.getContentPane().add(lblTimeline);
 
 		Button button_7 = new Button("Start Chrono Tool");
 		button_7.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_7.setBounds(1194, 607, 158, 57);
+		button_7.setBounds(1194, 527, 158, 57);
 		frame.getContentPane().add(button_7);
 
 		JLabel lblChronoMain = new JLabel("Chrono Tool");
@@ -300,10 +286,20 @@ public class MenuDrive {
 					list_values.removeAll();
 					list.add("File Name"); 
 					list_values.add(entry.getFilename());
-					list.add("File Size"); 
-					list_values.add("" + entry.getSize());
-					list.add("Is Shaerd"); 
-					list_values.add("" + entry.getShared());
+					if (!drive.getSizeCorrect(entry.getSize()).startsWith("0")){
+						list.add("File Size"); 
+						list_values.add("" + drive.getSizeCorrect(entry.getSize()));
+					}
+					list.add("Is Shaerd");
+					if (entry.getShared() == 1){
+						list_values.add("Yes");
+					}
+					if (entry.getShared() == 0){
+						list_values.add("No");
+					}
+					list.add("Last Modified");
+					java.util.Date time=new java.util.Date((long)entry.getModified()*1000);
+					list_values.add("" + time);
 				}
 			}
 		});
@@ -312,6 +308,52 @@ public class MenuDrive {
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setBounds(45, 100, 585, 564);
 		frame.getContentPane().add(scroll);
+		
+		List listFileStats1 = new List();
+		listFileStats1.setFont(new Font("Arial", Font.BOLD, 12));
+		listFileStats1.setBounds(745, 349, 169, 101);
+		listFileStats1.add("Folders");
+		listFileStats1.add("Shared Folders");
+		listFileStats1.add("Documents");
+		listFileStats1.add("Shared Documents");
+		listFileStats1.add("Files");
+		listFileStats1.add("Shared Files");
+		frame.getContentPane().add(listFileStats1);
+		
+		List listFileStats2 = new List();
+		listFileStats2.setFont(new Font("Arial", Font.PLAIN, 12));
+		listFileStats2.setBounds(913, 349, 169, 101);
+		listFileStats2.add(drive.getFileCount("Folders",false));
+		listFileStats2.add(drive.getFileCount("Folders",true));
+		listFileStats2.add(drive.getFileCount("Docs", false));
+		listFileStats2.add(drive.getFileCount("Docs", true));
+		listFileStats2.add(drive.getFileCount("Files", false));
+		listFileStats2.add(drive.getFileCount("Files", true));
+		frame.getContentPane().add(listFileStats2);
+		
+		List list_6 = new List();
+		list_6.setFont(new Font("Arial", Font.BOLD, 12));
+		list_6.setBounds(745, 456, 169, 68);
+		Iterator<Entry<String, Integer>> it1 =top3.entrySet().iterator();
+		while (it1.hasNext()) {
+			Map.Entry pair = (Map.Entry)it1.next();
+			if(!pair.getKey().equals("total")){
+				list_6.add("TOP - " + pair.getKey());
+			}
+		}
+		frame.getContentPane().add(list_6);
+		
+		List list_7 = new List();
+		list_7.setFont(new Font("Arial", Font.PLAIN, 12));
+		list_7.setBounds(913, 456, 169, 68);
+		Iterator<Entry<String, Integer>> it2 =top3.entrySet().iterator();
+		while (it2.hasNext()) {
+			Map.Entry pair = (Map.Entry)it2.next();
+			if(!pair.getKey().equals("total")){
+				list_7.add("" + drive.getPercentage(top3.get("total"), (Integer) pair.getValue())+ "%");
+			}
+		}
+		frame.getContentPane().add(list_7);
 	}
 
 	public DatabaseSnapshotEntry doMouseClicked(MouseEvent me, JTree tree, Drive drive) {

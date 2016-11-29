@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.print.DocFlavor.CHAR_ARRAY;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -58,6 +59,24 @@ public class Drive {
 		return extensions;
 	}
 
+	public ArrayList<DatabaseSnapshotEntry> getFilesByExtensionGivingPath(String path, String extension){
+
+		String doc_id = getDirectoryDocIdByPath(path);
+		ArrayList<DatabaseSnapshotEntry> extensions = new ArrayList<DatabaseSnapshotEntry>();
+
+		for(DatabaseSnapshotEntry entry: _database_schema.get(doc_id)){
+
+			if(entry.getResourceType().equals("file")){
+				String filename = entry.getFilename();
+				String file_extension = FilenameUtils.getExtension(filename);			
+				if((extension.toLowerCase()).equals(file_extension)){
+					extensions.add(entry);
+				}
+			}
+		}
+		return extensions;
+	}
+	
 	public HashMap<String, Integer> getChildrenExtensions(String path){
 		
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -81,7 +100,26 @@ public class Drive {
 			}
 		}
 		return extensions;
-	}	
+	}
+	
+	public ArrayList<DatabaseSnapshotEntry> getFilesByChildrenExtensionGivingPath(String path, String extension){
+
+		String doc_id = getDirectoryDocIdByPath(path);
+		ArrayList<DatabaseSnapshotEntry> extensions = new ArrayList<DatabaseSnapshotEntry>();
+		ArrayList<DatabaseSnapshotEntry> children = getArrayOfChildren(doc_id);
+
+		for(DatabaseSnapshotEntry entry: children){
+
+			if(entry.getResourceType().equals("file")){
+				String filename = entry.getFilename();
+				String file_extension = FilenameUtils.getExtension(filename);			
+				if((extension.toLowerCase()).equals(file_extension)){
+					extensions.add(entry);
+				}
+			}
+		}
+		return extensions;
+	}
 
 	public ArrayList<DatabaseSnapshotEntry> getArrayOfChildren (String parent_doc_id){
 
@@ -278,15 +316,44 @@ public class Drive {
 		return node;
 	}
 
+	public DefaultMutableTreeNode buildTreeOfDirs(){
+
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+		return buildTreeOfDirsAux("root", root);
+	}
+
+	public DefaultMutableTreeNode buildTreeOfDirsAux (String parent_doc_id, 
+			DefaultMutableTreeNode node){
+
+		List<DatabaseSnapshotEntry> initial_list = _database_schema.get(parent_doc_id);
+		for(DatabaseSnapshotEntry entry: initial_list){
+			if(_database_schema.containsKey(entry.getDocId())){
+				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
+				buildTreeOfDirsAux(entry.getDocId(),parent);
+				node.add(parent);
+			}
+			else if (entry.getResourceType().equals("folder")){
+				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
+				node.add(parent);
+			}
+		}
+		return node;
+	}
+
 	public String getLocalDriveSize(){
 		long bytes = 0L;
+		
+		for(DatabaseSnapshotEntry entry: _database_entrys){
+			bytes = bytes + entry.getSize();
+		}
+		return getSizeCorrect(bytes);
+	}
+	
+	public String getSizeCorrect(long bytes){
 		long kilo = 1024L;
 		long mega = 1048576L;
 		long giga = 10737418424L;
 		String size = null;
-		for(DatabaseSnapshotEntry entry: _database_entrys){
-			bytes = bytes + entry.getSize();
-		}
 		if(bytes < 1024){
 			size = "" + bytes + " bytes";
 		}
@@ -388,5 +455,27 @@ public class Drive {
 	    System.out.println(third + " = " + trd);
 	    System.out.println("total = " + total);
 		return top3;
+	}
+
+	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWord(String keyWord){
+		
+		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
+		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+		for (DatabaseSnapshotEntry entry: _database_entrys){
+			int e = 0;
+			char[] fileChar = entry.getFilename().toLowerCase().toCharArray();
+			for(int i = 0; i < fileChar.length; i++){
+				if (fileChar[i] == keyWordChar[e]){
+					e++;
+				}
+				else{
+					e = 0;
+				}
+				if (e == keyWordChar.length){
+					finalList.add(entry);
+				}
+			}
+		}
+		return finalList;
 	}
 }

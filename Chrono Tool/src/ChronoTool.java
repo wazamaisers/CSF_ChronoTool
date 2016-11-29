@@ -20,6 +20,41 @@ public class ChronoTool
 		Drive drive = new Drive(path_drive);
 		Skype skype = new Skype(path_skype);
 		
+		String keyWord = "ML00";
+		ArrayList<String> database_entrys = new ArrayList<String>();
+		database_entrys.add("PkGo");
+		database_entrys.add("ML3");
+		database_entrys.add("ML000000002");
+		database_entrys.add("MLas");
+		database_entrys.add("Uis7ML0da");
+		database_entrys.add("asd sdML0 asd");
+		database_entrys.add("Ficha3");
+		
+		ArrayList<String> finalList = new ArrayList<String>();
+		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+		for (String entry: database_entrys){
+			int e = 0;
+			char[] fileChar = entry.toLowerCase().toCharArray();
+			for(int i = 0; i < fileChar.length; i++){
+				System.out.println("Eu: " + fileChar[i]);
+				System.out.println("Ele: " + keyWordChar[e]);
+				if (fileChar[i] == keyWordChar[e]){
+					e++;
+				}
+				else{
+					e = 0;
+				}
+				if (e == keyWordChar.length){
+					finalList.add(entry);
+					break;
+				}
+			}
+		}
+		System.out.println(finalList);
+		
+		
+		
+		
 		/*
 		// Detalhes do útilizador
 		System.out.println("The user e-mail is " + drive.getUserMail() + " and the drive version is " +drive.getDriveVersion() + ".");
