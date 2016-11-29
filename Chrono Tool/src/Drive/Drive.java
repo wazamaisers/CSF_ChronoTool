@@ -186,6 +186,30 @@ public class Drive {
 		return null;
 	}
 	
+	public String getPathByDocId(String docId){
+		String path = "";
+		String parent = "";
+		for(DatabaseSnapshotEntry entry: _database_entrys){
+			if(entry.getDocId().equals(docId)){
+				path = entry.getFilename();
+				parent = entry.getParentDocId();
+				while(!(parent.equals("root"))){
+					for(DatabaseSnapshotEntry entry_1: _database_entrys){
+						if(entry_1.getDocId().equals(parent)){
+							path = entry_1.getFilename() + "/" + path;
+							parent = entry_1.getParentDocId();
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		path = "root/" + path;
+		
+		return path;
+	}
+	
 	public List<DatabaseSnapshotEntry> getFilesWithinFolder(String path){
 		String doc_id = getDirectoryDocIdByPath(path);
 		List<DatabaseSnapshotEntry> files_list = _database_schema.get(doc_id);
@@ -473,6 +497,7 @@ public class Drive {
 				}
 				if (e == keyWordChar.length){
 					finalList.add(entry);
+					break;
 				}
 			}
 		}
