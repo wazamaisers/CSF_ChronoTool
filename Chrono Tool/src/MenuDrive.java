@@ -168,13 +168,13 @@ public class MenuDrive {
 		JLabel lblSearchesByKeyword = new JLabel("Searches by");
 		lblSearchesByKeyword.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSearchesByKeyword.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblSearchesByKeyword.setBounds(1194, 211, 158, 33);
+		lblSearchesByKeyword.setBounds(1194, 297, 158, 33);
 		frame.getContentPane().add(lblSearchesByKeyword);
 
 		JLabel lblKeyword = new JLabel("KeyWord");
 		lblKeyword.setHorizontalAlignment(SwingConstants.CENTER);
 		lblKeyword.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblKeyword.setBounds(1194, 230, 158, 33);
+		lblKeyword.setBounds(1194, 316, 158, 33);
 		frame.getContentPane().add(lblKeyword);
 
 		Button button_2 = new Button("Filenames");
@@ -184,7 +184,7 @@ public class MenuDrive {
 			}
 		});
 		button_2.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_2.setBounds(1194, 314, 158, 39);
+		button_2.setBounds(1194, 355, 158, 39);
 		frame.getContentPane().add(button_2);
 
 		Button button_3 = new Button("File Contents");
@@ -193,29 +193,44 @@ public class MenuDrive {
 			}
 		});
 		button_3.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_3.setBounds(1194, 359, 158, 39);
+		button_3.setBounds(1194, 400, 158, 39);
 		frame.getContentPane().add(button_3);
 
-		Button button_6 = new Button("File Extensions");
+		Button button_6 = new Button("Filenames");
 		button_6.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_6.setBounds(1194, 269, 158, 39);
+		button_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveFilenamesByPath(drive, false);
+			}
+		});
+		button_6.setBounds(1194, 185, 158, 39);
 		frame.getContentPane().add(button_6);
+		
+		Button button_1 = new Button("Filenames (children)");
+		button_1.setFont(new Font("Arial", Font.PLAIN, 12));
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveFilenamesByPath(drive, true);
+			}
+		});
+		button_1.setBounds(1194, 230, 158, 39);
+		frame.getContentPane().add(button_1);
 
 		JLabel lblChronological = new JLabel("Chronological");
 		lblChronological.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChronological.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblChronological.setBounds(1194, 469, 158, 33);
+		lblChronological.setBounds(1194, 490, 158, 33);
 		frame.getContentPane().add(lblChronological);
 
 		JLabel lblTimeline = new JLabel("Timeline");
 		lblTimeline.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTimeline.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblTimeline.setBounds(1194, 486, 158, 33);
+		lblTimeline.setBounds(1194, 507, 158, 33);
 		frame.getContentPane().add(lblTimeline);
 
 		Button button_7 = new Button("Start Chrono Tool");
 		button_7.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_7.setBounds(1194, 527, 158, 57);
+		button_7.setBounds(1194, 548, 158, 57);
 		frame.getContentPane().add(button_7);
 
 		JLabel lblChronoMain = new JLabel("Chrono Tool");

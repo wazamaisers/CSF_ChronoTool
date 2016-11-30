@@ -31,7 +31,7 @@ public class Drive {
 		_database_entrys = db.getDatabaseEntrys();
 		_user_details = db.getUserDetails();
 	}
-	
+
 	public boolean getDatabaseLoaded(){
 		return _databaseLoaded;
 	}
@@ -76,9 +76,9 @@ public class Drive {
 		}
 		return extensions;
 	}
-	
+
 	public HashMap<String, Integer> getChildrenExtensions(String path){
-		
+
 		String doc_id = getDirectoryDocIdByPath(path);
 		ArrayList<DatabaseSnapshotEntry> children = getArrayOfChildren(doc_id);
 
@@ -101,7 +101,7 @@ public class Drive {
 		}
 		return extensions;
 	}
-	
+
 	public ArrayList<DatabaseSnapshotEntry> getFilesByChildrenExtensionGivingPath(String path, String extension){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -185,7 +185,7 @@ public class Drive {
 		}
 		return null;
 	}
-	
+
 	public String getPathByDocId(String docId){
 		String path = "";
 		String parent = "";
@@ -206,85 +206,85 @@ public class Drive {
 		}
 
 		path = "root/" + path;
-		
+
 		return path;
 	}
-	
+
 	public List<DatabaseSnapshotEntry> getFilesWithinFolder(String path){
 		String doc_id = getDirectoryDocIdByPath(path);
 		List<DatabaseSnapshotEntry> files_list = _database_schema.get(doc_id);
 		return files_list;
 	}
-	
+
 	public String getUserMail(){
 		return _user_details.getUserEmail();
 	}
-	
+
 	public String getDriveVersion(){
 		return _user_details.getVersion();
 	}
-	
+
 	public float getPercentage(int questions, int correct) {
-	    float proportionCorrect = ((float) correct) / ((float) questions);
-	    return Math.round(proportionCorrect * 100);
+		float proportionCorrect = ((float) correct) / ((float) questions);
+		return Math.round(proportionCorrect * 100);
 	}
-	
+
 	public HashMap<String, Integer> getTimes(){
-		
+
 		ArrayList<Integer> timestamps = new ArrayList<Integer>();
 		HashMap<String,Integer> _times = new HashMap<String, Integer>();
-		
+
 		for(DatabaseSnapshotEntry entry: _database_entrys){
 			timestamps.add(entry.getModified());
 		}
-		
+
 		_times.put("Dawn",0);  //2h - 6h
 		_times.put("Morning",0);  //6h - 12h
 		_times.put("Afternoon",0); //12h - 17h
 		_times.put("Evening",0); // 17h - 20h
 		_times.put("Night",0); //20h - 2h
-		
+
 		int total = 0;
 		for (Integer item : timestamps) {
 			Date date = new Date(item*1000L);
 			SimpleDateFormat hour = new SimpleDateFormat("H");
-			
+
 			if ((Integer.parseInt(hour.format(date)) >= 2) && (Integer.parseInt(hour.format(date))) < 6){
 				_times.put("Dawn", _times.get("Dawn")+1);
 			}
-			
+
 			if ((Integer.parseInt(hour.format(date)) >= 6) && (Integer.parseInt(hour.format(date))) < 12){
 				_times.put("Morning", _times.get("Morning")+1);
 			}
-			
+
 			if ((Integer.parseInt(hour.format(date)) >= 12) && (Integer.parseInt(hour.format(date))) < 17){
 				_times.put("Afternoon", _times.get("Afternoon")+1);
 			}
-			
+
 			if ((Integer.parseInt(hour.format(date)) >= 17) && (Integer.parseInt(hour.format(date))) < 20){
 				_times.put("Evening", _times.get("Evening")+1);
 			}
-			
+
 			if ((Integer.parseInt(hour.format(date)) >= 20) && (Integer.parseInt(hour.format(date))) < 24
 					|| (Integer.parseInt(hour.format(date)) >= 0) && (Integer.parseInt(hour.format(date))) < 2){
 				_times.put("Night", _times.get("Night")+1);
 			}	
 		}
-		
+
 		total = _times.get("Dawn") + _times.get("Morning") + _times.get("Afternoon") + _times.get("Evening") +
 				_times.get("Night");
-		
+
 		System.out.println("Dawn :" + getPercentage(total, _times.get("Dawn")) + "%");
 		System.out.println("Morning :" + getPercentage(total, _times.get("Morning")) + "%");
 		System.out.println("Afternoon :" + getPercentage(total, _times.get("Afternoon")) + "%");
 		System.out.println("Evening :" + getPercentage(total, _times.get("Evening")) + "%");
 		System.out.println("Night :" + getPercentage(total, _times.get("Night")) + "%");
-		
+
 		return _times;
 	}
 
 	public String getPathFromTreePath(TreePath tp){
-		
+
 		String list = tp.toString();
 		char[] list_ch = list.toCharArray();
 		List<Character> path_ch = new ArrayList<Character>();
@@ -292,28 +292,28 @@ public class Drive {
 		int n = list_ch.length;
 		while (i < n) {
 			if(list_ch[i] == ','){
-		    	path_ch.add('/');
-		    	i++;
-		    }
+				path_ch.add('/');
+				i++;
+			}
 			else if(list_ch[i] == '['){
-		    	i++;
-		    	continue;
-		    }
+				i++;
+				continue;
+			}
 			else if(list_ch[i] == ']'){
-		    	break;
-		    }
+				break;
+			}
 			else{
 				path_ch.add(list_ch[i]);
 			}
 			i++;
 		}
 		StringBuilder builder = new StringBuilder(path_ch.size());
-	    for(Character ch: path_ch)
-	    {
-	        builder.append(ch);
-	    }
-	    String path = builder.toString();
-	    return path;
+		for(Character ch: path_ch)
+		{
+			builder.append(ch);
+		}
+		String path = builder.toString();
+		return path;
 	}
 
 	public DefaultMutableTreeNode buildTree(){
@@ -366,13 +366,13 @@ public class Drive {
 
 	public String getLocalDriveSize(){
 		long bytes = 0L;
-		
+
 		for(DatabaseSnapshotEntry entry: _database_entrys){
 			bytes = bytes + entry.getSize();
 		}
 		return getSizeCorrect(bytes);
 	}
-	
+
 	public String getSizeCorrect(long bytes){
 		long kilo = 1024L;
 		long mega = 1048576L;
@@ -421,7 +421,7 @@ public class Drive {
 					files++;
 				}
 			}
-			
+
 		}
 		if (type.equals("Files")){
 			filecount = "" + files;
@@ -446,46 +446,95 @@ public class Drive {
 		Integer trd = 0;
 		Integer total = 0;
 		Iterator<Entry<String, Integer>> it =extensions.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pair = (Map.Entry)it.next();
-	        total = total + (Integer) pair.getValue();
-	        if (((Integer) pair.getValue())>fst){
-	        	third = second;
-	        	second = first;
-	        	trd = scd;
-	        	scd = fst;
-	        	first = (String) pair.getKey();
-	        	fst = (Integer) pair.getValue();
-	        }
-	        else if (((Integer) pair.getValue())<fst && ((Integer) pair.getValue())>scd){
-	        	third = second;
-	        	trd = scd;
-	        	second = (String) pair.getKey();
-	        	scd = (Integer) pair.getValue();
-	        }
-	        else if (((Integer) pair.getValue())<scd && ((Integer) pair.getValue())>trd){
-	        	third = (String) pair.getKey();
-	        	trd = (Integer) pair.getValue();
-	        }
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
-	    }
-	    top3.put(first, fst);
-	    top3.put(second, scd);
-	    top3.put(third, trd);
-	    top3.put("total", total);
-	    System.out.println(first + " = " + fst);
-	    System.out.println(second + " = " + scd);
-	    System.out.println(third + " = " + trd);
-	    System.out.println("total = " + total);
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry)it.next();
+			total = total + (Integer) pair.getValue();
+			if (((Integer) pair.getValue())>fst){
+				third = second;
+				second = first;
+				trd = scd;
+				scd = fst;
+				first = (String) pair.getKey();
+				fst = (Integer) pair.getValue();
+			}
+			else if (((Integer) pair.getValue())<fst && ((Integer) pair.getValue())>scd){
+				third = second;
+				trd = scd;
+				second = (String) pair.getKey();
+				scd = (Integer) pair.getValue();
+			}
+			else if (((Integer) pair.getValue())<scd && ((Integer) pair.getValue())>trd){
+				third = (String) pair.getKey();
+				trd = (Integer) pair.getValue();
+			}
+			System.out.println(pair.getKey() + " = " + pair.getValue());
+			it.remove(); // avoids a ConcurrentModificationException
+		}
+		top3.put(first, fst);
+		top3.put(second, scd);
+		top3.put(third, trd);
+		top3.put("total", total);
+		System.out.println(first + " = " + fst);
+		System.out.println(second + " = " + scd);
+		System.out.println(third + " = " + trd);
+		System.out.println("total = " + total);
 		return top3;
 	}
 
 	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWord(String keyWord){
-		
+
 		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
 		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
 		for (DatabaseSnapshotEntry entry: _database_entrys){
+			int e = 0;
+			char[] fileChar = entry.getFilename().toLowerCase().toCharArray();
+			for(int i = 0; i < fileChar.length; i++){
+				if (fileChar[i] == keyWordChar[e]){
+					e++;
+				}
+				else{
+					e = 0;
+				}
+				if (e == keyWordChar.length){
+					finalList.add(entry);
+					break;
+				}
+			}
+		}
+		return finalList;
+	}
+
+	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWordGivePath(String keyWord, String path){
+
+		String doc_id = getDirectoryDocIdByPath(path);
+		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
+		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+		for (DatabaseSnapshotEntry entry: _database_schema.get(doc_id)){
+			int e = 0;
+			char[] fileChar = entry.getFilename().toLowerCase().toCharArray();
+			for(int i = 0; i < fileChar.length; i++){
+				if (fileChar[i] == keyWordChar[e]){
+					e++;
+				}
+				else{
+					e = 0;
+				}
+				if (e == keyWordChar.length){
+					finalList.add(entry);
+					break;
+				}
+			}
+		}
+		return finalList;
+	}
+	
+	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWordChildrenGivePath(String keyWord, String path){
+		
+		String doc_id = getDirectoryDocIdByPath(path);
+		ArrayList<DatabaseSnapshotEntry> children = getArrayOfChildren(doc_id);
+		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
+		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+		for (DatabaseSnapshotEntry entry: children){
 			int e = 0;
 			char[] fileChar = entry.getFilename().toLowerCase().toCharArray();
 			for(int i = 0; i < fileChar.length; i++){
