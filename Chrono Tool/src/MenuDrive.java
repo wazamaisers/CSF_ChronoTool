@@ -230,6 +230,11 @@ public class MenuDrive {
 
 		Button button_7 = new Button("Start Chrono Tool");
 		button_7.setFont(new Font("Arial", Font.PLAIN, 15));
+		button_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveChrono(drive);
+			}
+		});
 		button_7.setBounds(1194, 548, 158, 57);
 		frame.getContentPane().add(button_7);
 

@@ -552,4 +552,14 @@ public class Drive {
 		}
 		return finalList;
 	}
+
+	public Integer getLastTime(){
+		Integer last = 2147483647;
+		for(DatabaseSnapshotEntry entry: _database_entrys){
+			if(last>entry.getModified() && !entry.getDocId().equals("root")){
+				last = entry.getModified();
+			}
+		}
+		return last;
+	}
 }
