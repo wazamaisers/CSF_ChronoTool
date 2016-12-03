@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
@@ -210,25 +212,21 @@ public class DriveChrono {
 		});
 		
 		
-		tree = new JTree();
+		tree = new JTree(drive.buildTree());
 		tree.setBounds(148, 30, 463, 566);
 		scroll = new JScrollPane(tree);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setBounds(148, 30, 463, 566);
 		frame.getContentPane().add(scroll);
 		
-		
 		weeksSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
 				Long timestamp = _table1.get(source.getValue());
-				tree.removeAll();
-				tree = new JTree(drive.buildTimedTree(timestamp));
-				//tree.setBounds(148, 30, 463, 566);
-				scroll = new JScrollPane(tree);
-				//scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-				//scroll.setBounds(148, 30, 463, 566);
-				frame.getContentPane().add(scroll);
+				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+				model.reload(drive.buildTimedTree(timestamp));
+				//tree = new JTree(drive.buildTimedTree(timestamp));
+				tree.repaint();
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}

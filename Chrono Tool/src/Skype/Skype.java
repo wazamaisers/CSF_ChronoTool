@@ -21,6 +21,7 @@ public class Skype {
 	private HashMap<String,DatabaseContactsEntry> _contacts = new HashMap<String,DatabaseContactsEntry>();
 	private HashMap<String,ArrayList<DatabaseMessagesEntry>> _messages = new HashMap<String,ArrayList<DatabaseMessagesEntry>>();
 	private HashMap<String,ArrayList<DatabaseCallsEntry>> _calls = new HashMap<String,ArrayList<DatabaseCallsEntry>>();
+	private HashMap<String,DatabaseContactsEntry> _user_profile = new HashMap<String,DatabaseContactsEntry>();
 	
 	public Skype(String path){
 		PopulateDatabase db = new PopulateDatabase(path);
@@ -30,6 +31,7 @@ public class Skype {
 		_contacts = db.getContacts();
 		_messages = db.getMessages();
 		_calls = db.getCalls();
+		_user_profile = db.getUserProfile();
 	}
 	
 	public boolean getDatabaseLoaded(){
@@ -91,21 +93,21 @@ public class Skype {
 				arrays[i][0] = entry.getValue().getFullName().toString();
 			}
 			catch(Exception e){
-				arrays[i][0] = "null";
+				arrays[i][0] = "";
 			}
 			
 			try{
 				arrays[i][1] = entry.getValue().getSkypeName().toString();
 			}
 			catch(Exception e){
-				arrays[i][1] = "null";
+				arrays[i][1] = "";
 			}
 			
 			try{
 				arrays[i][2] = entry.getValue().getGender().toString();
 			}
 			catch(Exception e){
-				arrays[i][2] = "null";
+				arrays[i][2] = "";
 			}
 			
 			try{
@@ -114,10 +116,30 @@ public class Skype {
 				arrays[i][3] = dateFormat.format(time);
 			}
 			catch(Exception e){
-				arrays[i][3] = "null";
+				arrays[i][3] = "";
 			}
 	        i++;	
 		}
 		return arrays;
+	}
+
+	public String getSkypeName(){
+		String skypeName = "";
+		for(Map.Entry<String,DatabaseContactsEntry> entry: _user_profile.entrySet()){
+			skypeName = entry.getValue().getFullName();
+		}
+		return skypeName;
+	}
+	
+	public String getSkypeUserName(){
+		String skypeUserName = "";
+		for(Map.Entry<String,DatabaseContactsEntry> entry: _user_profile.entrySet()){
+			skypeUserName = entry.getValue().getSkypeName();
+		}
+		return skypeUserName;
+	}
+
+	public HashMap<String,DatabaseContactsEntry> getUserProfile(){
+		return _user_profile;
 	}
 }

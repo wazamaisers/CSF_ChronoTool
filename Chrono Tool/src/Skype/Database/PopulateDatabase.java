@@ -11,11 +11,13 @@ public class PopulateDatabase {
 	private HashMap<String,DatabaseContactsEntry> _contacts = new HashMap<String,DatabaseContactsEntry>();
 	private HashMap<String,ArrayList<DatabaseMessagesEntry>> _messages = new HashMap<String,ArrayList<DatabaseMessagesEntry>>();
 	private HashMap<String,ArrayList<DatabaseCallsEntry>> _calls = new HashMap<String,ArrayList<DatabaseCallsEntry>>();
+	private HashMap<String,DatabaseContactsEntry> _user_profile = new HashMap<String,DatabaseContactsEntry>();
 	
 	private Connection _sh_links = null;
 	private Connection _sh_files = null;
 	private Connection _contacts1 = null;
 	private Connection _contacts2 = null;
+	private Connection _contacts3 = null;
 	private Connection _msgs = null;
 	private Connection _clls = null;
 	
@@ -27,6 +29,7 @@ public class PopulateDatabase {
 	private Statement _stmt6 = null;
 	private Statement _stmt7 = null;
 	private Statement _stmt8 = null;
+	private Statement _stmt9 = null;
 	
 	private boolean _dbCreated = false;
 
@@ -213,7 +216,6 @@ public class PopulateDatabase {
 			while (rs8.next()) {
 				String identity = rs8.getString("identity");
 				String dispname = rs8.getString("dispname");
-				System.out.println(dispname);
 				String type = rs8.getString("type");
 				String guid = rs8.getString("guid");
 				Integer start_timestamp = rs8.getInt("start_timestamp");
@@ -238,6 +240,58 @@ public class PopulateDatabase {
 			_stmt8.close();
 			_clls.close();
 			rs8.close();
+			
+			//////////////////////////////////////CONTACTS DATABASE ////////////////////////////////////
+			_contacts3 = DriverManager.getConnection("jdbc:sqlite:"+ path + "/main.db");
+			_contacts3.setAutoCommit(false);
+
+			System.out.println("passa1");
+			
+			_stmt9 = _contacts3.createStatement();
+			
+			ResultSet rs9 = _stmt9.executeQuery("SELECT * FROM Accounts;");
+			
+			while (rs9.next()) {
+				String skypename = rs9.getString("skypename");
+				String fullname = rs9.getString("fullname");
+				Integer birthday = rs9.getInt("birthday");
+				Integer gend = rs9.getInt("gender");
+				
+				String gender = "";
+				if (gend.equals(1)){
+					gender = "Male";
+				}
+				
+				if (gend.equals(2)){
+					gender = "Female";
+				}
+				
+				
+				String languages = rs9.getString("languages");
+				String country = rs9.getString("country");
+				String province = rs9.getString("province");
+				String city = rs9.getString("city");
+				String phone_home = rs9.getString("phone_home");
+				String phone_office = rs9.getString("phone_office");
+				String phone_mobile = rs9.getString("phone_mobile");
+				String emails = rs9.getString("emails");
+				String homepage = rs9.getString("homepage");
+				String about = rs9.getString("about");				
+				Integer timezone = rs9.getInt("timezone");
+				Integer profile_timestamp = rs9.getInt("profile_timestamp");
+				Integer last_online_timestamp = rs9.getInt("lastonline_timestamp");
+				
+				DatabaseContactsEntry database_entry = new DatabaseContactsEntry(skypename, fullname, birthday, gender, languages,
+						country, province, city, phone_home, phone_office, phone_mobile, emails, null, homepage, about,
+						null, null, null, timezone, profile_timestamp, last_online_timestamp, null, null);
+				_user_profile.put(skypename, database_entry);
+			}
+			
+			_stmt9.close();
+			_contacts3.close();
+			rs9.close();
+
+			System.out.println("passa2");
 			_dbCreated = true;
 			
 		} catch ( Exception e ) {
@@ -268,5 +322,9 @@ public class PopulateDatabase {
 	
 	public HashMap<String,ArrayList<DatabaseCallsEntry>> getCalls(){
 		return _calls;
+	}
+	
+	public HashMap<String,DatabaseContactsEntry> getUserProfile(){
+		return _user_profile;
 	}
 }
