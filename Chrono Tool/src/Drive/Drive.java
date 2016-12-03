@@ -562,4 +562,32 @@ public class Drive {
 		}
 		return last;
 	}
+
+	public DefaultMutableTreeNode buildTimedTree(Long timestamp){
+
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+		return buildTimedTreeAux("root", root, timestamp);
+	}
+
+	public DefaultMutableTreeNode buildTimedTreeAux (String parent_doc_id, 
+			DefaultMutableTreeNode node, Long timestamp){
+		System.out.println("Entra aux");
+
+		List<DatabaseSnapshotEntry> initial_list = _database_schema.get(parent_doc_id);
+		for(DatabaseSnapshotEntry entry: initial_list){
+			if(_database_schema.containsKey(entry.getDocId()) && (long) entry.getModified() < timestamp){
+				System.out.println("Entra if");
+				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
+				buildTreeAux(entry.getDocId(),parent);
+				node.add(parent);
+			}
+			else if((long) entry.getModified() < timestamp){
+				System.out.println("Entra else if");
+				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
+				node.add(parent);
+			}
+		}
+		return node;
+	}
+
 }

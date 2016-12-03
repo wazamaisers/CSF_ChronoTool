@@ -27,6 +27,8 @@ public class DriveChrono {
 
 	private JFrame frame;
 	private Integer last;
+	private JTree tree;
+	private JScrollPane scroll;
 	private HashMap<Integer,Long> _table1 = new HashMap<Integer,Long>();
 	private HashMap<Integer,Long> _table2 = new HashMap<Integer,Long>();
 	private HashMap<Integer,Long> _table3 = new HashMap<Integer,Long>();
@@ -64,15 +66,6 @@ public class DriveChrono {
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
-		
-		JTree tree = new JTree();
-		tree.setBounds(148, 30, 463, 566);
-		JScrollPane scroll = new JScrollPane(tree);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setBounds(45, 100, 585, 564);
-		frame.getContentPane().add(scroll);
-		
 		///////////////////////////////////////////////////////////////////////
 
 		last = drive.getLastTime();
@@ -99,10 +92,6 @@ public class DriveChrono {
 		System.out.print(week + "\n");
 		Hashtable<Integer, JLabel> table1 = new Hashtable<Integer, JLabel>();
 		JSlider weeksSlider = new JSlider(JSlider.HORIZONTAL,0,(int)totalWeeks,(int)totalWeeks);
-		weeksSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-			}
-		});
 		weeksSlider.setPaintLabels(true);
 		int i=0;
 		int monthValue = 0;
@@ -115,9 +104,9 @@ public class DriveChrono {
 				else{
 					table1.put((int)totalWeeks-i, new JLabel("" + monthValue));
 				}
-				_table1.put((int)totalWeeks-i, (long) Timestamp.valueOf(week.atStartOfDay()).getTime()/1000);
 				System.out.print(week + " "+ i + "\n\n");
 			}
+			_table1.put((int)totalWeeks-i, (long) Timestamp.valueOf(week.atStartOfDay()).getTime()/1000);
 			week = week.minus(1, ChronoUnit.WEEKS);
 			System.out.print(week + " "+ i + "\n");
 			i++;
@@ -133,10 +122,6 @@ public class DriveChrono {
 		System.out.print(month + "\n");
 		Hashtable<Integer, JLabel> table2 = new Hashtable<Integer, JLabel>();
 		JSlider monthsSlider = new JSlider(JSlider.HORIZONTAL,0,(int)totalMonths,(int)totalMonths);
-		monthsSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-			}
-		});
 		monthsSlider.setPaintLabels(true);
 		i=0;
 		monthValue = 0;
@@ -164,10 +149,6 @@ public class DriveChrono {
 		System.out.print(year + "\n");
 		Hashtable<Integer, JLabel> table3 = new Hashtable<Integer, JLabel>();
 		JSlider yearsSlider = new JSlider(JSlider.HORIZONTAL,0,(int)totalYears,(int)totalYears);
-		yearsSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-			}
-		});
 		yearsSlider.setPaintLabels(true);
 		i=0;
 		int yearValue = 0;
@@ -225,6 +206,49 @@ public class DriveChrono {
 				yearsSlider.setVisible(true);
 				rdbtnMonthly.setSelected(false);
 				rdbtnWeekly.setSelected(false);
+			}
+		});
+		
+		
+		tree = new JTree();
+		tree.setBounds(148, 30, 463, 566);
+		scroll = new JScrollPane(tree);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setBounds(148, 30, 463, 566);
+		frame.getContentPane().add(scroll);
+		
+		
+		weeksSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				Long timestamp = _table1.get(source.getValue());
+				tree.removeAll();
+				tree = new JTree(drive.buildTimedTree(timestamp));
+				//tree.setBounds(148, 30, 463, 566);
+				scroll = new JScrollPane(tree);
+				//scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				//scroll.setBounds(148, 30, 463, 566);
+				frame.getContentPane().add(scroll);
+				System.out.println(source.getValue());
+				System.out.println(timestamp);
+			}
+		});
+		
+		monthsSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				Long timestamp = _table2.get(source.getValue());
+				System.out.println(source.getValue());
+				System.out.println(timestamp);
+			}
+		});
+		
+		yearsSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				Long timestamp = _table3.get(source.getValue());
+				System.out.println(source.getValue());
+				System.out.println(timestamp);
 			}
 		});
 	}

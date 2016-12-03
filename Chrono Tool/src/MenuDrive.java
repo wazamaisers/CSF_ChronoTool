@@ -115,19 +115,19 @@ public class MenuDrive {
 		HashMap <String,Integer> top3 = drive.getChildrenExtensionsStatistics("root");
 
 		java.awt.List listSize1 = new java.awt.List();
-		listSize1.setBounds(745, 315, 169, 28);
+		listSize1.setBounds(745, 315, 169, 25);
 		listSize1.setFont(new Font("Arial", Font.BOLD, 12));
 		listSize1.add("Local Drive Size");
 		frame.getContentPane().add(listSize1);
 
 		java.awt.List listSize2 = new java.awt.List();
-		listSize2.setBounds(913, 315, 169, 28);
+		listSize2.setBounds(913, 315, 169, 25);
 		listSize2.setFont(new Font("Arial", Font.PLAIN, 12));
 		listSize2.add(drive.getLocalDriveSize());
 		frame.getContentPane().add(listSize2);
 
 		List listTimes = new List();
-		listTimes.setBounds(842, 533, 144, 131);
+		listTimes.setBounds(842, 533, 144, 80);
 		listTimes.setFont(new Font("Arial", Font.PLAIN, 12));
 		Integer total = drive.getTimes().get("Dawn") + drive.getTimes().get("Morning") + drive.getTimes().get("Afternoon") + drive.getTimes().get("Evening") +
 				drive.getTimes().get("Night");
@@ -331,7 +331,7 @@ public class MenuDrive {
 		
 		List listFileStats1 = new List();
 		listFileStats1.setFont(new Font("Arial", Font.BOLD, 12));
-		listFileStats1.setBounds(745, 349, 169, 101);
+		listFileStats1.setBounds(745, 349, 169, 95);
 		listFileStats1.add("Folders");
 		listFileStats1.add("Shared Folders");
 		listFileStats1.add("Documents");
@@ -342,7 +342,7 @@ public class MenuDrive {
 		
 		List listFileStats2 = new List();
 		listFileStats2.setFont(new Font("Arial", Font.PLAIN, 12));
-		listFileStats2.setBounds(913, 349, 169, 101);
+		listFileStats2.setBounds(913, 349, 169, 95);
 		listFileStats2.add(drive.getFileCount("Folders",false));
 		listFileStats2.add(drive.getFileCount("Folders",true));
 		listFileStats2.add(drive.getFileCount("Docs", false));
@@ -353,19 +353,21 @@ public class MenuDrive {
 		
 		List list_6 = new List();
 		list_6.setFont(new Font("Arial", Font.BOLD, 12));
-		list_6.setBounds(745, 456, 169, 68);
+		list_6.setBounds(745, 456, 169, 50);
 		Iterator<Entry<String, Integer>> it1 =top3.entrySet().iterator();
+		int i = 1;
 		while (it1.hasNext()) {
 			Map.Entry pair = (Map.Entry)it1.next();
 			if(!pair.getKey().equals("total")){
-				list_6.add("TOP - " + pair.getKey());
+				list_6.add("TOP " + i +" - " + pair.getKey());
+				i++;
 			}
 		}
 		frame.getContentPane().add(list_6);
 		
 		List list_7 = new List();
 		list_7.setFont(new Font("Arial", Font.PLAIN, 12));
-		list_7.setBounds(913, 456, 169, 68);
+		list_7.setBounds(913, 456, 169, 50);
 		Iterator<Entry<String, Integer>> it2 =top3.entrySet().iterator();
 		while (it2.hasNext()) {
 			Map.Entry pair = (Map.Entry)it2.next();

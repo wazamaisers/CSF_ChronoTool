@@ -1,9 +1,15 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 import Drive.Drive;
 import Skype.Skype;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class MenuSkype {
 
@@ -49,6 +55,19 @@ public class MenuSkype {
 		//        }
 		//        frame.pack();
 		frame.setVisible(true);
+		
+		String[] columnNames = {"Name", "Skype Name", "Gender", "Friends Since"};
+		String[][] rowData = skype.getBasicContactInfo();
+		JTable table = new JTable(rowData,columnNames){
+			public boolean isCellEditable(int rowData, int columnNames){
+				return false;
+			}
+		};
+		table.setAutoCreateRowSorter(true);
+		table.getRowSorter().toggleSortOrder(0);
+		table.setBounds(79, 53, 463, 586);
+		JScrollPane scroll = new JScrollPane(table);
+		scroll.setBounds(79, 53, 463, 586);
+		frame.getContentPane().add(scroll);
 	}
-
 }

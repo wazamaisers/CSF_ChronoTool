@@ -1,7 +1,9 @@
 package Skype;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import Skype.Database.DatabaseCallsEntry;
@@ -69,7 +71,7 @@ public class Skype {
 				System.out.println("Time: " + entry.getStartTimestamp() + "\n");
 			}
 		}
-System.out.println(" - - - Testes de mensagens - - - \n");
+		System.out.println(" - - - Testes de mensagens - - - \n");
 		
 		for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> list: _messages.entrySet()){
 			System.out.println("Messages with: " + list.getKey());
@@ -79,5 +81,43 @@ System.out.println(" - - - Testes de mensagens - - - \n");
 				System.out.println("Message: " + entry.getMessage() + "\n");
 			}
 		}
+	}
+	
+	public String[][] getBasicContactInfo(){
+		String[][] arrays = new String[_contacts.entrySet().size()][4];
+		int i = 0;
+		for(Map.Entry<String,DatabaseContactsEntry> entry: _contacts.entrySet()){
+			try{
+				arrays[i][0] = entry.getValue().getFullName().toString();
+			}
+			catch(Exception e){
+				arrays[i][0] = "null";
+			}
+			
+			try{
+				arrays[i][1] = entry.getValue().getSkypeName().toString();
+			}
+			catch(Exception e){
+				arrays[i][1] = "null";
+			}
+			
+			try{
+				arrays[i][2] = entry.getValue().getGender().toString();
+			}
+			catch(Exception e){
+				arrays[i][2] = "null";
+			}
+			
+			try{
+				java.util.Date time=new java.util.Date((long)entry.getValue().getProfileTimestamp()*1000);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				arrays[i][3] = dateFormat.format(time);
+			}
+			catch(Exception e){
+				arrays[i][3] = "null";
+			}
+	        i++;	
+		}
+		return arrays;
 	}
 }
