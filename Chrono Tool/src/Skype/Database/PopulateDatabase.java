@@ -241,7 +241,7 @@ public class PopulateDatabase {
 			_clls.close();
 			rs8.close();
 			
-			//////////////////////////////////////CONTACTS DATABASE ////////////////////////////////////
+			//////////////////////////////////////USER PROFILE DATABASE ////////////////////////////////////
 			_contacts3 = DriverManager.getConnection("jdbc:sqlite:"+ path + "/main.db");
 			_contacts3.setAutoCommit(false);
 

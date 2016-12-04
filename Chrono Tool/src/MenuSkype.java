@@ -136,15 +136,6 @@ public class MenuSkype {
 		lblSearchesByPath.setBounds(1194, 53, 158, 24);
 		frame.getContentPane().add(lblSearchesByPath);
 		
-		Button button_1 = new Button("Calls");
-		button_1.setFont(new Font("Dialog", Font.PLAIN, 12));
-		button_1.setBounds(1194, 90, 158, 39);
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		frame.getContentPane().add(button_1);
-		
 		List list = new List();
 		list.setBounds(757, 239, 141, 245);
 		list.add("Skype Name");
@@ -243,16 +234,41 @@ public class MenuSkype {
 		Button button = new Button("Messages");
 		button.setFont(new Font("Dialog", Font.PLAIN, 12));
 		button.setBounds(1194, 135, 158, 39);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SkypeLists("messages",skype);
+			}
+		});
 		frame.getContentPane().add(button);
+		
+		Button button_1 = new Button("Calls");
+		button_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		button_1.setBounds(1194, 90, 158, 39);
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SkypeLists("calls",skype);
+			}
+		});
+		frame.getContentPane().add(button_1);
 		
 		Button button_2 = new Button("Links");
 		button_2.setFont(new Font("Dialog", Font.PLAIN, 12));
 		button_2.setBounds(1194, 180, 158, 39);
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SkypeLists("links",skype);
+			}
+		});
 		frame.getContentPane().add(button_2);
 		
 		Button button_3 = new Button("Files");
 		button_3.setFont(new Font("Dialog", Font.PLAIN, 12));
 		button_3.setBounds(1194, 225, 158, 39);
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SkypeLists("files",skype);
+			}
+		});
 		frame.getContentPane().add(button_3);
 		
 		Button button_4 = new Button("All");
