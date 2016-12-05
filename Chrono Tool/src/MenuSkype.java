@@ -187,17 +187,25 @@ public class MenuSkype {
 		
 		List list_3 = new List();
 		list_3.setBounds(904, 497, 37, 82);
+		list_3.add(""+skype.getTotalContacts());
+		list_3.add(""+skype.getTotalCalls());
+		list_3.add(""+skype.getTotalMessages());
+		list_3.add(""+skype.getTotalLinks());
+		list_3.add(""+skype.getTotalFiles());
 		frame.getContentPane().add(list_3);
 		
 		List list_4 = new List();
-		list_4.setBounds(959, 497, 141, 50);
+		list_4.setBounds(959, 497, 88, 50);
 		list_4.add("TOP 1 - Calls");
 		list_4.add("TOP 2 - Calls");
 		list_4.add("TOP 3 - Calls");
 		frame.getContentPane().add(list_4);
 		
+		skype.getTop("messages");
+		skype.getTop("calls");
+		
 		List list_5 = new List();
-		list_5.setBounds(1106, 497, 37, 50);
+		list_5.setBounds(1053, 497, 90, 50);
 		frame.getContentPane().add(list_5);
 		
 		List list_6 = new List();
@@ -208,17 +216,19 @@ public class MenuSkype {
 		
 		List list_7 = new List();
 		list_7.setBounds(904, 591, 37, 35);
+		list_7.add("" + skype.getLastCallsByPeriod("weeks"));
+		list_7.add("" + skype.getLastMessagesByPeriod("weeks"));
 		frame.getContentPane().add(list_7);
 		
 		List list_8 = new List();
-		list_8.setBounds(959, 556, 141, 50);
-		list_8.add("TOP 1 - Messages");
-		list_8.add("TOP 2 - Messages");
-		list_8.add("TOP 3 - Messages");
+		list_8.setBounds(959, 556, 88, 50);
+		list_8.add("TOP 1 - Msgs.");
+		list_8.add("TOP 2 - Msgs.");
+		list_8.add("TOP 3 - Msgs.");
 		frame.getContentPane().add(list_8);
 		
 		List list_9 = new List();
-		list_9.setBounds(1106, 556, 37, 50);
+		list_9.setBounds(1053, 556, 90, 50);
 		frame.getContentPane().add(list_9);
 		
 		List list_10 = new List();
@@ -229,6 +239,8 @@ public class MenuSkype {
 		
 		List list_11 = new List();
 		list_11.setBounds(904, 642, 37, 35);
+		list_11.add("" + skype.getLastCallsByPeriod("months"));
+		list_11.add("" + skype.getLastMessagesByPeriod("months"));
 		frame.getContentPane().add(list_11);
 		
 		Button button = new Button("Messages");
@@ -292,18 +304,16 @@ public class MenuSkype {
 		button_6.setBounds(1194, 437, 158, 39);
 		frame.getContentPane().add(button_6);
 		
-		Button button_7 = new Button("Links");
-		button_7.setFont(new Font("Dialog", Font.PLAIN, 12));
-		button_7.setBounds(1194, 482, 158, 39);
-		frame.getContentPane().add(button_7);
-		
 		Button button_8 = new Button("Files");
 		button_8.setFont(new Font("Dialog", Font.PLAIN, 12));
-		button_8.setBounds(1194, 527, 158, 39);
+		button_8.setBounds(1194, 482, 158, 39);
 		frame.getContentPane().add(button_8);
 		
 		Choice choice = new Choice();
 		choice.setBounds(1194, 321, 158, 20);
+		for(String name: skype.getSkypeNamesList()){
+			choice.add(name);
+		}
 		frame.getContentPane().add(choice);
 	}
 }

@@ -1,5 +1,4 @@
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -44,45 +43,48 @@ public class SkypeLists {
 		frame.setVisible(true);
 		
 		if(listType.equals("calls")){
-			String[] columnNames = {"Name", "Skype Name", "Caller", "Time", "CallID"};
+			String[] columnNames = {"Name", "Skype Name", "Caller", "Answered", "Time", "Timestamp"};
 			String[][] rowData = skype.getAllCalls();
 			table = new JTable(rowData,columnNames){
 				public boolean isCellEditable(int rowData, int columnNames){
 					return false;
 				}
 			};
-			//table.setAutoCreateRowSorter(true);
-			//table.getRowSorter().toggleSortOrder(4);
+			table.setAutoCreateRowSorter(true);
+			table.getRowSorter().toggleSortOrder(5);
+			table.removeColumn(table.getColumnModel().getColumn(5));
 			table.setBounds(46, 47, 700, 500);
 			JScrollPane scroll = new JScrollPane(table);
 			scroll.setBounds(46, 47, 700, 500);
 			frame.getContentPane().add(scroll);
 		}
 		else if(listType.equals("messages")){
-			String[] columnNames = {"Chat With", "Author Skype Name", "Author Name", "Message", "Time"};
+			String[] columnNames = {"Chat With", "Author Skype Name", "Author Name", "Message", "Time","Timestamps"};
 			String[][] rowData = skype.getAllMessages();
 			table = new JTable(rowData,columnNames){
 				public boolean isCellEditable(int rowData, int columnNames){
 					return false;
 				}
 			};
-			//table.setAutoCreateRowSorter(true);
-			//table.getRowSorter().toggleSortOrder(4);
+			table.setAutoCreateRowSorter(true);
+			table.getRowSorter().toggleSortOrder(5);
+			table.removeColumn(table.getColumnModel().getColumn(5));
 			table.setBounds(46, 47, 700, 500);
 			JScrollPane scroll = new JScrollPane(table);
 			scroll.setBounds(46, 47, 700, 500);
 			frame.getContentPane().add(scroll);
 		}
 		else if(listType.equals("links")){
-			String[] columnNames = {"Link", "Type", "Time"};
+			String[] columnNames = {"Link", "Type", "Time","Timestamps"};
 			String[][] rowData = skype.getAllLinks();
 			table = new JTable(rowData,columnNames){
 				public boolean isCellEditable(int rowData, int columnNames){
 					return false;
 				}
 			};
-			//table.setAutoCreateRowSorter(true);
-			//table.getRowSorter().toggleSortOrder(4);
+			table.setAutoCreateRowSorter(true);
+			table.getRowSorter().toggleSortOrder(3);
+			table.removeColumn(table.getColumnModel().getColumn(3));
 			table.setBounds(46, 47, 700, 500);
 			JScrollPane scroll = new JScrollPane(table);
 			scroll.setBounds(46, 47, 700, 500);
