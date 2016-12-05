@@ -94,6 +94,16 @@ public class Skype {
 		}
 	}
 
+	public String getUserAvatarPath(String skypeusername){
+		String path = _user_profile.get(skypeusername).getAvatarImage();
+		return path;
+	}
+	
+	public String getAvatarPath(String skypeusername){
+		String path = _contacts.get(skypeusername).getAvatarImage();
+		return path;
+	}
+	
 	public String[][] getBasicContactInfo(){
 		String[][] arrays = new String[_contacts.entrySet().size()][4];
 		int i = 0;
@@ -120,9 +130,15 @@ public class Skype {
 			}
 
 			try{
-				java.util.Date time=new java.util.Date((long)entry.getValue().getProfileTimestamp()*1000);
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				arrays[i][3] = dateFormat.format(time);
+				if(!(entry.getValue().getLastOnlineTimestamp()==0)){
+					java.util.Date time=new java.util.Date((long)entry.getValue().getLastOnlineTimestamp()*1000);
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+					arrays[i][3] = dateFormat.format(time);
+				}
+				else{
+					arrays[i][3] = "";
+				}
+				
 			}
 			catch(Exception e){
 				arrays[i][3] = "";
@@ -150,6 +166,10 @@ public class Skype {
 
 	public HashMap<String,DatabaseContactsEntry> getUserProfile(){
 		return _user_profile;
+	}
+	
+	public HashMap<String,DatabaseContactsEntry> getContacts(){
+		return _contacts;
 	}
 
 	public String[][] getAllCalls(){
@@ -210,7 +230,7 @@ public class Skype {
 
 				try{
 					java.util.Date time=new java.util.Date((long)entry1.getCreationTimestamp()*1000);
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 					arrays[i][4] = dateFormat.format(time);
 				}
 				catch(Exception e){
@@ -291,7 +311,7 @@ public class Skype {
 
 				try{
 					java.util.Date time=new java.util.Date((long)entry1.getTimestamp()*1000);
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 					arrays[i][4] = dateFormat.format(time);
 				}
 				catch(Exception e){
@@ -336,7 +356,7 @@ public class Skype {
 				}
 				try{
 					java.util.Date time=new java.util.Date((long)entry.getValue().getTimestamp()*1000);
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 					arrays[i][2] = dateFormat.format(time);
 				}
 				catch(Exception e){
@@ -508,8 +528,13 @@ public class Skype {
 		return calls;
 	}
 
-	public HashMap <String,Integer> getTop(String type){
+	public HashMap <String,HashMap<String,Integer>> getTop(String type){
+		HashMap <String,Integer> top1 = new HashMap <String,Integer>();
+		HashMap <String,Integer> top2 = new HashMap <String,Integer>();
 		HashMap <String,Integer> top3 = new HashMap <String,Integer>();
+		HashMap <String,HashMap<String,Integer>> ret = 
+				new HashMap <String,HashMap<String,Integer>>();
+
 		String first = "";
 		String second = "";
 		String third = "";
@@ -520,8 +545,21 @@ public class Skype {
 		Integer total = 0;
 		if(type.equals("messages")){
 			for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> list: _messages.entrySet()){
+				for(DatabaseMessagesEntry entry1: list.getValue()){
+					try{
+						if(entry1.getMessage().length()>=20){
+							if(entry1.getMessage().substring(0,15).equals("<partlist type=")){
+								continue;
+							}
+						}
+					}
+					catch(Exception e){
+						continue;
+					}
+					total++;
+				}
+
 				person = list.getKey();
-				total = list.getValue().size();
 				if (total>fst){
 					third = second;
 					second = first;
@@ -542,12 +580,11 @@ public class Skype {
 				}
 			}
 		}
-		
+
 		else if(type.equals("calls")){
 			for(Map.Entry<String,ArrayList<DatabaseCallsEntry>> list: _calls.entrySet()){
 				person = list.getKey();
 				total = list.getValue().size();
-				System.out.println(person + " " + total);
 				if (total>fst){
 					third = second;
 					second = first;
@@ -568,21 +605,219 @@ public class Skype {
 				}
 			}
 		}
-		
-		
-		top3.put(first, fst);
-		top3.put(second, scd);
+
+
+		top1.put(first, fst);
+		top2.put(second, scd);
 		top3.put(third, trd);
-		top3.put("total", total);
-		System.out.println(first + " = " + fst);
-		System.out.println(second + " = " + scd);
-		System.out.println(third + " = " + trd);
-		return top3;
+		ret.put("First", top1);
+		ret.put("Second", top2);
+		ret.put("Third", top3);
+		return ret;
 	}
 
-	public void links(){
+	public String[][] getAllCallsByName(String skypeName){
+		int size = 0;
+		ArrayList<DatabaseCallsEntry> list = _calls.get(skypeName);
+		for(DatabaseCallsEntry entry1: list){
+			if(entry1.getCreationTimestamp()==0){
+				continue;
+			}
+			size++;
+		}
+		String[][] arrays = new String[size][6];
+		int i = 0;
+		for(DatabaseCallsEntry entry1: list){
+			if(entry1.getCreationTimestamp()==0){
+				continue;
+			}
+			try{
+				arrays[i][0] = entry1.getDispname();
+			}
+			catch(Exception e){
+				arrays[i][0] = "";
+			}
+
+			try{
+				arrays[i][1] = entry1.getIdentity();
+			}
+			catch(Exception e){
+				arrays[i][1] = "";
+			}
+
+			try{
+				if(entry1.getWhoCalls().equals("1")){
+					arrays[i][2] = entry1.getDispname();
+				}
+				else if(entry1.getWhoCalls().equals("2")){
+					arrays[i][2] = getSkypeName();			
+				}
+
+			}
+			catch(Exception e){
+				arrays[i][2] = "";
+			}
+
+			try{
+				if(!(entry1.getStartTimestamp() == 0)){
+					arrays[i][3] = "Yes";
+				}
+				else{
+					arrays[i][3] = "No";
+				}
+			}
+			catch(Exception e){
+				arrays[i][3] = "No";
+			}
+
+			try{
+				java.util.Date time=new java.util.Date((long)entry1.getCreationTimestamp()*1000);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				arrays[i][4] = dateFormat.format(time);
+			}
+			catch(Exception e){
+				arrays[i][4] = "";
+			}
+
+			try{
+				arrays[i][5] = entry1.getCreationTimestamp().toString();
+			}
+			catch(Exception e){
+				arrays[i][5] = "";
+			}
+			i++;
+		}
+		return arrays;
+	}
+
+	public String[][] getAllMessagesByName(String skypeName){
+		int size = 0;
+		ArrayList<DatabaseMessagesEntry> list = _messages.get(skypeName);
+		for(DatabaseMessagesEntry entry1: list){
+			try{
+				if(entry1.getMessage().length()>=20){
+					if(entry1.getMessage().substring(0,15).equals("<partlist type=")){
+						continue;
+					}
+				}
+			}
+			catch(Exception e){
+				continue;
+			}
+			size++;
+		}
+		String[][] arrays = new String[size][6];
+		int i = 0;
+		for(DatabaseMessagesEntry entry1: list){
+			try{
+				if(entry1.getMessage().length()>=20){
+					if(entry1.getMessage().substring(0,15).equals("<partlist type=")){
+						continue;
+					}
+				}
+			}
+			catch(Exception e){
+				continue;
+			}
+
+			try{
+				arrays[i][0] = entry1.getChatname();
+			}
+			catch(Exception e){
+				arrays[i][0] = "";
+			}
+
+			try{
+				arrays[i][1] = entry1.getAuthor();
+			}
+			catch(Exception e){
+				arrays[i][1] = "";
+			}
+
+			try{
+				arrays[i][2] = entry1.getFromDispname();
+			}
+			catch(Exception e){
+				arrays[i][2] = "";
+			}
+
+			try{
+				arrays[i][3] = entry1.getMessage();
+			}
+			catch(Exception e){
+				arrays[i][3] = "";
+			}
+
+			try{
+				java.util.Date time=new java.util.Date((long)entry1.getTimestamp()*1000);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				arrays[i][4] = dateFormat.format(time);
+			}
+			catch(Exception e){
+				arrays[i][4] = "";
+			}
+
+			try{
+				arrays[i][5] = entry1.getTimestamp().toString();
+			}
+			catch(Exception e){
+				arrays[i][5] = "";
+			}
+			i++;
+		}
+
+		return arrays;
+	}
+
+	public String[][] getAllFilesByName(String skypeName){
+		int size = 0;
+		for(Map.Entry<String,DatabaseSharedFilesStoredEntry> entry: _shared_files.entrySet()){
+			if(entry.getValue().getUserName().equals(skypeName)){
+				size++;
+			}
+		}
+
+		String[][] arrays = new String[size][4];
+		int i = 0;
+		for(Map.Entry<String,DatabaseSharedFilesStoredEntry> entry: _shared_files.entrySet()){
+			if(entry.getValue().getUserName().equals(skypeName)){
+				try{
+					arrays[i][0] = entry.getValue().getFileName();
+				}
+				catch(Exception e){
+					arrays[i][0] = "";
+				}
+
+				try{
+					arrays[i][1] = entry.getValue().getLocalPath();
+				}
+				catch(Exception e){
+					arrays[i][1] = "";
+				}
+
+				try{
+					arrays[i][2] = entry.getValue().getUserName();
+				}
+				catch(Exception e){
+					arrays[i][2] = "";
+				}
+
+				try{
+					arrays[i][3] = getSizeCorrect(entry.getValue().getSize());
+				}
+				catch(Exception e){
+					arrays[i][3] = "";
+				}
+				i++;
+			}
+		}
+		return arrays;
+	}
+
+
+	public void links(String link){
 		try {
-			Desktop.getDesktop().browse(new URI("http://www.google.pt"));
+			Desktop.getDesktop().browse(new URI(link));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -591,4 +826,6 @@ public class Skype {
 			e.printStackTrace();
 		}
 	}
+
+
 }

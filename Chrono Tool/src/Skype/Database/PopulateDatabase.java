@@ -18,6 +18,7 @@ public class PopulateDatabase {
 	private Connection _contacts1 = null;
 	private Connection _contacts2 = null;
 	private Connection _contacts3 = null;
+	private Connection _contacts4 = null;
 	private Connection _msgs = null;
 	private Connection _clls = null;
 	
@@ -30,6 +31,7 @@ public class PopulateDatabase {
 	private Statement _stmt7 = null;
 	private Statement _stmt8 = null;
 	private Statement _stmt9 = null;
+	private Statement _stmt10 = null;
 	
 	private boolean _dbCreated = false;
 
@@ -178,6 +180,9 @@ public class PopulateDatabase {
 			while (rs7.next()) {
 				Integer convo_id = rs7.getInt("convo_id");
 				String chatname = rs7.getString("chatname");
+				if(String.valueOf(chatname.charAt(0)).equals("#")){
+					chatname = rs7.getString("dialog_partner");
+				}
 				String author = rs7.getString("author");
 				String from_dispname = rs7.getString("from_dispname");
 				Integer timestamp = rs7.getInt("timestamp");
@@ -214,6 +219,9 @@ public class PopulateDatabase {
 			ResultSet rs8 = _stmt8.executeQuery("SELECT * FROM CallMembers;");
 			
 			while (rs8.next()) {
+				if(rs8.getInt("is_permanent")==0){
+					continue;
+				}
 				String identity = rs8.getString("identity");
 				String dispname = rs8.getString("dispname");
 				String type = rs8.getString("type");
@@ -244,12 +252,15 @@ public class PopulateDatabase {
 			//////////////////////////////////////USER PROFILE DATABASE ////////////////////////////////////
 			_contacts3 = DriverManager.getConnection("jdbc:sqlite:"+ path + "/main.db");
 			_contacts3.setAutoCommit(false);
-
-			System.out.println("passa1");
 			
 			_stmt9 = _contacts3.createStatement();
 			
 			ResultSet rs9 = _stmt9.executeQuery("SELECT * FROM Accounts;");
+			
+			_contacts4 = DriverManager.getConnection("jdbc:sqlite:"+ path + "/eascache.db");
+			_contacts4.setAutoCommit(false);
+			
+			_stmt10 = _contacts4.createStatement();
 			
 			while (rs9.next()) {
 				String skypename = rs9.getString("skypename");
@@ -281,14 +292,26 @@ public class PopulateDatabase {
 				Integer profile_timestamp = rs9.getInt("profile_timestamp");
 				Integer last_online_timestamp = rs9.getInt("lastonline_timestamp");
 				
+				ResultSet rs10 = _stmt10.executeQuery("SELECT * FROM fullobjects WHERE NickName = '" + skypename + "';");
+				String avatar_image = "";
+				if(!rs10.next()){
+					avatar_image = null;
+				}
+				else{
+					avatar_image = rs10.getString("UserTileUrlL");
+				}
+				rs10.close();
+				
 				DatabaseContactsEntry database_entry = new DatabaseContactsEntry(skypename, fullname, birthday, gender, languages,
 						country, province, city, phone_home, phone_office, phone_mobile, emails, null, homepage, about,
-						null, null, null, timezone, profile_timestamp, last_online_timestamp, null, null);
+						avatar_image, null, null, timezone, profile_timestamp, last_online_timestamp, null, null);
 				_user_profile.put(skypename, database_entry);
 			}
 			
 			_stmt9.close();
+			_stmt10.close();
 			_contacts3.close();
+			_contacts4.close();
 			rs9.close();
 
 			System.out.println("passa2");
