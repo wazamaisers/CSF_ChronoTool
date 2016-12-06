@@ -131,11 +131,11 @@ public class MenuDrive {
 		listTimes.setFont(new Font("Arial", Font.PLAIN, 12));
 		Integer total = drive.getTimes().get("Dawn") + drive.getTimes().get("Morning") + drive.getTimes().get("Afternoon") + drive.getTimes().get("Evening") +
 				drive.getTimes().get("Night");
-		listTimes.add("Dawn :" + drive.getPercentage(total, drive.getTimes().get("Dawn")) + "%");
-		listTimes.add("Morning :" + drive.getPercentage(total, drive.getTimes().get("Morning")) + "%");
-		listTimes.add("Afternoon :" + drive.getPercentage(total, drive.getTimes().get("Afternoon")) + "%");
-		listTimes.add("Evening :" + drive.getPercentage(total, drive.getTimes().get("Evening")) + "%");
-		listTimes.add("Night :" + drive.getPercentage(total, drive.getTimes().get("Night")) + "%");
+		listTimes.add("Dawn :        " + drive.getPercentage(total, drive.getTimes().get("Dawn")) + "%");
+		listTimes.add("Morning :    " + drive.getPercentage(total, drive.getTimes().get("Morning")) + "%");
+		listTimes.add("Afternoon : " + drive.getPercentage(total, drive.getTimes().get("Afternoon")) + "%");
+		listTimes.add("Evening :    " + drive.getPercentage(total, drive.getTimes().get("Evening")) + "%");
+		listTimes.add("Night :         " + drive.getPercentage(total, drive.getTimes().get("Night")) + "%");
 		frame.getContentPane().add(listTimes);
 
 		Button buttonPath1 = new Button("File Extensions");

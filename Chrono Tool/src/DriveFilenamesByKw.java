@@ -9,6 +9,7 @@ import Drive.Drive;
 import Drive.Database.DatabaseSnapshotEntry;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -90,6 +91,15 @@ public class DriveFilenamesByKw {
 					_list.put(i, entry);
 					i++;
 				}
+				
+				try {
+					list.getItem(0);
+				} catch (Exception ex) {
+					frame.setVisible(false);
+					JOptionPane.showMessageDialog(null, "The list is empty", "InfoBox: " + "Listing error", JOptionPane.INFORMATION_MESSAGE);
+					ex.printStackTrace();
+				}
+				
 				list.setVisible(true);
 			}
 		});

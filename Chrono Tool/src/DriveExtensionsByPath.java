@@ -11,6 +11,7 @@ import Drive.Database.DatabaseSnapshotEntry;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ import java.awt.List;
 import java.awt.Button;
 import java.awt.Choice;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Label;
 
@@ -200,6 +203,14 @@ public class DriveExtensionsByPath extends JFrame {
 						_list.put(i, entry);
 						i++;
 					}
+				}
+				
+				try {
+					list.getItem(0);
+				} catch (Exception e) {
+					frame.setVisible(false);
+					JOptionPane.showMessageDialog(null, "The list is empty", "InfoBox: " + "Listing error", JOptionPane.INFORMATION_MESSAGE);
+					e.printStackTrace();
 				}
 				frame.getContentPane().add(list);
 				

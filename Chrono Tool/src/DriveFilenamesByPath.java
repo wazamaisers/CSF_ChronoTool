@@ -29,6 +29,8 @@ import java.awt.List;
 import java.awt.Button;
 import java.awt.Choice;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Label;
 
@@ -193,6 +195,15 @@ public class DriveFilenamesByPath extends JFrame {
 						i++;
 					}
 				}
+				
+				try {
+					list.getItem(0);
+				} catch (Exception ex) {
+					frame.setVisible(false);
+					JOptionPane.showMessageDialog(null, "The list is empty", "InfoBox: " + "Listing error", JOptionPane.INFORMATION_MESSAGE);
+					ex.printStackTrace();
+				}
+				
 				list.setVisible(true);
 			}
 		});

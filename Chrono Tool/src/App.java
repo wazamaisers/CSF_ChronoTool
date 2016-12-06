@@ -128,8 +128,8 @@ public class App {
 
 		btnDrive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String fileName = fileChooser(e);
-				_drive = new Drive(fileName);
+				String driveDefaultPath = System.getenv("HOMEPATH") + "/AppData/Local/Google/Drive";
+				_drive = new Drive(driveDefaultPath);
 				if(_drive.getDatabaseLoaded()){
 					btnDrive.setVisible(false);
 					lblDrive.setText("Google Drive database loaded!");
@@ -139,15 +139,30 @@ public class App {
 					}
 				}
 				else{
-					JOptionPane.showMessageDialog(null, "The path given for Google Drive folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
+					String fileName = fileChooser(e);
+					_drive = new Drive(fileName);
+					if(_drive.getDatabaseLoaded()){
+						btnDrive.setVisible(false);
+						lblDrive.setText("Google Drive database loaded!");
+						lblDrive.setVisible(true);
+						if(!btnStartApplication.isVisible()){
+							btnStartApplication.setVisible(true);
+						}
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "The path given for Google Drive folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
+					}
 				}
+				
+				
 			}
 		});
 
 		btnSkype.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String fileName = fileChooser(e);
-				_skype = new Skype(fileName);
+				String skypeUsername = JOptionPane.showInputDialog(frame, "Enter your skype username");
+				String skypeDefaultPath = System.getenv("HOMEPATH") + "/AppData/Roaming/Skype/" + skypeUsername;
+				_skype = new Skype(skypeDefaultPath);
 				if(_skype.getDatabaseLoaded()){
 					btnSkype.setVisible(false);
 					lblSkype.setText("Skype database loaded!");
@@ -157,7 +172,19 @@ public class App {
 					}
 				}
 				else{
-					JOptionPane.showMessageDialog(null, "The path given for Skype folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
+					String fileName = fileChooser(e);
+					_skype = new Skype(fileName);
+					if(_skype.getDatabaseLoaded()){
+						btnSkype.setVisible(false);
+						lblSkype.setText("Skype database loaded!");
+						lblSkype.setVisible(true);
+						if(!btnStartApplication.isVisible()){
+							btnStartApplication.setVisible(true);
+						}
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "The path given for Skype folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
+					}
 				}
 			}
 		});

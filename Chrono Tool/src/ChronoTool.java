@@ -1,5 +1,27 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.sql.*;
 import java.util.*;
+
+import org.apache.poi.POIXMLDocument;
+import org.apache.poi.hslf.usermodel.HSLFTextParagraph;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import Drive.*;
 import Drive.Database.DatabaseSnapshotEntry;
@@ -19,48 +41,176 @@ public class ChronoTool
 		// Importação da base de dados do ficheiro BD para o programa
 		Drive drive = new Drive(path_drive);
 		Skype skype = new Skype(path_skype);
-		
-		String keyWord = "ML0";
-		ArrayList<String> database_entrys = new ArrayList<String>();
-		database_entrys.add("PkGo");
-		database_entrys.add("ML3");
-		database_entrys.add("ML000000002");
-		database_entrys.add("MLas");
-		database_entrys.add("nova imagem.bmp");
-		database_entrys.add("ML00000002");
-		database_entrys.add("Uis7ML0da");
-		
-		ArrayList<String> finalList = new ArrayList<String>();
-		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
-		for (String entry: database_entrys){
-			int e = 0;
-			char[] fileChar = entry.toLowerCase().toCharArray();
-			for(int i = 0; i < fileChar.length; i++){
-				System.out.println("Ele: " + fileChar[i]);
-				System.out.println("Eu: " + keyWordChar[e] + "\n");
-				if (fileChar[i] == keyWordChar[e]){
-					e++;
-				}
-				else{
-					e = 0;
-				}
-				System.out.println("Valor do E: " + e);
-				if (e == keyWordChar.length){
-					finalList.add(entry);
-					break;
-				}
+
+
+		////////////// LER DOCX ////////
+		try {
+			File file = new File("C:/sei la.docx");
+			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+
+			XWPFDocument document = new XWPFDocument(fis);
+
+			List<XWPFParagraph> paragraphs = document.getParagraphs();
+
+
+			for (XWPFParagraph para : paragraphs) {
+				System.out.println(para.getText());
+			}
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		//////////////LER DOC ////////
+		try {
+			File file = new File("C:/report.doc");
+			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+
+			HWPFDocument document = new HWPFDocument(fis);
+			WordExtractor extract = new WordExtractor(document);
+	        System.out.println(extract.getText());
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		///////////// LER XLSX ///////////////
+		try{
+			File myFile = new File("C://ubr.xlsx"); 
+			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
+			XSSFWorkbook myWorkBook = new XSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+			XSSFSheet mySheet = myWorkBook.getSheetAt(0); // Get iterator to all the rows in current sheet 
+			Iterator<Row> rowIterator = mySheet.iterator(); // Traversing over each row of XLSX file 
+			while (rowIterator.hasNext()) { 
+				Row row = rowIterator.next(); // For each row, iterate through each columns 
+				Iterator<Cell> cellIterator = row.cellIterator(); 
+				while (cellIterator.hasNext()) { 
+					Cell cell = cellIterator.next(); 
+
+					switch (cell.getCellType()) { 
+
+					case Cell.CELL_TYPE_STRING: 
+
+						System.out.print(cell.getStringCellValue() + "\t"); 
+						break; 
+
+					case Cell.CELL_TYPE_NUMERIC: 
+						System.out.print(cell.getNumericCellValue() + "\t"); 
+						break; 
+
+					case Cell.CELL_TYPE_BOOLEAN: 
+						System.out.print(cell.getBooleanCellValue() + "\t"); 
+						break; 
+
+					default : 
+
+					} 
+				} 
+				System.out.println(""); 
 			}
 		}
-		System.out.println(finalList);
-		
-		
-		
-		
-		/*
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		////// LER XLS///////
+		try{
+			File myFile = new File("C://Futebol.xls"); 
+			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
+			HSSFWorkbook myWorkBook = new HSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+			HSSFSheet mySheet = myWorkBook.getSheetAt(0); // Get iterator to all the rows in current sheet 
+			Iterator<Row> rowIterator = mySheet.iterator(); // Traversing over each row of XLSX file 
+			while (rowIterator.hasNext()) { 
+				Row row = rowIterator.next(); // For each row, iterate through each columns 
+				Iterator<Cell> cellIterator = row.cellIterator(); 
+				while (cellIterator.hasNext()) { 
+					Cell cell = cellIterator.next(); 
+
+					switch (cell.getCellType()) { 
+
+					case Cell.CELL_TYPE_STRING: 
+
+						System.out.print(cell.getStringCellValue() + "\t"); 
+						break; 
+
+					case Cell.CELL_TYPE_NUMERIC: 
+						System.out.print(cell.getNumericCellValue() + "\t"); 
+						break; 
+
+					case Cell.CELL_TYPE_BOOLEAN: 
+						System.out.print(cell.getBooleanCellValue() + "\t"); 
+						break; 
+
+					default : 
+
+					} 
+				} 
+				System.out.println(""); 
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static Workbook create(InputStream inp) throws IOException, InvalidFormatException {
+		// If clearly doesn't do mark/reset, wrap up
+		if(! inp.markSupported()) {
+			inp = new PushbackInputStream(inp, 8);
+		}
+
+		if(POIFSFileSystem.hasPOIFSHeader(inp)) {
+			return new HSSFWorkbook(inp);
+		}
+		if(POIXMLDocument.hasOOXMLHeader(inp)) {
+			return new XSSFWorkbook(OPCPackage.open(inp));
+		}
+		throw new IllegalArgumentException("Your InputStream was neither an OLE2 stream, nor an OOXML stream");
+	}
+
+
+
+	//		String keyWord = "ML0";
+	//		ArrayList<String> database_entrys = new ArrayList<String>();
+	//		database_entrys.add("PkGo");
+	//		database_entrys.add("ML3");
+	//		database_entrys.add("ML000000002");
+	//		database_entrys.add("MLas");
+	//		database_entrys.add("nova imagem.bmp");
+	//		database_entrys.add("ML00000002");
+	//		database_entrys.add("Uis7ML0da");
+	//		
+	//		ArrayList<String> finalList = new ArrayList<String>();
+	//		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+	//		for (String entry: database_entrys){
+	//			int e = 0;
+	//			char[] fileChar = entry.toLowerCase().toCharArray();
+	//			for(int i = 0; i < fileChar.length; i++){
+	//				System.out.println("Ele: " + fileChar[i]);
+	//				System.out.println("Eu: " + keyWordChar[e] + "\n");
+	//				if (fileChar[i] == keyWordChar[e]){
+	//					e++;
+	//				}
+	//				else{
+	//					e = 0;
+	//				}
+	//				System.out.println("Valor do E: " + e);
+	//				if (e == keyWordChar.length){
+	//					finalList.add(entry);
+	//					break;
+	//				}
+	//			}
+	//		}
+	//		System.out.println(finalList);
+
+
+
+
+	/*
 		// Detalhes do útilizador
 		System.out.println("The user e-mail is " + drive.getUserMail() + " and the drive version is " +drive.getDriveVersion() + ".");
 		System.out.println("");
-		
+
 		// Percentagem de ficheiros modificados pela última vez a cada altura do dia
 		drive.getTimes();
 		System.out.println("");
@@ -77,7 +227,7 @@ public class ChronoTool
 		System.out.println("");
 
 		// Ver as extensões de todos os ficheiros que se encontram numa dada pasta e suas filhas
-		
+
 		System.out.println("Extensão de todos os ficheiros dentro da pasta " + path);
 		HashMap <String, Integer> hm = drive.getExtensions(path);
 
@@ -94,15 +244,14 @@ public class ChronoTool
 		for(HashMap.Entry<String, Integer> entry: hm.entrySet()){
 			System.out.println("Extension: ." + entry.getKey() + " -> Quantity: " + entry.getValue());
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
 		//////////////////////////////////////////////////////////////////////////////////////////////
 		//DROPBOX
-		
+
 		skype.testSkype();
-		*/
-	}
+	 */
 }

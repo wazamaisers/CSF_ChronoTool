@@ -1,15 +1,31 @@
 package Drive;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.print.DocFlavor.CHAR_ARRAY;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import Drive.Database.DatabaseSnapshotEntry;
 import Drive.Database.DatabaseSyncConfigEntry;
@@ -590,4 +606,123 @@ public class Drive {
 		return node;
 	}
 
+	public String readDoc(String path){
+		String result = "";
+		try {
+			File file = new File(path);
+			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+
+			HWPFDocument document = new HWPFDocument(fis);
+			WordExtractor extract = new WordExtractor(document);
+	        result = extract.getText();
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public String readDocx(String path){
+		String result = "";
+		try {
+			File file = new File(path);
+			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+
+			XWPFDocument document = new XWPFDocument(fis);
+
+			List<XWPFParagraph> paragraphs = document.getParagraphs();
+
+
+			for (XWPFParagraph para : paragraphs) {
+				result = result + para.getText();
+			}
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public ArrayList<String> readExcel(String path, String type){
+		ArrayList<String> result = new ArrayList<String>();
+		Iterator<Row> rowIterator;
+		try{
+			File myFile = new File(path); 
+			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
+			if(type.equals("xlsx")){
+				XSSFWorkbook myWorkBook = new XSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+				XSSFSheet mySheet = myWorkBook.getSheetAt(0);
+				rowIterator = mySheet.iterator();
+			}
+			else{
+				HSSFWorkbook myWorkBook = new HSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+				HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+				rowIterator = mySheet.iterator();
+			}
+			
+			// Get iterator to all the rows in current sheet 
+			 // Traversing over each row of XLSX file 
+			while (rowIterator.hasNext()) { 
+				Row row = rowIterator.next(); // For each row, iterate through each columns 
+				Iterator<Cell> cellIterator = row.cellIterator();
+				String line = "";
+				while (cellIterator.hasNext()) { 
+					Cell cell = cellIterator.next(); 
+
+					switch (cell.getCellType()) { 
+
+					case Cell.CELL_TYPE_STRING: 
+
+						line = line + cell.getStringCellValue() + "\t"; 
+						break; 
+
+					case Cell.CELL_TYPE_NUMERIC: 
+						line = line + cell.getNumericCellValue() + "\t"; 
+						break; 
+
+					case Cell.CELL_TYPE_BOOLEAN: 
+						line = line + cell.getBooleanCellValue() + "\t"; 
+						break; 
+
+					default : 
+
+					} 
+				}
+				result.add(line);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
+	
+	public Image readImage(String path){
+		Image image = null;
+		try {
+			File sourceimage = new File(path);
+            image = ImageIO.read(sourceimage);
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
+		return image;
+	}
+
+	public String readFile(String path){
+		String result = "";
+		try {
+			Scanner fileIn = new Scanner(new File(path));
+			while(fileIn.hasNextLine()){
+				result = result + fileIn.nextLine();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

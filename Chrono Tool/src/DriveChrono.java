@@ -239,6 +239,13 @@ public class DriveChrono {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
 				Long timestamp = _table2.get(source.getValue());
+				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+	    	    DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
+	    	    nodeToRemove.removeAllChildren();
+	    	    model.nodeStructureChanged(nodeToRemove);
+	    	    DefaultMutableTreeNode root1 = 
+	    	    		drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
+	    	    model.reload(root1);
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}
@@ -248,6 +255,13 @@ public class DriveChrono {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
 				Long timestamp = _table3.get(source.getValue());
+				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+	    	    DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
+	    	    nodeToRemove.removeAllChildren();
+	    	    model.nodeStructureChanged(nodeToRemove);
+	    	    DefaultMutableTreeNode root1 = 
+	    	    		drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
+	    	    model.reload(root1);
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}
