@@ -224,9 +224,12 @@ public class DriveChrono {
 				JSlider source = (JSlider) e.getSource();
 				Long timestamp = _table1.get(source.getValue());
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-				model.reload(drive.buildTimedTree(timestamp));
-				//tree = new JTree(drive.buildTimedTree(timestamp));
-				tree.repaint();
+	    	    DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
+	    	    nodeToRemove.removeAllChildren();
+	    	    model.nodeStructureChanged(nodeToRemove);
+	    	    DefaultMutableTreeNode root1 = 
+	    	    		drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
+	    	    model.reload(root1);
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}

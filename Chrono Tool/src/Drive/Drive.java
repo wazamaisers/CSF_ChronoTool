@@ -563,9 +563,9 @@ public class Drive {
 		return last;
 	}
 
-	public DefaultMutableTreeNode buildTimedTree(Long timestamp){
+	public DefaultMutableTreeNode buildTimedTree(Long timestamp, DefaultMutableTreeNode root1){
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+		DefaultMutableTreeNode root = root1;
 		return buildTimedTreeAux("root", root, timestamp);
 	}
 
