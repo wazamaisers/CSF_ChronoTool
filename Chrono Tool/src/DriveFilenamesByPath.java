@@ -74,33 +74,33 @@ public class DriveFilenamesByPath extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Drive drive, boolean children) {
-		frame = new JFrame();
+		frame = new JFrame("Google Drive - File Names by Path");
 		frame.setBounds(100, 100, 450, 300);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
 		Label label = new Label();
-		label.setBounds(450, 30, 400, 23);
+		label.setBounds(450, 30, 550, 23);
 		label.setVisible(false);
 		frame.getContentPane().add(label);
 
 		Label label_1 = new Label();
-		label_1.setBounds(450, 60, 400, 23);
+		label_1.setBounds(450, 60, 550, 23);
 		label_1.setVisible(false);
 		frame.getContentPane().add(label_1);
 
 		Label label_2 = new Label();
-		label_2.setBounds(450, 90, 400, 23);
+		label_2.setBounds(450, 90, 550, 23);
 		label_2.setVisible(false);
 		frame.getContentPane().add(label_2);
 
 		Label label_3 = new Label();
-		label_3.setBounds(450, 120, 400, 23);
+		label_3.setBounds(450, 120, 550, 23);
 		label_3.setVisible(false);
 		frame.getContentPane().add(label_3);
 
 		Label label_4 = new Label();
-		label_4.setBounds(450, 150, 400, 23);
+		label_4.setBounds(450, 150, 550, 23);
 		label_4.setVisible(false);
 		frame.getContentPane().add(label_4);
 
@@ -133,6 +133,34 @@ public class DriveFilenamesByPath extends JFrame {
 		label_9.setBounds(350, 150, 100, 23);
 		label_9.setVisible(false);
 		frame.getContentPane().add(label_9);
+		
+		JLabel lblPath = new JLabel("Path:");
+		lblPath.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPath.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblPath.setBounds(74, 339, 110, 23);
+		lblPath.setVisible(false);
+		frame.getContentPane().add(lblPath);
+		
+		JLabel lblFilename = new JLabel("File Name:");
+		lblFilename.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFilename.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblFilename.setBounds(74, 370, 110, 23);
+		lblFilename.setVisible(false);
+		frame.getContentPane().add(lblFilename);
+		
+		JLabel lblPath_1 = new JLabel();
+		lblPath_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPath_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblPath_1.setBounds(185, 339, 815, 23);
+		lblPath_1.setVisible(false);
+		frame.getContentPane().add(lblPath_1);
+		
+		JLabel lblFn = new JLabel();
+		lblFn.setHorizontalAlignment(SwingConstants.LEFT);
+		lblFn.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblFn.setBounds(185, 370, 815, 23);
+		lblFn.setVisible(false);
+		frame.getContentPane().add(lblFn);
 		
 		JButton btnSeeFileContent = new JButton("File Content");
 		btnSeeFileContent.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -188,11 +216,17 @@ public class DriveFilenamesByPath extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = choose.getPath();
+				lblPath.setVisible(true);
+				lblFilename.setVisible(true);
+				lblPath_1.setText(path);
+				lblPath_1.setVisible(true);
+				lblFn.setText(textField.getText());
+				lblFn.setVisible(true);
 				lblIntroduceAWord.setVisible(false);
 				textField.setVisible(false);
 				button.setVisible(false);
 				lblPathSelected.setVisible(false);
-				frame.setBounds(100, 100, 750, 500);
+				frame.setBounds(100, 100, 1150, 500);
 				list.setVisible(true);
 				frame.getContentPane().add(list);
 				Integer i = 0;

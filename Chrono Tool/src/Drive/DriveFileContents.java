@@ -40,7 +40,7 @@ public class DriveFileContents {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String string, ArrayList<String> array, Image image) {
-		frame = new JFrame();
+		frame = new JFrame("Google Drive - File Contents");
 		frame.setBounds(50, 50, 1200, 650);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
@@ -69,7 +69,7 @@ public class DriveFileContents {
 		}
 		else{
 			JLabel label = new JLabel(new ImageIcon(image));
-			label.setBounds(58, 37, 867, 667);
+			label.setBounds(58, 37, 1100, 560);
 			
 			JScrollPane scroll = new JScrollPane(label);
 			scroll.setBounds(58, 37, 867, 667);

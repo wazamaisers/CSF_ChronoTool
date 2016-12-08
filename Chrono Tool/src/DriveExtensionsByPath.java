@@ -78,7 +78,7 @@ public class DriveExtensionsByPath extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Drive drive, boolean children) {
-		frame = new JFrame();
+		frame = new JFrame("Google Drive - File Extensions by Path");
 		frame.setBounds(100, 100, 450, 300);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
@@ -125,27 +125,27 @@ public class DriveExtensionsByPath extends JFrame {
 		frame.getContentPane().add(button);
 		
 		Label label = new Label();
-		label.setBounds(450, 30, 400, 23);
+		label.setBounds(450, 30, 550, 23);
 		label.setVisible(false);
 		frame.getContentPane().add(label);
 		
 		Label label_1 = new Label();
-		label_1.setBounds(450, 60, 400, 23);
+		label_1.setBounds(450, 60, 550, 23);
 		label_1.setVisible(false);
 		frame.getContentPane().add(label_1);
 		
 		Label label_2 = new Label();
-		label_2.setBounds(450, 90, 400, 23);
+		label_2.setBounds(450, 90, 550, 23);
 		label_2.setVisible(false);
 		frame.getContentPane().add(label_2);
 		
 		Label label_3 = new Label();
-		label_3.setBounds(450, 120, 400, 23);
+		label_3.setBounds(450, 120, 550, 23);
 		label_3.setVisible(false);
 		frame.getContentPane().add(label_3);
 		
 		Label label_4 = new Label();
-		label_4.setBounds(450, 150, 400, 23);
+		label_4.setBounds(450, 150, 550, 23);
 		label_4.setVisible(false);
 		frame.getContentPane().add(label_4);
 		
@@ -179,6 +179,34 @@ public class DriveExtensionsByPath extends JFrame {
 		label_9.setVisible(false);
 		frame.getContentPane().add(label_9);
 		
+		JLabel lblPath = new JLabel("Path:");
+		lblPath.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPath.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblPath.setBounds(74, 339, 110, 23);
+		lblPath.setVisible(false);
+		frame.getContentPane().add(lblPath);
+		
+		JLabel lblExtension = new JLabel("Extension:");
+		lblExtension.setHorizontalAlignment(SwingConstants.CENTER);
+		lblExtension.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblExtension.setBounds(74, 370, 110, 23);
+		lblExtension.setVisible(false);
+		frame.getContentPane().add(lblExtension);
+		
+		JLabel lblPath_1 = new JLabel();
+		lblPath_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPath_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblPath_1.setBounds(185, 339, 815, 23);
+		lblPath_1.setVisible(false);
+		frame.getContentPane().add(lblPath_1);
+		
+		JLabel lblEx = new JLabel();
+		lblEx.setHorizontalAlignment(SwingConstants.LEFT);
+		lblEx.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblEx.setBounds(185, 370, 815, 23);
+		lblEx.setVisible(false);
+		frame.getContentPane().add(lblEx);
+		
 		JButton btnSeeFileContent = new JButton("File Content");
 		btnSeeFileContent.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSeeFileContent.setBounds(350, 200, 130, 42);
@@ -196,11 +224,17 @@ public class DriveExtensionsByPath extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String extension = choice.getSelectedItem();
 				String path = choose.getPath();
+				lblPath.setVisible(true);
+				lblExtension.setVisible(true);
+				lblPath_1.setText(path);
+				lblPath_1.setVisible(true);
+				lblEx.setText(extension);
+				lblEx.setVisible(true);
 				lblTypeAnExtension.setVisible(false);
 				btnSearch.setVisible(false);
 				choice.setVisible(false);
 				lblPathSelected.setVisible(false);
-				frame.setBounds(100, 100, 1000, 500);
+				frame.setBounds(100, 100, 1150, 500);
 				list = new List();
 				list.setBounds(35, 10, 257, 241);
 				frame.getContentPane().add(list);

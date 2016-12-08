@@ -62,7 +62,7 @@ public class DriveChrono {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Drive drive) {
-		frame = new JFrame();
+		frame = new JFrame("Google Drive - Chronology");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);

@@ -824,17 +824,21 @@ public class Drive {
 				if(result.equals("")){
 					try {
 						Image image = drive.readImage(path);
-						new DriveFileContents(null,null,image);
+						if(image == null){
+							JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+						}
+						else{
+							new DriveFileContents(null,null,image);
+						}
+						
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
-						System.out.println("not readable");
 					}
 				}
 				else{
 					new DriveFileContents(result,null,null);
 				}
 			} catch (Exception e) {
-				System.out.println("not readable");
 				JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -853,6 +857,16 @@ public class Drive {
 			System.out.println(result);
 			return result;
 
+		}
+		else if(file_extension.equals("pdf")){
+			String result = readPdf(path);
+			System.out.println(result);
+			return result;
+		}
+		else if(file_extension.equals("ppt") || file_extension.equals("pptx")){
+			String result = readPpt(path);
+			System.out.println(result);
+			return result;
 		}
 		else if(file_extension.equals("xls")){
 			String result = "";

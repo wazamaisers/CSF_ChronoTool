@@ -67,7 +67,7 @@ public class App {
 
 	public void inicialMenu(){
 		//Window
-		frame = new JFrame();
+		frame = new JFrame("Chrono Tool");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

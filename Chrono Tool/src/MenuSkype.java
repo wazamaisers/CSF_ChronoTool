@@ -67,7 +67,7 @@ public class MenuSkype {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Skype skype) {
-		frame = new JFrame();
+		frame = new JFrame("Chrono Tool - Skype");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

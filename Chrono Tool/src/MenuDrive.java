@@ -37,11 +37,13 @@ import java.awt.Component;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.JButton;
 
 public class MenuDrive {
 
 	private JFrame frame;
 	private JTextField textField;
+	private DatabaseSnapshotEntry entrySelected;
 
 	/**
 	 * Launch the application.
@@ -70,7 +72,7 @@ public class MenuDrive {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Drive drive) {
-		frame = new JFrame();
+		frame = new JFrame("Chrono Tool - Google Drive");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -272,20 +274,14 @@ public class MenuDrive {
 		frame.getContentPane().add(lblDriveSmall);
 		
 		Button button = new Button("Close");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				list.setVisible(false);
-				list_values.setVisible(false);
-				button.setVisible(false);
-				lblChronoMain.setVisible(true);
-				lblDriveMain.setVisible(true);
-				lblChronoSmall.setVisible(false);
-				lblDriveSmall.setVisible(false);
-			}
-		});
 		button.setBounds(1029, 211, 53, 22);
 		button.setVisible(false);
 		frame.getContentPane().add(button);
+		
+		JButton btnFileContents = new JButton("File contents");
+		btnFileContents.setBounds(745, 210, 111, 23);
+		btnFileContents.setVisible(false);
+		frame.getContentPane().add(btnFileContents);
 
 		//create the tree by passing in the root node
 		JTree tree = new JTree(drive.buildTree());
@@ -294,8 +290,9 @@ public class MenuDrive {
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				if(me.getClickCount() == 2 && !me.isConsumed()) {
-					DatabaseSnapshotEntry entry = doMouseClicked(me, tree, drive);
+					entrySelected = doMouseClicked(me, tree, drive);
 					me.consume();
+					btnFileContents.setVisible(true);
 					button.setVisible(true);
 					list.setVisible(true);
 					lblChronoMain.setVisible(false);
@@ -306,20 +303,20 @@ public class MenuDrive {
 					list_values.setVisible(true);
 					list_values.removeAll();
 					list.add("File Name"); 
-					list_values.add(entry.getFilename());
-					if (!drive.getSizeCorrect(entry.getSize()).startsWith("0")){
+					list_values.add(entrySelected.getFilename());
+					if (!drive.getSizeCorrect(entrySelected.getSize()).startsWith("0")){
 						list.add("File Size"); 
-						list_values.add("" + drive.getSizeCorrect(entry.getSize()));
+						list_values.add("" + drive.getSizeCorrect(entrySelected.getSize()));
 					}
 					list.add("Is Shaerd");
-					if (entry.getShared() == 1){
+					if (entrySelected.getShared() == 1){
 						list_values.add("Yes");
 					}
-					if (entry.getShared() == 0){
+					if (entrySelected.getShared() == 0){
 						list_values.add("No");
 					}
 					list.add("Last Modified");
-					java.util.Date time=new java.util.Date((long)entry.getModified()*1000);
+					java.util.Date time=new java.util.Date((long)entrySelected.getModified()*1000);
 					list_values.add("" + time);
 				}
 			}
@@ -377,6 +374,29 @@ public class MenuDrive {
 			}
 		}
 		frame.getContentPane().add(list_7);
+		
+		btnFileContents.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
+				String path = drivePath + drive.getPathByDocId(entrySelected.getDocId()).substring(4);
+				System.out.println(path);
+				drive.showFileContent(path,drive);
+			}
+		});
+		
+		
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				list.setVisible(false);
+				list_values.setVisible(false);
+				button.setVisible(false);
+				lblChronoMain.setVisible(true);
+				lblDriveMain.setVisible(true);
+				lblChronoSmall.setVisible(false);
+				lblDriveSmall.setVisible(false);
+				btnFileContents.setVisible(false);
+			}
+		});
 	}
 
 	public DatabaseSnapshotEntry doMouseClicked(MouseEvent me, JTree tree, Drive drive) {

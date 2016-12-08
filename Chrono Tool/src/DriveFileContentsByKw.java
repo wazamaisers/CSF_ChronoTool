@@ -60,7 +60,7 @@ public class DriveFileContentsByKw {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Drive drive, ArrayList<DatabaseSnapshotEntry> entrys) {
-		frame = new JFrame();
+		frame = new JFrame("Google Drive - File contents by Key Word");
 		frame.setBounds(100, 100, 450, 300);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
@@ -80,65 +80,28 @@ public class DriveFileContentsByKw {
 		list.setBounds(35, 10, 257, 241);
 		list.setVisible(false);
 
-		button = new JButton("Search");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblIntroduceAWord.setVisible(false);
-				textField.setVisible(false);
-				button.setVisible(false);
-				frame.setBounds(100, 100, 1000, 500);
-				list.setVisible(true);
-				frame.getContentPane().add(list);
-				Integer i = 0;
-				ArrayList<DatabaseSnapshotEntry> filesList = new ArrayList<DatabaseSnapshotEntry>();
-				if(entrys == null){
-					filesList = drive.getFilesByKwInContent(textField.getText(), null);
-				}
-				else{
-					filesList = drive.getFilesByKwInContent(textField.getText(), entrys);
-				}
-				for (DatabaseSnapshotEntry entry: filesList){
-					list.add(entry.getFilename());
-					_list.put(i, entry);
-					i++;
-				}
-				
-				try {
-					list.getItem(0);
-				} catch (Exception ex) {
-					frame.setVisible(false);
-					JOptionPane.showMessageDialog(null, "The list is empty", "InfoBox: " + "Listing error", JOptionPane.INFORMATION_MESSAGE);
-					ex.printStackTrace();
-				}
-				
-				list.setVisible(true);
-			}
-		});
-		button.setBounds(172, 162, 89, 23);
-		frame.getContentPane().add(button);
-
 		Label label = new Label();
-		label.setBounds(450, 30, 400, 23);
+		label.setBounds(450, 30, 550, 23);
 		label.setVisible(false);
 		frame.getContentPane().add(label);
 
 		Label label_1 = new Label();
-		label_1.setBounds(450, 60, 400, 23);
+		label_1.setBounds(450, 60, 550, 23);
 		label_1.setVisible(false);
 		frame.getContentPane().add(label_1);
 
 		Label label_2 = new Label();
-		label_2.setBounds(450, 90, 400, 23);
+		label_2.setBounds(450, 90, 550, 23);
 		label_2.setVisible(false);
 		frame.getContentPane().add(label_2);
 
 		Label label_3 = new Label();
-		label_3.setBounds(450, 120, 400, 23);
+		label_3.setBounds(450, 120, 550, 23);
 		label_3.setVisible(false);
 		frame.getContentPane().add(label_3);
 
 		Label label_4 = new Label();
-		label_4.setBounds(450, 150, 400, 23);
+		label_4.setBounds(450, 150, 550, 23);
 		label_4.setVisible(false);
 		frame.getContentPane().add(label_4);
 
@@ -172,11 +135,65 @@ public class DriveFileContentsByKw {
 		label_9.setVisible(false);
 		frame.getContentPane().add(label_9);
 		
+		JLabel lblKeyWord = new JLabel("Key Word:");
+		lblKeyWord.setHorizontalAlignment(SwingConstants.CENTER);
+		lblKeyWord.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblKeyWord.setBounds(74, 280, 110, 23);
+		lblKeyWord.setVisible(false);
+		frame.getContentPane().add(lblKeyWord);
+		
+		JLabel lblKw = new JLabel();
+		lblKw.setHorizontalAlignment(SwingConstants.LEFT);
+		lblKw.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblKw.setBounds(185, 280, 815, 23);
+		lblKw.setVisible(false);
+		frame.getContentPane().add(lblKw);
+		
 		JButton btnSeeFileContent = new JButton("File Content");
 		btnSeeFileContent.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSeeFileContent.setBounds(350, 200, 130, 42);
 		btnSeeFileContent.setVisible(false);
 		frame.getContentPane().add(btnSeeFileContent);
+		
+		button = new JButton("Search");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblIntroduceAWord.setVisible(false);
+				lblKeyWord.setVisible(true);
+				lblKw.setText(textField.getText());
+				lblKw.setVisible(true);
+				textField.setVisible(false);
+				button.setVisible(false);
+				frame.setBounds(100, 100, 1150, 380);
+				list.setVisible(true);
+				frame.getContentPane().add(list);
+				Integer i = 0;
+				ArrayList<DatabaseSnapshotEntry> filesList = new ArrayList<DatabaseSnapshotEntry>();
+				if(entrys == null){
+					filesList = drive.getFilesByKwInContent(textField.getText(), null);
+				}
+				else{
+					filesList = drive.getFilesByKwInContent(textField.getText(), entrys);
+				}
+				for (DatabaseSnapshotEntry entry: filesList){
+					list.add(entry.getFilename());
+					_list.put(i, entry);
+					i++;
+				}
+				
+				try {
+					list.getItem(0);
+				} catch (Exception ex) {
+					frame.setVisible(false);
+					JOptionPane.showMessageDialog(null, "The list is empty", "InfoBox: " + "Listing error", JOptionPane.INFORMATION_MESSAGE);
+					ex.printStackTrace();
+				}
+				
+				list.setVisible(true);
+			}
+		});
+		button.setBounds(172, 162, 89, 23);
+		frame.getContentPane().add(button);
 		
 		btnSeeFileContent.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
