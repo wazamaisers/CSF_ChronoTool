@@ -635,7 +635,7 @@ public class Drive {
 
 
 			for (XWPFParagraph para : paragraphs) {
-				result = result + para.getText();
+				result = result + para.getText() + "\n";
 			}
 			fis.close();
 		} catch (Exception e) {
@@ -717,7 +717,7 @@ public class Drive {
 		try {
 			Scanner fileIn = new Scanner(new File(path));
 			while(fileIn.hasNextLine()){
-				result = result + fileIn.nextLine();
+				result = result + fileIn.nextLine() + "\n";
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -725,4 +725,5 @@ public class Drive {
 		}
 		return result;
 	}
+
 }

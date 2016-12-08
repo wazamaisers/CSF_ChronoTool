@@ -6,6 +6,7 @@ import java.io.PushbackInputStream;
 import java.sql.*;
 import java.util.*;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hslf.usermodel.HSLFTextParagraph;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -42,171 +43,220 @@ public class ChronoTool
 		Drive drive = new Drive(path_drive);
 		Skype skype = new Skype(path_skype);
 
+		String docxFile = "C:/sei la.docx";
+		String docFile = "C:/report.doc";
+		String xlsFile = "C:/Futebol.xls";
+		String xlsxFile = "C:/ubr.xlsx";
+		String confFile = "C:/ripd.conf";
+		String datFile = "C:/3-labeled.dat";
+		String imageFile = "C:/image.jpg";
+
+
+		String path = imageFile;
+
+		String file_extension = FilenameUtils.getExtension(path);
+		if(file_extension.equals("docx")){
+			String result = drive.readDocx(path);
+			System.out.println(result);
+		}
+		else if(file_extension.equals("doc")){
+			String result = drive.readDoc(path);
+			System.out.println(result);
+
+		}
+		else if(file_extension.equals("xls")){
+			ArrayList<String> result = drive.readExcel(path,"xls");
+			for(String s: result){
+				System.out.println(s);
+			}
+		}
+		else if(file_extension.equals("xlsx")){
+			ArrayList<String> result = drive.readExcel(path,"xlsx");
+			for(String s: result){
+				System.out.println(s);
+			}
+		}
+		else{
+			try {
+				String result = drive.readFile(path);
+				System.out.println(result);
+				System.out.println("YAYA");
+			} catch (Exception e) {
+				System.out.println("not readable");
+				// TODO: handle exception
+			}
+		}
+
+
+
+
+
+
 
 		////////////// LER DOCX ////////
-		try {
-			File file = new File("C:/sei la.docx");
-			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-
-			XWPFDocument document = new XWPFDocument(fis);
-
-			List<XWPFParagraph> paragraphs = document.getParagraphs();
-
-
-			for (XWPFParagraph para : paragraphs) {
-				System.out.println(para.getText());
-			}
-			fis.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		//////////////LER DOC ////////
-		try {
-			File file = new File("C:/report.doc");
-			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-
-			HWPFDocument document = new HWPFDocument(fis);
-			WordExtractor extract = new WordExtractor(document);
-	        System.out.println(extract.getText());
-			fis.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		///////////// LER XLSX ///////////////
-		try{
-			File myFile = new File("C://ubr.xlsx"); 
-			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
-			XSSFWorkbook myWorkBook = new XSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
-			XSSFSheet mySheet = myWorkBook.getSheetAt(0); // Get iterator to all the rows in current sheet 
-			Iterator<Row> rowIterator = mySheet.iterator(); // Traversing over each row of XLSX file 
-			while (rowIterator.hasNext()) { 
-				Row row = rowIterator.next(); // For each row, iterate through each columns 
-				Iterator<Cell> cellIterator = row.cellIterator(); 
-				while (cellIterator.hasNext()) { 
-					Cell cell = cellIterator.next(); 
-
-					switch (cell.getCellType()) { 
-
-					case Cell.CELL_TYPE_STRING: 
-
-						System.out.print(cell.getStringCellValue() + "\t"); 
-						break; 
-
-					case Cell.CELL_TYPE_NUMERIC: 
-						System.out.print(cell.getNumericCellValue() + "\t"); 
-						break; 
-
-					case Cell.CELL_TYPE_BOOLEAN: 
-						System.out.print(cell.getBooleanCellValue() + "\t"); 
-						break; 
-
-					default : 
-
-					} 
-				} 
-				System.out.println(""); 
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		////// LER XLS///////
-		try{
-			File myFile = new File("C://Futebol.xls"); 
-			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
-			HSSFWorkbook myWorkBook = new HSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
-			HSSFSheet mySheet = myWorkBook.getSheetAt(0); // Get iterator to all the rows in current sheet 
-			Iterator<Row> rowIterator = mySheet.iterator(); // Traversing over each row of XLSX file 
-			while (rowIterator.hasNext()) { 
-				Row row = rowIterator.next(); // For each row, iterate through each columns 
-				Iterator<Cell> cellIterator = row.cellIterator(); 
-				while (cellIterator.hasNext()) { 
-					Cell cell = cellIterator.next(); 
-
-					switch (cell.getCellType()) { 
-
-					case Cell.CELL_TYPE_STRING: 
-
-						System.out.print(cell.getStringCellValue() + "\t"); 
-						break; 
-
-					case Cell.CELL_TYPE_NUMERIC: 
-						System.out.print(cell.getNumericCellValue() + "\t"); 
-						break; 
-
-					case Cell.CELL_TYPE_BOOLEAN: 
-						System.out.print(cell.getBooleanCellValue() + "\t"); 
-						break; 
-
-					default : 
-
-					} 
-				} 
-				System.out.println(""); 
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static Workbook create(InputStream inp) throws IOException, InvalidFormatException {
-		// If clearly doesn't do mark/reset, wrap up
-		if(! inp.markSupported()) {
-			inp = new PushbackInputStream(inp, 8);
-		}
-
-		if(POIFSFileSystem.hasPOIFSHeader(inp)) {
-			return new HSSFWorkbook(inp);
-		}
-		if(POIXMLDocument.hasOOXMLHeader(inp)) {
-			return new XSSFWorkbook(OPCPackage.open(inp));
-		}
-		throw new IllegalArgumentException("Your InputStream was neither an OLE2 stream, nor an OOXML stream");
-	}
-
-
-
-	//		String keyWord = "ML0";
-	//		ArrayList<String> database_entrys = new ArrayList<String>();
-	//		database_entrys.add("PkGo");
-	//		database_entrys.add("ML3");
-	//		database_entrys.add("ML000000002");
-	//		database_entrys.add("MLas");
-	//		database_entrys.add("nova imagem.bmp");
-	//		database_entrys.add("ML00000002");
-	//		database_entrys.add("Uis7ML0da");
-	//		
-	//		ArrayList<String> finalList = new ArrayList<String>();
-	//		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
-	//		for (String entry: database_entrys){
-	//			int e = 0;
-	//			char[] fileChar = entry.toLowerCase().toCharArray();
-	//			for(int i = 0; i < fileChar.length; i++){
-	//				System.out.println("Ele: " + fileChar[i]);
-	//				System.out.println("Eu: " + keyWordChar[e] + "\n");
-	//				if (fileChar[i] == keyWordChar[e]){
-	//					e++;
-	//				}
-	//				else{
-	//					e = 0;
-	//				}
-	//				System.out.println("Valor do E: " + e);
-	//				if (e == keyWordChar.length){
-	//					finalList.add(entry);
-	//					break;
-	//				}
-	//			}
-	//		}
-	//		System.out.println(finalList);
+		//		try {
+		//			File file = new File("C:/sei la.docx");
+		//			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+		//
+		//			XWPFDocument document = new XWPFDocument(fis);
+		//
+		//			List<XWPFParagraph> paragraphs = document.getParagraphs();
+		//
+		//
+		//			for (XWPFParagraph para : paragraphs) {
+		//				System.out.println(para.getText());
+		//			}
+		//			fis.close();
+		//		} catch (Exception e) {
+		//			e.printStackTrace();
+		//		}
+		//
+		//		//////////////LER DOC ////////
+		//		try {
+		//			File file = new File("C:/report.doc");
+		//			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+		//
+		//			HWPFDocument document = new HWPFDocument(fis);
+		//			WordExtractor extract = new WordExtractor(document);
+		//	        System.out.println(extract.getText());
+		//			fis.close();
+		//		} catch (Exception e) {
+		//			e.printStackTrace();
+		//		}
+		//
+		//		///////////// LER XLSX ///////////////
+		//		try{
+		//			File myFile = new File("C://ubr.xlsx"); 
+		//			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
+		//			XSSFWorkbook myWorkBook = new XSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+		//			XSSFSheet mySheet = myWorkBook.getSheetAt(0); // Get iterator to all the rows in current sheet 
+		//			Iterator<Row> rowIterator = mySheet.iterator(); // Traversing over each row of XLSX file 
+		//			while (rowIterator.hasNext()) { 
+		//				Row row = rowIterator.next(); // For each row, iterate through each columns 
+		//				Iterator<Cell> cellIterator = row.cellIterator(); 
+		//				while (cellIterator.hasNext()) { 
+		//					Cell cell = cellIterator.next(); 
+		//
+		//					switch (cell.getCellType()) { 
+		//
+		//					case Cell.CELL_TYPE_STRING: 
+		//
+		//						System.out.print(cell.getStringCellValue() + "\t"); 
+		//						break; 
+		//
+		//					case Cell.CELL_TYPE_NUMERIC: 
+		//						System.out.print(cell.getNumericCellValue() + "\t"); 
+		//						break; 
+		//
+		//					case Cell.CELL_TYPE_BOOLEAN: 
+		//						System.out.print(cell.getBooleanCellValue() + "\t"); 
+		//						break; 
+		//
+		//					default : 
+		//
+		//					} 
+		//				} 
+		//				System.out.println(""); 
+		//			}
+		//		}
+		//		catch (Exception e) {
+		//			e.printStackTrace();
+		//		}
+		//		////// LER XLS///////
+		//		try{
+		//			File myFile = new File("C://Futebol.xls"); 
+		//			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
+		//			HSSFWorkbook myWorkBook = new HSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+		//			HSSFSheet mySheet = myWorkBook.getSheetAt(0); // Get iterator to all the rows in current sheet 
+		//			Iterator<Row> rowIterator = mySheet.iterator(); // Traversing over each row of XLSX file 
+		//			while (rowIterator.hasNext()) { 
+		//				Row row = rowIterator.next(); // For each row, iterate through each columns 
+		//				Iterator<Cell> cellIterator = row.cellIterator(); 
+		//				while (cellIterator.hasNext()) { 
+		//					Cell cell = cellIterator.next(); 
+		//
+		//					switch (cell.getCellType()) { 
+		//
+		//					case Cell.CELL_TYPE_STRING: 
+		//
+		//						System.out.print(cell.getStringCellValue() + "\t"); 
+		//						break; 
+		//
+		//					case Cell.CELL_TYPE_NUMERIC: 
+		//						System.out.print(cell.getNumericCellValue() + "\t"); 
+		//						break; 
+		//
+		//					case Cell.CELL_TYPE_BOOLEAN: 
+		//						System.out.print(cell.getBooleanCellValue() + "\t"); 
+		//						break; 
+		//
+		//					default : 
+		//
+		//					} 
+		//				} 
+		//				System.out.println(""); 
+		//			}
+		//		}
+		//		catch (Exception e) {
+		//			e.printStackTrace();
+		//		}
+		//
+		//	}
+		//
+		//	public static Workbook create(InputStream inp) throws IOException, InvalidFormatException {
+		//		// If clearly doesn't do mark/reset, wrap up
+		//		if(! inp.markSupported()) {
+		//			inp = new PushbackInputStream(inp, 8);
+		//		}
+		//
+		//		if(POIFSFileSystem.hasPOIFSHeader(inp)) {
+		//			return new HSSFWorkbook(inp);
+		//		}
+		//		if(POIXMLDocument.hasOOXMLHeader(inp)) {
+		//			return new XSSFWorkbook(OPCPackage.open(inp));
+		//		}
+		//		throw new IllegalArgumentException("Your InputStream was neither an OLE2 stream, nor an OOXML stream");
+		//	}
 
 
 
+		//		String keyWord = "ML0";
+		//		ArrayList<String> database_entrys = new ArrayList<String>();
+		//		database_entrys.add("PkGo");
+		//		database_entrys.add("ML3");
+		//		database_entrys.add("ML000000002");
+		//		database_entrys.add("MLas");
+		//		database_entrys.add("nova imagem.bmp");
+		//		database_entrys.add("ML00000002");
+		//		database_entrys.add("Uis7ML0da");
+		//		
+		//		ArrayList<String> finalList = new ArrayList<String>();
+		//		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+		//		for (String entry: database_entrys){
+		//			int e = 0;
+		//			char[] fileChar = entry.toLowerCase().toCharArray();
+		//			for(int i = 0; i < fileChar.length; i++){
+		//				System.out.println("Ele: " + fileChar[i]);
+		//				System.out.println("Eu: " + keyWordChar[e] + "\n");
+		//				if (fileChar[i] == keyWordChar[e]){
+		//					e++;
+		//				}
+		//				else{
+		//					e = 0;
+		//				}
+		//				System.out.println("Valor do E: " + e);
+		//				if (e == keyWordChar.length){
+		//					finalList.add(entry);
+		//					break;
+		//				}
+		//			}
+		//		}
+		//		System.out.println(finalList);
 
-	/*
+
+
+
+		/*
 		// Detalhes do útilizador
 		System.out.println("The user e-mail is " + drive.getUserMail() + " and the drive version is " +drive.getDriveVersion() + ".");
 		System.out.println("");
@@ -253,5 +303,6 @@ public class ChronoTool
 		//DROPBOX
 
 		skype.testSkype();
-	 */
+		 */
+	}
 }

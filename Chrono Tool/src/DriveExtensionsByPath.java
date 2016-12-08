@@ -6,12 +6,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.commons.io.FilenameUtils;
+
 import Drive.Drive;
 import Drive.Database.DatabaseSnapshotEntry;
 
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.HeadlessException;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -174,6 +177,12 @@ public class DriveExtensionsByPath extends JFrame {
 		label_9.setVisible(false);
 		frame.getContentPane().add(label_9);
 		
+		JButton btnSeeFileContent = new JButton("File Content");
+		btnSeeFileContent.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnSeeFileContent.setBounds(350, 200, 130, 42);
+		btnSeeFileContent.setVisible(false);
+		frame.getContentPane().add(btnSeeFileContent);
+		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -218,7 +227,16 @@ public class DriveExtensionsByPath extends JFrame {
 					public void mouseClicked(MouseEvent me) {
 						if(me.getClickCount() == 2 && !me.isConsumed()) {
 							me.consume();
+							btnSeeFileContent.setVisible(true);
 							DatabaseSnapshotEntry entry = _list.get(list.getSelectedIndex());
+							btnSeeFileContent.addMouseListener(new MouseAdapter() {
+								public void mouseClicked(MouseEvent me) {
+									String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
+									String path = drivePath + drive.getPathByDocId(entry.getDocId()).substring(4);
+									System.out.println(path);
+									showFileContent(path,drive);
+								}
+							});
 							label.setText(entry.getFilename());
 							label.setVisible(true);
 							label_5.setText("File Name");
@@ -276,5 +294,54 @@ public class DriveExtensionsByPath extends JFrame {
 		
 		btnSearch.setBounds(172, 208, 89, 23);
 		frame.getContentPane().add(btnSearch);
+	}
+	
+	public void showFileContent(String path, Drive drive){
+		String file_extension = FilenameUtils.getExtension(path);
+		if(file_extension.equals("docx")){
+			String result = drive.readDocx(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("doc")){
+			String result = drive.readDoc(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+
+		}
+		else if(file_extension.equals("xls")){
+			ArrayList<String> result = drive.readExcel(path,"xls");
+			for(String s: result){
+				System.out.println(s);
+			}
+			new DriveFileContents(null,result,null);
+		}
+		else if(file_extension.equals("xlsx")){
+			ArrayList<String> result = drive.readExcel(path,"xlsx");
+			for(String s: result){
+				System.out.println(s);
+			}
+			new DriveFileContents(null,result,null);
+		}
+		else{
+			try {
+				String result = drive.readFile(path);
+				if(result.equals("")){
+					try {
+						Image image = drive.readImage(path);
+						new DriveFileContents(null,null,image);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+						System.out.println("not readable");
+					}
+				}
+				else{
+					new DriveFileContents(result,null,null);
+				}
+			} catch (Exception e) {
+				System.out.println("not readable");
+				JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
 	}
 }
