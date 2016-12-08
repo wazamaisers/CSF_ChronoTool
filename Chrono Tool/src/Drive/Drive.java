@@ -12,16 +12,25 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 import javax.print.DocFlavor.CHAR_ARRAY;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.apache.poi.POIXMLProperties.CoreProperties;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFShape;
+import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.apache.poi.xslf.usermodel.XSLFTextShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -543,9 +552,9 @@ public class Drive {
 		}
 		return finalList;
 	}
-	
+
 	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWordChildrenGivePath(String keyWord, String path){
-		
+
 		String doc_id = getDirectoryDocIdByPath(path);
 		ArrayList<DatabaseSnapshotEntry> children = getArrayOfChildren(doc_id);
 		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
@@ -614,15 +623,15 @@ public class Drive {
 
 			HWPFDocument document = new HWPFDocument(fis);
 			WordExtractor extract = new WordExtractor(document);
-	        result = extract.getText();
+			result = extract.getText();
 			fis.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	public String readDocx(String path){
 		String result = "";
 		try {
@@ -641,7 +650,7 @@ public class Drive {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -661,9 +670,9 @@ public class Drive {
 				HSSFSheet mySheet = myWorkBook.getSheetAt(0);
 				rowIterator = mySheet.iterator();
 			}
-			
+
 			// Get iterator to all the rows in current sheet 
-			 // Traversing over each row of XLSX file 
+			// Traversing over each row of XLSX file 
 			while (rowIterator.hasNext()) { 
 				Row row = rowIterator.next(); // For each row, iterate through each columns 
 				Iterator<Cell> cellIterator = row.cellIterator();
@@ -696,19 +705,65 @@ public class Drive {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return result;
+
+	}
+
+	public String readPdf(String path){
+		String result = "";
+		try {
+		    PDDocument document = null;
+		    document = PDDocument.load(new File(path));
+		    document.getClass();
+		    if (!document.isEncrypted()) {
+		        PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+		        stripper.setSortByPosition(true);
+		        PDFTextStripper Tstripper = new PDFTextStripper();
+		        result = Tstripper.getText(document);
+		    }
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public String readPpt(String path){
+		String result = "";
+		try {
+			FileInputStream inputStream = new FileInputStream(path);
+			XMLSlideShow ppt = new XMLSlideShow(inputStream);
+			
+			CoreProperties props = ppt.getProperties().getCoreProperties();
+			String title = props.getTitle();
+			result = "Title: " + title + "\n\n";
+			
+			for (XSLFSlide slide: ppt.getSlides()) {
+				result = result + "New slide..." + "\n\n";
+				List<XSLFShape> shapes = slide.getShapes();
+				for (XSLFShape shape: shapes) {
+					if (shape instanceof XSLFTextShape) {
+				        XSLFTextShape textShape = (XSLFTextShape)shape;
+				        String text = textShape.getText();
+				        result = result + text + "\n";
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return result;
-		
 	}
 	
 	public Image readImage(String path){
 		Image image = null;
 		try {
 			File sourceimage = new File(path);
-            image = ImageIO.read(sourceimage);
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
+			image = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return image;
 	}
 
@@ -726,4 +781,158 @@ public class Drive {
 		return result;
 	}
 
+	public void showFileContent(String path, Drive drive){
+		String file_extension = FilenameUtils.getExtension(path);
+		if(file_extension.equals("docx")){
+			String result = drive.readDocx(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("doc")){
+			String result = drive.readDoc(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+
+		}
+		else if(file_extension.equals("pdf")){
+			String result = drive.readPdf(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("ppt") || file_extension.equals("pptx")){
+			String result = drive.readPpt(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("xls")){
+			ArrayList<String> result = drive.readExcel(path,"xls");
+			for(String s: result){
+				System.out.println(s);
+			}
+			new DriveFileContents(null,result,null);
+		}
+		else if(file_extension.equals("xlsx")){
+			ArrayList<String> result = drive.readExcel(path,"xlsx");
+			for(String s: result){
+				System.out.println(s);
+			}
+			new DriveFileContents(null,result,null);
+		}
+		else{
+			try {
+				String result = drive.readFile(path);
+				if(result.equals("")){
+					try {
+						Image image = drive.readImage(path);
+						new DriveFileContents(null,null,image);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+						System.out.println("not readable");
+					}
+				}
+				else{
+					new DriveFileContents(result,null,null);
+				}
+			} catch (Exception e) {
+				System.out.println("not readable");
+				JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
+
+	public String checkFileContent(DatabaseSnapshotEntry entry){
+		String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
+		String path = drivePath + getPathByDocId(entry.getDocId()).substring(4);
+		String file_extension = FilenameUtils.getExtension(path);
+		if(file_extension.equals("docx")){
+			String result = readDocx(path);
+			return result;
+		}
+		else if(file_extension.equals("doc")){
+			String result = readDoc(path);
+			System.out.println(result);
+			return result;
+
+		}
+		else if(file_extension.equals("xls")){
+			String result = "";
+			ArrayList<String> arrayResult = readExcel(path,"xls");
+			for(String s: arrayResult){
+				result = result + arrayResult;
+			}
+			return result;
+		}
+		else if(file_extension.equals("xlsx")){
+			String result = "";
+			ArrayList<String> arrayResult = readExcel(path,"xlsx");
+			for(String s: arrayResult){
+				result = result + arrayResult;
+			}
+			return result;
+		}
+		else{
+			try {
+				String result = readFile(path);
+				if(result.equals("")){
+					return "";
+				}
+				else{
+					return result;
+				}
+			} catch (Exception e) {
+				return "";
+			}
+		}
+	}
+
+	public ArrayList<DatabaseSnapshotEntry> getFilesByKwInContent(String keyWord, ArrayList<DatabaseSnapshotEntry> entrys){
+
+		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
+		char[] keyWordChar = keyWord.toLowerCase().toCharArray();
+		if(entrys == null){
+			for (DatabaseSnapshotEntry entry: _database_entrys){
+				if(!(entry.getResourceType().equals("folder"))){
+					System.out.println("A analisar: " + entry.getFilename());
+					int e = 0;
+					char[] fileChar = checkFileContent(entry).toLowerCase().toCharArray();
+					for(int i = 0; i < fileChar.length; i++){
+						if (fileChar[i] == keyWordChar[e]){
+							e++;
+						}
+						else{
+							e = 0;
+						}
+						if (e == keyWordChar.length){
+							finalList.add(entry);
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		else{
+			for (DatabaseSnapshotEntry entry: entrys){
+				if(!(entry.getResourceType().equals("folder"))){
+					System.out.println("A analisar: " + entry.getFilename());
+					int e = 0;
+					char[] fileChar = checkFileContent(entry).toLowerCase().toCharArray();
+					for(int i = 0; i < fileChar.length; i++){
+						if (fileChar[i] == keyWordChar[e]){
+							e++;
+						}
+						else{
+							e = 0;
+						}
+						if (e == keyWordChar.length){
+							finalList.add(entry);
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return finalList;
+	}
 }

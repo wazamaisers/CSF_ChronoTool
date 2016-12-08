@@ -190,6 +190,7 @@ public class MenuDrive {
 		Button button_3 = new Button("File Contents");
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new DriveFileContentsByKw(drive, null);
 			}
 		});
 		button_3.setFont(new Font("Arial", Font.PLAIN, 15));

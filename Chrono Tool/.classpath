@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/sqlite-jdbc-3.14.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/xmlbeans-2.3.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/pdfbox-app-2.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

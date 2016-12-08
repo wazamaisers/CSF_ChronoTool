@@ -6,11 +6,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.commons.io.FilenameUtils;
+
 import Drive.Drive;
 import Drive.Database.DatabaseSnapshotEntry;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +43,9 @@ public class DriveFilenamesByPath extends JFrame {
 	private JTextField textField;
 	private List list;
 	private HashMap<Integer, DatabaseSnapshotEntry> _list = new HashMap<Integer, DatabaseSnapshotEntry>();
+	private ArrayList<DatabaseSnapshotEntry> _array_list = new ArrayList<DatabaseSnapshotEntry>();
 	private ChooseFromDirsTree choose;
+	private DatabaseSnapshotEntry entrySelected = null;
 
 	/**
 	 * Launch the application.
@@ -129,6 +134,18 @@ public class DriveFilenamesByPath extends JFrame {
 		label_9.setVisible(false);
 		frame.getContentPane().add(label_9);
 		
+		JButton btnSeeFileContent = new JButton("File Content");
+		btnSeeFileContent.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnSeeFileContent.setBounds(350, 200, 130, 42);
+		btnSeeFileContent.setVisible(false);
+		frame.getContentPane().add(btnSeeFileContent);
+		
+		JButton btnKeyWordSearch = new JButton("Search by Keyword");
+		btnKeyWordSearch.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnKeyWordSearch.setBounds(90, 270, 160, 42);
+		btnKeyWordSearch.setVisible(false);
+		frame.getContentPane().add(btnKeyWordSearch);
+		
 		JLabel lblPathSelected = new JLabel("Path Selected");
 		lblPathSelected.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblPathSelected.setHorizontalAlignment(SwingConstants.CENTER);
@@ -184,6 +201,7 @@ public class DriveFilenamesByPath extends JFrame {
 					for (DatabaseSnapshotEntry entry: files){
 						list.add(entry.getFilename());
 						_list.put(i, entry);
+						_array_list.add(entry);
 						i++;
 					}
 				}
@@ -192,6 +210,7 @@ public class DriveFilenamesByPath extends JFrame {
 					for (DatabaseSnapshotEntry entry: files){
 						list.add(entry.getFilename());
 						_list.put(i, entry);
+						_array_list.add(entry);
 						i++;
 					}
 				}
@@ -203,8 +222,24 @@ public class DriveFilenamesByPath extends JFrame {
 					JOptionPane.showMessageDialog(null, "The list is empty", "InfoBox: " + "Listing error", JOptionPane.INFORMATION_MESSAGE);
 					ex.printStackTrace();
 				}
-				
+
+				btnKeyWordSearch.setVisible(true);
 				list.setVisible(true);
+			}
+		});
+		
+		btnSeeFileContent.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
+				String path = drivePath + drive.getPathByDocId(entrySelected.getDocId()).substring(4);
+				System.out.println(path);
+				drive.showFileContent(path,drive);
+			}
+		});
+		
+		btnKeyWordSearch.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				new DriveFileContentsByKw(drive, _array_list);
 			}
 		});
 		
@@ -212,48 +247,49 @@ public class DriveFilenamesByPath extends JFrame {
 			public void mouseClicked(MouseEvent me) {
 				if(me.getClickCount() == 2 && !me.isConsumed()) {
 					me.consume();
-					DatabaseSnapshotEntry entry = _list.get(list.getSelectedIndex());
+					btnSeeFileContent.setVisible(true);
+					entrySelected = _list.get(list.getSelectedIndex());
 					label_9.setVisible(false);
 					label_4.setVisible(false);
-					label.setText(entry.getFilename());
+					label.setText(entrySelected.getFilename());
 					label.setVisible(true);
 					label_5.setText("File Name");
 					label_5.setVisible(true);
-					label_1.setText(drive.getPathByDocId(entry.getDocId()));
+					label_1.setText(drive.getPathByDocId(entrySelected.getDocId()));
 					label_1.setVisible(true);
 					label_6.setText("Path");
 					label_6.setVisible(true);
-					if (!drive.getSizeCorrect(entry.getSize()).startsWith("0")){
-						label_2.setText(drive.getSizeCorrect(entry.getSize()));
+					if (!drive.getSizeCorrect(entrySelected.getSize()).startsWith("0")){
+						label_2.setText(drive.getSizeCorrect(entrySelected.getSize()));
 						label_2.setVisible(true);
 						label_7.setText("File Size");
 						label_7.setVisible(true);
-						if (entry.getShared() == 1){
+						if (entrySelected.getShared() == 1){
 							label_3.setText("Yes");
 						}
-						if (entry.getShared() == 0){
+						if (entrySelected.getShared() == 0){
 							label_3.setText("No");
 						}
 						label_3.setVisible(true);
 						label_8.setText("Is shared");
 						label_8.setVisible(true);
-						java.util.Date time=new java.util.Date((long)entry.getModified()*1000);
+						java.util.Date time=new java.util.Date((long)entrySelected.getModified()*1000);
 						label_4.setText("" + time);
 						label_4.setVisible(true);
 						label_9.setText("Last Modified");
 						label_9.setVisible(true);
 					}
 					else{
-						if (entry.getShared() == 1){
+						if (entrySelected.getShared() == 1){
 							label_2.setText("Yes");
 						}
-						if (entry.getShared() == 0){
+						if (entrySelected.getShared() == 0){
 							label_2.setText("No");;
 						}
 						label_2.setVisible(true);
 						label_7.setText("Is shared");
 						label_7.setVisible(true);
-						java.util.Date time=new java.util.Date((long)entry.getModified()*1000);
+						java.util.Date time=new java.util.Date((long)entrySelected.getModified()*1000);
 						label_3.setText("" + time);
 						label_3.setVisible(true);
 						label_8.setText("Last Modified");
