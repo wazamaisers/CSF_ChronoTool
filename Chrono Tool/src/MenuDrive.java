@@ -278,7 +278,7 @@ public class MenuDrive {
 		button.setVisible(false);
 		frame.getContentPane().add(button);
 		
-		JButton btnFileContents = new JButton("File contents");
+		Button btnFileContents = new Button("File contents");
 		btnFileContents.setBounds(745, 210, 111, 23);
 		btnFileContents.setVisible(false);
 		frame.getContentPane().add(btnFileContents);

@@ -949,4 +949,15 @@ public class Drive {
 		
 		return finalList;
 	}
+
+	public HashMap<Integer,DatabaseSnapshotEntry> getFilesBetweenTwoDates(long timestamp1, long timestamp2){
+		HashMap<Integer,DatabaseSnapshotEntry> hash = new HashMap<Integer,DatabaseSnapshotEntry>();
+		for(DatabaseSnapshotEntry entry: _database_entrys){
+			if(entry.getModified()>=timestamp1 && entry.getModified()<timestamp2){
+				hash.put(entry.getModified(), entry);				
+			}
+		}
+		return hash;
+	}
+	
 }
