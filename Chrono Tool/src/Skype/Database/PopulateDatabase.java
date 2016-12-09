@@ -2,8 +2,6 @@ package Skype.Database;
 import java.sql.*;
 import java.util.*;
 
-import Drive.Database.DatabaseSnapshotEntry;
-
 public class PopulateDatabase {
 	
 	private HashMap<String,DatabaseSharedLinksEntry> _shared_links = new HashMap<String,DatabaseSharedLinksEntry>();

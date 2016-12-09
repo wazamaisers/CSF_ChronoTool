@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import Skype.Skype;
-import javax.swing.Box;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -183,11 +182,23 @@ public class SkypeLists {
 				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+				table.setAutoCreateRowSorter(true);
 				
 				table.setBounds(46, 47, 700, 500);
 				JScrollPane scroll = new JScrollPane(table);
 				scroll.setBounds(46, 47, 700, 500);
 				frame.getContentPane().add(scroll);
+				
+				table.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent me) {
+						if(me.getClickCount() == 2 && !me.isConsumed()) {
+							String path = "";
+							path = rowData[table.getRowSorter().convertRowIndexToModel(table.getSelectedRow())][1];
+							skype.showFileContent(path);
+							table.getSelectedRow();
+						}
+					}
+				});
 			}
 			
 			if(table.getRowCount() == 0){

@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
-import javax.print.DocFlavor.CHAR_ARRAY;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -401,7 +400,7 @@ public class Drive {
 	public String getSizeCorrect(long bytes){
 		long kilo = 1024L;
 		long mega = 1048576L;
-		long giga = 10737418424L;
+		double giga = 1073741824L;
 		String size = null;
 		if(bytes < 1024){
 			size = "" + bytes + " bytes";
@@ -413,7 +412,7 @@ public class Drive {
 			size = "" + (bytes/(1024*1024)) + " Mbytes";
 		}
 		else{
-			size = "" + (bytes/(1024*1024*1024)) + " Gbytes";
+			size = "" + (float) (bytes/(1024*1024))/1000 + " Gbytes";
 		}
 		return size;
 	}
@@ -615,7 +614,7 @@ public class Drive {
 		return node;
 	}
 
-	public String readDoc(String path){
+	public static String readDoc(String path){
 		String result = "";
 		try {
 			File file = new File(path);
@@ -626,13 +625,14 @@ public class Drive {
 			result = extract.getText();
 			fis.close();
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			e.printStackTrace();
 		}
 
 		return result;
 	}
 
-	public String readDocx(String path){
+	public static String readDocx(String path){
 		String result = "";
 		try {
 			File file = new File(path);
@@ -648,31 +648,30 @@ public class Drive {
 			}
 			fis.close();
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			e.printStackTrace();
 		}
 
 		return result;
 	}
 
-	public ArrayList<String> readExcel(String path, String type){
+	public static ArrayList<String> readExcel(String path, String type){
 		ArrayList<String> result = new ArrayList<String>();
 		Iterator<Row> rowIterator;
 		try{
 			File myFile = new File(path); 
-			FileInputStream fis = new FileInputStream(myFile); // Finds the workbook instance for XLSX file 
+			FileInputStream fis = new FileInputStream(myFile);
 			if(type.equals("xlsx")){
-				XSSFWorkbook myWorkBook = new XSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+				XSSFWorkbook myWorkBook = new XSSFWorkbook (fis); 
 				XSSFSheet mySheet = myWorkBook.getSheetAt(0);
 				rowIterator = mySheet.iterator();
 			}
 			else{
-				HSSFWorkbook myWorkBook = new HSSFWorkbook (fis); // Return first sheet from the XLSX workbook 
+				HSSFWorkbook myWorkBook = new HSSFWorkbook (fis);
 				HSSFSheet mySheet = myWorkBook.getSheetAt(0);
 				rowIterator = mySheet.iterator();
 			}
-
-			// Get iterator to all the rows in current sheet 
-			// Traversing over each row of XLSX file 
+ 
 			while (rowIterator.hasNext()) { 
 				Row row = rowIterator.next(); // For each row, iterate through each columns 
 				Iterator<Cell> cellIterator = row.cellIterator();
@@ -697,12 +696,14 @@ public class Drive {
 
 					default : 
 
-					} 
+					}
+					line = line + "\n";
 				}
 				result.add(line);
 			}
 		}
 		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			e.printStackTrace();
 		}
 
@@ -710,7 +711,7 @@ public class Drive {
 
 	}
 
-	public String readPdf(String path){
+	public static String readPdf(String path){
 		String result = "";
 		try {
 		    PDDocument document = null;
@@ -722,13 +723,15 @@ public class Drive {
 		        PDFTextStripper Tstripper = new PDFTextStripper();
 		        result = Tstripper.getText(document);
 		    }
+		    return result;
 		} catch (Exception e) {
 		    e.printStackTrace();
+		    JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+		    return result;
 		}
-		return result;
 	}
 	
-	public String readPpt(String path){
+	public static String readPpt(String path){
 		String result = "";
 		try {
 			FileInputStream inputStream = new FileInputStream(path);
@@ -750,24 +753,25 @@ public class Drive {
 				}
 			}
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			e.printStackTrace();
 		}
-		
 		return result;
 	}
 	
-	public Image readImage(String path){
+	public static Image readImage(String path){
 		Image image = null;
 		try {
 			File sourceimage = new File(path);
 			image = ImageIO.read(sourceimage);
 		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			e.printStackTrace();
 		}
 		return image;
 	}
 
-	public String readFile(String path){
+	public static String readFile(String path){
 		String result = "";
 		try {
 			Scanner fileIn = new Scanner(new File(path));
@@ -775,7 +779,7 @@ public class Drive {
 				result = result + fileIn.nextLine() + "\n";
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 			e.printStackTrace();
 		}
 		return result;
@@ -784,46 +788,38 @@ public class Drive {
 	public void showFileContent(String path, Drive drive){
 		String file_extension = FilenameUtils.getExtension(path);
 		if(file_extension.equals("docx")){
-			String result = drive.readDocx(path);
+			String result = readDocx(path);
 			System.out.println(result);
 			new DriveFileContents(result,null,null);
 		}
 		else if(file_extension.equals("doc")){
-			String result = drive.readDoc(path);
+			String result = readDoc(path);
 			System.out.println(result);
 			new DriveFileContents(result,null,null);
 
 		}
 		else if(file_extension.equals("pdf")){
-			String result = drive.readPdf(path);
-			System.out.println(result);
+			String result = readPdf(path);
 			new DriveFileContents(result,null,null);
 		}
 		else if(file_extension.equals("ppt") || file_extension.equals("pptx")){
-			String result = drive.readPpt(path);
-			System.out.println(result);
+			String result = readPpt(path);
 			new DriveFileContents(result,null,null);
 		}
 		else if(file_extension.equals("xls")){
-			ArrayList<String> result = drive.readExcel(path,"xls");
-			for(String s: result){
-				System.out.println(s);
-			}
+			ArrayList<String> result = readExcel(path,"xls");
 			new DriveFileContents(null,result,null);
 		}
 		else if(file_extension.equals("xlsx")){
-			ArrayList<String> result = drive.readExcel(path,"xlsx");
-			for(String s: result){
-				System.out.println(s);
-			}
+			ArrayList<String> result = readExcel(path,"xlsx");
 			new DriveFileContents(null,result,null);
 		}
 		else{
 			try {
-				String result = drive.readFile(path);
+				String result = readFile(path);
 				if(result.equals("")){
 					try {
-						Image image = drive.readImage(path);
+						Image image = readImage(path);
 						if(image == null){
 							JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 						}

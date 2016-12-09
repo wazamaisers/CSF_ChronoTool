@@ -1,6 +1,5 @@
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Label;
 import java.awt.List;
 
@@ -12,8 +11,6 @@ import Drive.Database.DatabaseSnapshotEntry;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-
-import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -156,6 +153,9 @@ public class DriveFileContentsByKw {
 		frame.getContentPane().add(btnSeeFileContent);
 		
 		button = new JButton("Search");
+		button.setBounds(172, 162, 89, 23);
+		frame.getContentPane().add(button);
+		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lblIntroduceAWord.setVisible(false);
@@ -192,8 +192,6 @@ public class DriveFileContentsByKw {
 				list.setVisible(true);
 			}
 		});
-		button.setBounds(172, 162, 89, 23);
-		frame.getContentPane().add(button);
 		
 		btnSeeFileContent.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {

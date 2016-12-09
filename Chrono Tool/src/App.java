@@ -58,32 +58,20 @@ public class App {
 		inicialMenu();
 	}
 
-	public void mainMenuDrive(Drive drive){
-		new MenuDrive(drive);
-	}
-	public void mainMenuSkype(Skype skype){
-		new MenuSkype(skype);
-	}
-
 	public void inicialMenu(){
+		
 		//Window
 		frame = new JFrame("Chrono Tool");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);
-//		try {
-//			frame.setContentPane(new JLabel(new ImageIcon(ImageIO.read(
-//					new File(System.getProperty("user.dir") + "\\image.jpg")))));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		frame.pack();
 		frame.setVisible(true);
 
 		//Chrono Tool Title
 		JLabel lblChronoTool = new JLabel("Chrono Tool");
-		lblChronoTool.setForeground(Color.WHITE);
+		lblChronoTool.setBackground(Color.WHITE);
+		lblChronoTool.setForeground(Color.BLACK);
 		lblChronoTool.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChronoTool.setFont(new Font("Rockwell Extra Bold", Font.BOLD, 50));
 		lblChronoTool.setBounds(468, 65, 417, 90);
@@ -102,20 +90,20 @@ public class App {
 		frame.getContentPane().add(btnSkype);
 
 		//Text To Appear when Drive path is chosen
-		JLabel lblDrive = new JLabel("Drive");
+		JLabel lblDrive = new JLabel("");
 		lblDrive.setFont(new Font("Source Sans Pro Black", Font.PLAIN, 20));
-		lblDrive.setForeground(Color.WHITE);
+		lblDrive.setForeground(Color.BLACK);
 		lblDrive.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDrive.setBounds(252, 287, 389, 130);
+		lblDrive.setBounds(486, 287, 389, 130);
 		frame.getContentPane().add(lblDrive);
 		lblDrive.setVisible(false);
 
 		//Text To Appear when Skype path is chosen
-		JLabel lblSkype = new JLabel("Skype");
+		JLabel lblSkype = new JLabel("");
 		lblSkype.setFont(new Font("Source Sans Pro Black", Font.PLAIN, 20));
-		lblSkype.setForeground(Color.WHITE);
+		lblSkype.setForeground(Color.BLACK);
 		lblSkype.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSkype.setBounds(712, 287, 389, 130);
+		lblSkype.setBounds(486, 287, 389, 130);
 		frame.getContentPane().add(lblSkype);
 		lblSkype.setVisible(false);
 
@@ -124,14 +112,22 @@ public class App {
 		btnStartApplication.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnStartApplication.setBounds(540, 511, 273, 47);
 		frame.getContentPane().add(btnStartApplication);
+
+		//Choose manually button
+		JButton btnChooseManually = new JButton("Choose Manually");
+		btnChooseManually.setBounds(773, 427, 273, 35);
+		btnChooseManually.setVisible(false);
+		frame.getContentPane().add(btnChooseManually);
 		btnStartApplication.setVisible(false);
 
+		//Action done when drive button is pressed
 		btnDrive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String driveDefaultPath = System.getenv("HOMEPATH") + "/AppData/Local/Google/Drive";
 				_drive = new Drive(driveDefaultPath);
 				if(_drive.getDatabaseLoaded()){
 					btnDrive.setVisible(false);
+					btnSkype.setVisible(false);
 					lblDrive.setText("Google Drive database loaded!");
 					lblDrive.setVisible(true);
 					if(!btnStartApplication.isVisible()){
@@ -143,6 +139,7 @@ public class App {
 					_drive = new Drive(fileName);
 					if(_drive.getDatabaseLoaded()){
 						btnDrive.setVisible(false);
+						btnSkype.setVisible(false);
 						lblDrive.setText("Google Drive database loaded!");
 						lblDrive.setVisible(true);
 						if(!btnStartApplication.isVisible()){
@@ -153,17 +150,17 @@ public class App {
 						JOptionPane.showMessageDialog(null, "The path given for Google Drive folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
-				
-				
 			}
 		});
 
+		//Action done when skype button is pressed
 		btnSkype.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String skypeUsername = JOptionPane.showInputDialog(frame, "Enter your skype username");
 				String skypeDefaultPath = System.getenv("HOMEPATH") + "/AppData/Roaming/Skype/" + skypeUsername;
 				_skype = new Skype(skypeDefaultPath);
 				if(_skype.getDatabaseLoaded()){
+					btnDrive.setVisible(false);
 					btnSkype.setVisible(false);
 					lblSkype.setText("Skype database loaded!");
 					lblSkype.setVisible(true);
@@ -172,23 +169,34 @@ public class App {
 					}
 				}
 				else{
-					String fileName = fileChooser(e);
-					_skype = new Skype(fileName);
-					if(_skype.getDatabaseLoaded()){
-						btnSkype.setVisible(false);
-						lblSkype.setText("Skype database loaded!");
-						lblSkype.setVisible(true);
-						if(!btnStartApplication.isVisible()){
-							btnStartApplication.setVisible(true);
-						}
-					}
-					else{
-						JOptionPane.showMessageDialog(null, "The path given for Skype folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
-					}
+					JOptionPane.showMessageDialog(null, "Skype username does not exist", "InfoBox: " + "Error in Skype username", JOptionPane.INFORMATION_MESSAGE);
+					btnChooseManually.setVisible(true);
 				}
 			}
 		});
 
+		//Action done when choose manually button is pressed
+		btnChooseManually.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String fileName = fileChooser(e);
+				_skype = new Skype(fileName);
+				if(_skype.getDatabaseLoaded()){
+					btnDrive.setVisible(false);
+					btnSkype.setVisible(false);
+					lblSkype.setText("Skype database loaded!");
+					lblSkype.setVisible(true);
+					btnChooseManually.setVisible(false);
+					if(!btnStartApplication.isVisible()){
+						btnStartApplication.setVisible(true);
+					}
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "The path given for Skype folder is not correct", "InfoBox: " + "Error loadig database", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+
+		//Action done when start application button is pressed
 		btnStartApplication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (lblSkype.isVisible() && !lblDrive.isVisible()){
@@ -201,16 +209,15 @@ public class App {
 					frame.setVisible(false);
 					mainMenuDrive(_drive);
 				}
-				else {
-					System.out.println("Abre os dois");
-				}
-				lblSkype.setVisible(false);
-				btnSkype.setVisible(false);
-				lblDrive.setVisible(false);
-				btnDrive.setVisible(false);
-				btnStartApplication.setVisible(false);
 			}
 		});
+	}
+	
+	public void mainMenuDrive(Drive drive){
+		new MenuDrive(drive);
+	}
+	public void mainMenuSkype(Skype skype){
+		new MenuSkype(skype);
 	}
 
 	public String fileChooser(ActionEvent e){

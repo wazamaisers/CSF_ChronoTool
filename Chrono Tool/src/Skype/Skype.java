@@ -1,6 +1,10 @@
 package Skype;
 
 import java.awt.Desktop;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,9 +16,35 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Scanner;
 
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.apache.poi.POIXMLProperties.CoreProperties;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFShape;
+import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.apache.poi.xslf.usermodel.XSLFTextShape;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+
+import Drive.Drive;
+import Drive.DriveFileContents;
 import Skype.Database.DatabaseCallsEntry;
 import Skype.Database.DatabaseContactsEntry;
 import Skype.Database.DatabaseMessagesEntry;
@@ -814,6 +844,69 @@ public class Skype {
 		return arrays;
 	}
 
+	public void showFileContent(String path){
+
+		String file_extension = FilenameUtils.getExtension(path);
+		if(file_extension.equals("docx")){
+			String result = Drive.readDocx(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("doc")){
+			String result = Drive.readDoc(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+
+		}
+		else if(file_extension.equals("pdf")){
+			String result = Drive.readPdf(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("ppt") || file_extension.equals("pptx")){
+			String result = Drive.readPpt(path);
+			System.out.println(result);
+			new DriveFileContents(result,null,null);
+		}
+		else if(file_extension.equals("xls")){
+			ArrayList<String> result = Drive.readExcel(path,"xls");
+			for(String s: result){
+				System.out.println(s);
+			}
+			new DriveFileContents(null,result,null);
+		}
+		else if(file_extension.equals("xlsx")){
+			ArrayList<String> result = Drive.readExcel(path,"xlsx");
+			for(String s: result){
+				System.out.println(s);
+			}
+			new DriveFileContents(null,result,null);
+		}
+		else{
+			try {
+				String result = Drive.readFile(path);
+				if(result.equals("")){
+					try {
+						Image image = Drive.readImage(path);
+						if(image == null){
+							JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+						}
+						else{
+							new DriveFileContents(null,null,image);
+						}
+						
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				else{
+					new DriveFileContents(result,null,null);
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
 
 	public void links(String link){
 		try {
@@ -826,6 +919,5 @@ public class Skype {
 			e.printStackTrace();
 		}
 	}
-
 
 }

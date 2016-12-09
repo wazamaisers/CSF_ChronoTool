@@ -67,7 +67,6 @@ public class SkypeContactInfo {
 		list.add("Homepage");
 		list.add("About");
 		list.add("Mood Text");
-		list.add("Timezone");
 		list.add("Profile Created");
 		list.add("Last Online");
 		
@@ -98,8 +97,6 @@ public class SkypeContactInfo {
 		list_1.add(skype.getContacts().get(skypename).getHomepage());
 		list_1.add(skype.getContacts().get(skypename).getAbout());
 		list_1.add(skype.getContacts().get(skypename).getMoodText());
-		
-		list_1.add(skype.getContacts().get(skypename).getTimezone().toString());
 		
 		Integer timestamp = skype.getContacts().get(skypename).getProfileTimestamp();
 		java.util.Date time=new java.util.Date((long)timestamp*1000);

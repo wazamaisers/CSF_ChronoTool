@@ -5,8 +5,6 @@
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.14.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/commons-io-2.5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/commons-io-2.5-javadoc.jar"/>
-	<classpathentry kind="lib" path="jgoodies-common-1.8.0.jar" sourcepath="jgoodies-common-1.8.0-sources.jar"/>
-	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/poi-3.15.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/poi-examples-3.15.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/poi-excelant-3.15.jar"/>
@@ -24,5 +22,7 @@
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/xmlbeans-2.3.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/pdfbox-app-2.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/jgoodies-common-1.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tiago/workspace/Chrono Tool/lib/jgoodies-forms-1.8.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

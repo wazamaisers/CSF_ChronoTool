@@ -1,28 +1,16 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-
-import org.apache.commons.io.FilenameUtils;
-
 import Drive.Drive;
 import Drive.Database.DatabaseSnapshotEntry;
 
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.ListModel;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -30,11 +18,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.awt.List;
 import java.awt.Button;
-import java.awt.Choice;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Label;
 
 public class DriveFilenamesByPath extends JFrame {
@@ -201,6 +186,10 @@ public class DriveFilenamesByPath extends JFrame {
 		button_1.setBounds(124, 30, 185, 60);
 		frame.getContentPane().add(button_1);
 		
+		list = new List();
+		list.setBounds(35, 10, 257, 241);
+		list.setVisible(false);
+		
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				choose = new ChooseFromDirsTree(drive);
@@ -208,10 +197,6 @@ public class DriveFilenamesByPath extends JFrame {
 				lblPathSelected.setVisible(true);
 			}
 		});
-		
-		list = new List();
-		list.setBounds(35, 10, 257, 241);
-		list.setVisible(false);
 		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

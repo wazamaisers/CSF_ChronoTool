@@ -1,29 +1,17 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-
-import org.apache.commons.io.FilenameUtils;
-
 import Drive.Drive;
 import Drive.Database.DatabaseSnapshotEntry;
 
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.HeadlessException;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.ListModel;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -32,16 +20,13 @@ import java.awt.event.ActionEvent;
 import java.awt.List;
 import java.awt.Button;
 import java.awt.Choice;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Label;
 
 public class DriveExtensionsByPath extends JFrame {
 
 	private JFrame frame;
-	private JTextField textField;
 	private JLabel lblTypeAnExtension;
 	private List list;
 	private ChooseFromDirsTree choose;
@@ -98,17 +83,11 @@ public class DriveExtensionsByPath extends JFrame {
 		
 		Button button = new Button("Select a path");
 		button.setFont(new Font("Dialog", Font.BOLD, 16));
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				choose = new ChooseFromDirsTree(drive);
-				button.setVisible(false);
-				lblPathSelected.setVisible(true);
-			}
-		});
+		button.setBounds(124, 30, 185, 60);
+		frame.getContentPane().add(button);
 		
 		choice = new Choice();
 		choice.setBounds(124, 159, 185, 20);
-		
 		ArrayList<String> sortedKeys=new ArrayList<String>(drive.getChildrenExtensions("root").keySet());
 		Collections.sort(sortedKeys);
 		for (String key: sortedKeys){
@@ -120,9 +99,6 @@ public class DriveExtensionsByPath extends JFrame {
 			}
 		}
 		frame.getContentPane().add(choice);
-		
-		button.setBounds(124, 30, 185, 60);
-		frame.getContentPane().add(button);
 		
 		Label label = new Label();
 		label.setBounds(450, 30, 550, 23);
@@ -220,6 +196,17 @@ public class DriveExtensionsByPath extends JFrame {
 		frame.getContentPane().add(btnKeyWordSearch);
 		
 		JButton btnSearch = new JButton("Search");
+		btnSearch.setBounds(172, 208, 89, 23);
+		frame.getContentPane().add(btnSearch);
+		
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				choose = new ChooseFromDirsTree(drive);
+				button.setVisible(false);
+				lblPathSelected.setVisible(true);
+			}
+		});
+		
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String extension = choice.getSelectedItem();
@@ -343,8 +330,5 @@ public class DriveExtensionsByPath extends JFrame {
 				});
 			}
 		});
-		
-		btnSearch.setBounds(172, 208, 89, 23);
-		frame.getContentPane().add(btnSearch);
 	}
 }

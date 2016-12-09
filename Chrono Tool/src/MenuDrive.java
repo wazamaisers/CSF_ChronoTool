@@ -11,38 +11,23 @@ import javax.swing.tree.TreePath;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TimeZone;
-
 import javax.swing.JScrollPane;
 
 import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import java.awt.Color;
-import javax.swing.JList;
 import java.awt.List;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
-import javax.swing.JMenu;
 import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 
 public class MenuDrive {
 
 	private JFrame frame;
-	private JTextField textField;
 	private DatabaseSnapshotEntry entrySelected;
 
 	/**
@@ -77,17 +62,10 @@ public class MenuDrive {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);
-		//		try {
-		//            frame.setContentPane(new JLabel(new ImageIcon(ImageIO.read(
-		//            		new File(System.getProperty("user.dir") + "\\image.jpg")))));
-		//        } catch (IOException e) {
-		//            e.printStackTrace();
-		//        }
-		//        frame.pack();
 		frame.setVisible(true);
 
 		JLabel lblDriveVersion = new JLabel("");
-		lblDriveVersion.setForeground(Color.WHITE);
+		lblDriveVersion.setForeground(Color.BLACK);
 		lblDriveVersion.setBounds(45, 23, 585, 33);
 		lblDriveVersion.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblDriveVersion.setText("Drive version: " + drive.getDriveVersion());
@@ -95,7 +73,7 @@ public class MenuDrive {
 		frame.getContentPane().add(lblDriveVersion);
 
 		JLabel lblDriveUsername = new JLabel("");
-		lblDriveUsername.setForeground(Color.WHITE);
+		lblDriveUsername.setForeground(Color.BLACK);
 		lblDriveUsername.setBounds(45, 53, 585, 33);
 		lblDriveUsername.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblDriveUsername.setText("Drive username: " + drive.getUserMail());
@@ -142,24 +120,13 @@ public class MenuDrive {
 
 		Button buttonPath1 = new Button("File Extensions");
 		buttonPath1.setFont(new Font("Arial", Font.PLAIN, 15));
-		buttonPath1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new DriveExtensionsByPath(drive, false);
-			}
-		});
 		buttonPath1.setBounds(1194, 96, 158, 39);
 		frame.getContentPane().add(buttonPath1);
-		
+
 		Button buttonPath2 = new Button("File Extensions (children)");
 		buttonPath2.setFont(new Font("Arial", Font.PLAIN, 12));
-		buttonPath2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new DriveExtensionsByPath(drive, true);
-			}
-		});
 		buttonPath2.setBounds(1194, 141, 158, 39);
 		frame.getContentPane().add(buttonPath2);
-
 
 		JLabel lblSearchesByPath = new JLabel("Searches by Path");
 		lblSearchesByPath.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -180,44 +147,19 @@ public class MenuDrive {
 		frame.getContentPane().add(lblKeyword);
 
 		Button button_2 = new Button("Filenames");
-		button_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new DriveFilenamesByKw(drive);
-			}
-		});
 		button_2.setFont(new Font("Arial", Font.PLAIN, 15));
 		button_2.setBounds(1194, 355, 158, 39);
 		frame.getContentPane().add(button_2);
 
 		Button button_3 = new Button("File Contents");
-		button_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new DriveFileContentsByKw(drive, null);
-			}
-		});
 		button_3.setFont(new Font("Arial", Font.PLAIN, 15));
 		button_3.setBounds(1194, 400, 158, 39);
 		frame.getContentPane().add(button_3);
 
 		Button button_6 = new Button("Filenames");
 		button_6.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_6.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new DriveFilenamesByPath(drive, false);
-			}
-		});
 		button_6.setBounds(1194, 185, 158, 39);
 		frame.getContentPane().add(button_6);
-		
-		Button button_1 = new Button("Filenames (children)");
-		button_1.setFont(new Font("Arial", Font.PLAIN, 12));
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new DriveFilenamesByPath(drive, true);
-			}
-		});
-		button_1.setBounds(1194, 230, 158, 39);
-		frame.getContentPane().add(button_1);
 
 		JLabel lblChronological = new JLabel("Chronological");
 		lblChronological.setHorizontalAlignment(SwingConstants.CENTER);
@@ -233,17 +175,17 @@ public class MenuDrive {
 
 		Button button_7 = new Button("Start Chrono Tool");
 		button_7.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new DriveChrono(drive);
-			}
-		});
 		button_7.setBounds(1194, 548, 158, 57);
 		frame.getContentPane().add(button_7);
 
+		Button button_1 = new Button("Filenames (children)");
+		button_1.setFont(new Font("Arial", Font.PLAIN, 12));
+		button_1.setBounds(1194, 230, 158, 39);
+		frame.getContentPane().add(button_1);
+
 		JLabel lblChronoMain = new JLabel("Chrono Tool");
 		lblChronoMain.setHorizontalAlignment(SwingConstants.CENTER);
-		lblChronoMain.setForeground(Color.WHITE);
+		lblChronoMain.setForeground(Color.BLACK);
 		lblChronoMain.setFont(new Font("Rockwell Extra Bold", Font.BOLD, 50));
 		lblChronoMain.setBounds(706, 100, 417, 90);
 		lblChronoMain.setVisible(true);
@@ -251,7 +193,7 @@ public class MenuDrive {
 
 		JLabel lblDriveMain = new JLabel("Google Drive");
 		lblDriveMain.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDriveMain.setForeground(Color.WHITE);
+		lblDriveMain.setForeground(Color.BLACK);
 		lblDriveMain.setFont(new Font("Rockwell Extra Bold", Font.BOLD, 35));
 		lblDriveMain.setBounds(706, 143, 417, 90);
 		lblDriveMain.setVisible(true);
@@ -259,7 +201,7 @@ public class MenuDrive {
 
 		JLabel lblChronoSmall = new JLabel("Chrono Tool");
 		lblChronoSmall.setHorizontalAlignment(SwingConstants.CENTER);
-		lblChronoSmall.setForeground(Color.WHITE);
+		lblChronoSmall.setForeground(Color.BLACK);
 		lblChronoSmall.setFont(new Font("Rockwell Extra Bold", Font.BOLD, 35));
 		lblChronoSmall.setBounds(706, 11, 417, 62);
 		lblChronoSmall.setVisible(false);
@@ -267,17 +209,17 @@ public class MenuDrive {
 
 		JLabel lblDriveSmall = new JLabel("Google Drive");
 		lblDriveSmall.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDriveSmall.setForeground(Color.WHITE);
+		lblDriveSmall.setForeground(Color.BLACK);
 		lblDriveSmall.setFont(new Font("Rockwell Extra Bold", Font.BOLD, 25));
 		lblDriveSmall.setBounds(706, 23, 417, 90);
 		lblDriveSmall.setVisible(false);
 		frame.getContentPane().add(lblDriveSmall);
-		
+
 		Button button = new Button("Close");
 		button.setBounds(1029, 211, 53, 22);
 		button.setVisible(false);
 		frame.getContentPane().add(button);
-		
+
 		Button btnFileContents = new Button("File contents");
 		btnFileContents.setBounds(745, 210, 111, 23);
 		btnFileContents.setVisible(false);
@@ -286,6 +228,101 @@ public class MenuDrive {
 		//create the tree by passing in the root node
 		JTree tree = new JTree(drive.buildTree());
 		tree.setBounds(45, 100, 585, 564);
+		
+		JScrollPane scroll = new JScrollPane(tree);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setBounds(45, 100, 585, 564);
+		frame.getContentPane().add(scroll);
+
+		List listFileStats1 = new List();
+		listFileStats1.setFont(new Font("Arial", Font.BOLD, 12));
+		listFileStats1.setBounds(745, 349, 169, 95);
+		listFileStats1.add("Folders");
+		listFileStats1.add("Shared Folders");
+		listFileStats1.add("Documents");
+		listFileStats1.add("Shared Documents");
+		listFileStats1.add("Files");
+		listFileStats1.add("Shared Files");
+		frame.getContentPane().add(listFileStats1);
+
+		List listFileStats2 = new List();
+		listFileStats2.setFont(new Font("Arial", Font.PLAIN, 12));
+		listFileStats2.setBounds(913, 349, 169, 95);
+		listFileStats2.add(drive.getFileCount("Folders",false));
+		listFileStats2.add(drive.getFileCount("Folders",true));
+		listFileStats2.add(drive.getFileCount("Docs", false));
+		listFileStats2.add(drive.getFileCount("Docs", true));
+		listFileStats2.add(drive.getFileCount("Files", false));
+		listFileStats2.add(drive.getFileCount("Files", true));
+		frame.getContentPane().add(listFileStats2);
+
+		List list_6 = new List();
+		list_6.setFont(new Font("Arial", Font.BOLD, 12));
+		list_6.setBounds(745, 456, 169, 50);
+		Iterator<Entry<String, Integer>> it1 =top3.entrySet().iterator();
+		int i = 1;
+		while (it1.hasNext()) {
+			Map.Entry pair = (Map.Entry)it1.next();
+			if(!pair.getKey().equals("total")){
+				list_6.add("TOP " + i +" - " + pair.getKey());
+				i++;
+			}
+		}
+		frame.getContentPane().add(list_6);
+
+		List list_7 = new List();
+		list_7.setFont(new Font("Arial", Font.PLAIN, 12));
+		list_7.setBounds(913, 456, 169, 50);
+		Iterator<Entry<String, Integer>> it2 =top3.entrySet().iterator();
+		while (it2.hasNext()) {
+			Map.Entry pair = (Map.Entry)it2.next();
+			if(!pair.getKey().equals("total")){
+				list_7.add("" + drive.getPercentage(top3.get("total"), (Integer) pair.getValue())+ "%");
+			}
+		}
+		frame.getContentPane().add(list_7);
+
+		buttonPath1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveExtensionsByPath(drive, false);
+			}
+		});
+
+		buttonPath2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveExtensionsByPath(drive, true);
+			}
+		});
+
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new DriveFilenamesByKw(drive);
+			}
+		});
+
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveFileContentsByKw(drive, null);
+			}
+		});
+
+		button_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveFilenamesByPath(drive, false);
+			}
+		});
+
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveFilenamesByPath(drive, true);
+			}
+		});
+
+		button_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new DriveChrono(drive);
+			}
+		});
 
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
@@ -322,59 +359,6 @@ public class MenuDrive {
 			}
 		});
 
-		JScrollPane scroll = new JScrollPane(tree);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(45, 100, 585, 564);
-		frame.getContentPane().add(scroll);
-		
-		List listFileStats1 = new List();
-		listFileStats1.setFont(new Font("Arial", Font.BOLD, 12));
-		listFileStats1.setBounds(745, 349, 169, 95);
-		listFileStats1.add("Folders");
-		listFileStats1.add("Shared Folders");
-		listFileStats1.add("Documents");
-		listFileStats1.add("Shared Documents");
-		listFileStats1.add("Files");
-		listFileStats1.add("Shared Files");
-		frame.getContentPane().add(listFileStats1);
-		
-		List listFileStats2 = new List();
-		listFileStats2.setFont(new Font("Arial", Font.PLAIN, 12));
-		listFileStats2.setBounds(913, 349, 169, 95);
-		listFileStats2.add(drive.getFileCount("Folders",false));
-		listFileStats2.add(drive.getFileCount("Folders",true));
-		listFileStats2.add(drive.getFileCount("Docs", false));
-		listFileStats2.add(drive.getFileCount("Docs", true));
-		listFileStats2.add(drive.getFileCount("Files", false));
-		listFileStats2.add(drive.getFileCount("Files", true));
-		frame.getContentPane().add(listFileStats2);
-		
-		List list_6 = new List();
-		list_6.setFont(new Font("Arial", Font.BOLD, 12));
-		list_6.setBounds(745, 456, 169, 50);
-		Iterator<Entry<String, Integer>> it1 =top3.entrySet().iterator();
-		int i = 1;
-		while (it1.hasNext()) {
-			Map.Entry pair = (Map.Entry)it1.next();
-			if(!pair.getKey().equals("total")){
-				list_6.add("TOP " + i +" - " + pair.getKey());
-				i++;
-			}
-		}
-		frame.getContentPane().add(list_6);
-		
-		List list_7 = new List();
-		list_7.setFont(new Font("Arial", Font.PLAIN, 12));
-		list_7.setBounds(913, 456, 169, 50);
-		Iterator<Entry<String, Integer>> it2 =top3.entrySet().iterator();
-		while (it2.hasNext()) {
-			Map.Entry pair = (Map.Entry)it2.next();
-			if(!pair.getKey().equals("total")){
-				list_7.add("" + drive.getPercentage(top3.get("total"), (Integer) pair.getValue())+ "%");
-			}
-		}
-		frame.getContentPane().add(list_7);
-		
 		btnFileContents.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
@@ -383,8 +367,8 @@ public class MenuDrive {
 				drive.showFileContent(path,drive);
 			}
 		});
-		
-		
+
+
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				list.setVisible(false);

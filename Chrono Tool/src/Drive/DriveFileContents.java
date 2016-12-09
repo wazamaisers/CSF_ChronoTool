@@ -72,7 +72,7 @@ public class DriveFileContents {
 			label.setBounds(58, 37, 1100, 560);
 			
 			JScrollPane scroll = new JScrollPane(label);
-			scroll.setBounds(58, 37, 867, 667);
+			scroll.setBounds(58, 37, 1100, 560);
 			frame.getContentPane().add(scroll);
 		}		
 	}

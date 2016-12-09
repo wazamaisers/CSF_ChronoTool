@@ -1,6 +1,4 @@
 import java.awt.EventQueue;
-import java.awt.HeadlessException;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;

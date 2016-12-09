@@ -38,6 +38,7 @@ import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import java.awt.List;
+import java.awt.Color;
 
 public class DriveChrono {
 
@@ -50,6 +51,8 @@ public class DriveChrono {
 	private HashMap<Integer,Long> _table3 = new HashMap<Integer,Long>();
 	private DatabaseSnapshotEntry entrySelected;
 	private JTable table;
+	private long timestamp1;
+	private long timestamp2;
 
 	/**
 	 * Launch the application.
@@ -83,38 +86,69 @@ public class DriveChrono {
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
-		
+
 		java.awt.List list = new java.awt.List();
+		list.setBackground(Color.LIGHT_GRAY);
 		list.setFont(new Font("Arial", Font.BOLD, 12));
 		list.setBounds(675, 100, 111, 113);
 		frame.getContentPane().add(list);
 
 		java.awt.List list_values = new java.awt.List();
+		list_values.setBackground(Color.LIGHT_GRAY);
 		list_values.setFont(new Font("Arial", Font.PLAIN, 12));
 		list_values.setBounds(787, 100, 421, 113);
 		frame.getContentPane().add(list_values);
-		
+
 		Button button = new Button("Clear");
 		button.setBounds(1155, 211, 53, 22);
 		button.setVisible(false);
 		frame.getContentPane().add(button);
-		
+
 		Button btnFileContents = new Button("File contents");
 		btnFileContents.setBounds(675, 210, 111, 23);
 		btnFileContents.setVisible(false);
 		frame.getContentPane().add(btnFileContents);
-		
-		
+
+
 		JLabel lblPeriod = new JLabel("Period:");
 		lblPeriod.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPeriod.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblPeriod.setBounds(697, 572, 89, 26);
+		lblPeriod.setVisible(false);
 		frame.getContentPane().add(lblPeriod);
-		
+
 		JLabel label = new JLabel("");
 		label.setBounds(857, 572, 319, 26);
 		frame.getContentPane().add(label);
 		
+		tree = new JTree(drive.buildTree());
+		tree.setBounds(148, 30, 463, 566);
+		scroll = new JScrollPane(tree);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setBounds(148, 30, 463, 566);
+		frame.getContentPane().add(scroll);
+
+		List list_updates = new List();
+		list_updates.setBounds(676, 289, 617, 277);
+		list_updates.setBackground(Color.LIGHT_GRAY);
+		frame.getContentPane().add(list_updates);
+
+		Button button_1 = new Button("Update");
+		button_1.setBounds(1219, 261, 70, 22);
+		frame.getContentPane().add(button_1);
+		
+		JRadioButton rdbtnWeekly = new JRadioButton("Weekly");
+		rdbtnWeekly.setBounds(33, 30, 109, 23);
+		frame.getContentPane().add(rdbtnWeekly);
+
+		JRadioButton rdbtnMonthly = new JRadioButton("Monthly");
+		rdbtnMonthly.setBounds(33, 56, 109, 23);
+		frame.getContentPane().add(rdbtnMonthly);
+
+		JRadioButton rdbtnYearly = new JRadioButton("Yearly");
+		rdbtnYearly.setBounds(33, 82, 109, 23);
+		frame.getContentPane().add(rdbtnYearly);
+
 		///////////////////////////////////////////////////////////////////////
 
 		last = drive.getLastTime();
@@ -208,21 +242,9 @@ public class DriveChrono {
 		yearsSlider.setBounds(33, 619, 1268, 26);
 		yearsSlider.setVisible(false);
 		frame.getContentPane().add(yearsSlider);
-		
+
 		/////////////////////////////////////////////////////////////////////////
-		
-		JRadioButton rdbtnWeekly = new JRadioButton("Weekly");
-		rdbtnWeekly.setBounds(33, 30, 109, 23);
-		frame.getContentPane().add(rdbtnWeekly);
-		
-		JRadioButton rdbtnMonthly = new JRadioButton("Monthly");
-		rdbtnMonthly.setBounds(33, 56, 109, 23);
-		frame.getContentPane().add(rdbtnMonthly);
-		
-		JRadioButton rdbtnYearly = new JRadioButton("Yearly");
-		rdbtnYearly.setBounds(33, 82, 109, 23);
-		frame.getContentPane().add(rdbtnYearly);
-		
+
 		rdbtnWeekly.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				weeksSlider.setVisible(true);
@@ -230,9 +252,10 @@ public class DriveChrono {
 				yearsSlider.setVisible(false);
 				rdbtnMonthly.setSelected(false);
 				rdbtnYearly.setSelected(false);
+				lblPeriod.setVisible(true);
 			}
 		});
-		
+
 		rdbtnMonthly.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				weeksSlider.setVisible(false);
@@ -240,9 +263,10 @@ public class DriveChrono {
 				yearsSlider.setVisible(false);
 				rdbtnWeekly.setSelected(false);
 				rdbtnYearly.setSelected(false);
+				lblPeriod.setVisible(true);
 			}
 		});
-		
+
 		rdbtnYearly.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				weeksSlider.setVisible(false);
@@ -250,21 +274,10 @@ public class DriveChrono {
 				yearsSlider.setVisible(true);
 				rdbtnMonthly.setSelected(false);
 				rdbtnWeekly.setSelected(false);
+				lblPeriod.setVisible(true);
 			}
 		});
-		
-		
-		tree = new JTree(drive.buildTree());
-		tree.setBounds(148, 30, 463, 566);
-		scroll = new JScrollPane(tree);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(148, 30, 463, 566);
-		frame.getContentPane().add(scroll);
-		
-		List list_updates = new List();
-		list_updates.setBounds(676, 289, 617, 277);
-		frame.getContentPane().add(list_updates);
-		
+
 		weeksSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
@@ -275,29 +288,23 @@ public class DriveChrono {
 					java.util.Date time2=new java.util.Date(timestampLast*1000);
 					SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
 					label.setText(dt.format(time2) + " to " + dt.format(time1));
-					HashMap<Integer,DatabaseSnapshotEntry> hash = drive.getFilesBetweenTwoDates(timestampLast, timestamp);
 					list_updates.removeAll();
-					Map<Integer,DatabaseSnapshotEntry> map = new TreeMap<Integer,DatabaseSnapshotEntry>(hash);
-					for(Entry<Integer, DatabaseSnapshotEntry> entry: map.entrySet()){
-						java.util.Date time=new java.util.Date((long)entry.getValue().getModified()*1000);
-						list_updates.add("Date: " + dt.format(time));
-						list_updates.add("File Added: " + entry.getValue().getFilename() + " " + drive.getPathByDocId(entry.getValue().getDocId()));
-						list_updates.add("Path:  " + drive.getPathByDocId(entry.getValue().getDocId()));
-						list_updates.add("");
-					}
+					list_updates.setBackground(Color.LIGHT_GRAY);
+					timestamp1 = timestampLast;
+					timestamp2 = timestamp;
 				}
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-	    	    DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
-	    	    nodeToRemove.removeAllChildren();
-	    	    model.nodeStructureChanged(nodeToRemove);
-	    	    DefaultMutableTreeNode root1 = 
-	    	    		drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
-	    	    model.reload(root1);
+				DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
+				nodeToRemove.removeAllChildren();
+				model.nodeStructureChanged(nodeToRemove);
+				DefaultMutableTreeNode root1 = 
+						drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
+				model.reload(root1);
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}
 		});
-		
+
 		monthsSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
@@ -308,29 +315,23 @@ public class DriveChrono {
 					java.util.Date time2=new java.util.Date(timestampLast*1000);
 					SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
 					label.setText(dt.format(time2) + " to " + dt.format(time1));
-					HashMap<Integer,DatabaseSnapshotEntry> hash = drive.getFilesBetweenTwoDates(timestampLast, timestamp);
 					list_updates.removeAll();
-					Map<Integer,DatabaseSnapshotEntry> map = new TreeMap<Integer,DatabaseSnapshotEntry>(hash);
-					for(Entry<Integer, DatabaseSnapshotEntry> entry: map.entrySet()){
-						java.util.Date time=new java.util.Date((long)entry.getValue().getModified()*1000);
-						list_updates.add("Date: " + dt.format(time));
-						list_updates.add("File Added: " + entry.getValue().getFilename() + " " + drive.getPathByDocId(entry.getValue().getDocId()));
-						list_updates.add("Path:  " + drive.getPathByDocId(entry.getValue().getDocId()));
-						list_updates.add("");
-					}
+					list_updates.setBackground(Color.LIGHT_GRAY);
+					timestamp1 = timestampLast;
+					timestamp2 = timestamp;
 				}
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-	    	    DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
-	    	    nodeToRemove.removeAllChildren();
-	    	    model.nodeStructureChanged(nodeToRemove);
-	    	    DefaultMutableTreeNode root1 = 
-	    	    		drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
-	    	    model.reload(root1);
+				DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
+				nodeToRemove.removeAllChildren();
+				model.nodeStructureChanged(nodeToRemove);
+				DefaultMutableTreeNode root1 = 
+						drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
+				model.reload(root1);
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}
 		});
-		
+
 		yearsSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
@@ -341,29 +342,40 @@ public class DriveChrono {
 					java.util.Date time2=new java.util.Date(timestampLast*1000);
 					SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
 					label.setText(dt.format(time2) + " to " + dt.format(time1));
-					HashMap<Integer,DatabaseSnapshotEntry> hash = drive.getFilesBetweenTwoDates(timestampLast, timestamp);
 					list_updates.removeAll();
-					Map<Integer,DatabaseSnapshotEntry> map = new TreeMap<Integer,DatabaseSnapshotEntry>(hash);
-					for(Entry<Integer, DatabaseSnapshotEntry> entry: map.entrySet()){
-						java.util.Date time=new java.util.Date((long)entry.getValue().getModified()*1000);
-						list_updates.add("Date: " + dt.format(time));
-						list_updates.add("File Added: " + entry.getValue().getFilename() + " " + drive.getPathByDocId(entry.getValue().getDocId()));
-						list_updates.add("Path:  " + drive.getPathByDocId(entry.getValue().getDocId()));
-						list_updates.add("");
-					}
+					list_updates.setBackground(Color.LIGHT_GRAY);
+					timestamp1 = timestampLast;
+					timestamp2 = timestamp;
 				}
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-	    	    DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
-	    	    nodeToRemove.removeAllChildren();
-	    	    model.nodeStructureChanged(nodeToRemove);
-	    	    DefaultMutableTreeNode root1 = 
-	    	    		drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
-	    	    model.reload(root1);
+				DefaultMutableTreeNode nodeToRemove = (DefaultMutableTreeNode) model.getRoot();
+				nodeToRemove.removeAllChildren();
+				model.nodeStructureChanged(nodeToRemove);
+				DefaultMutableTreeNode root1 = 
+						drive.buildTimedTree(timestamp,(DefaultMutableTreeNode) model.getRoot());
+				model.reload(root1);
 				System.out.println(source.getValue());
 				System.out.println(timestamp);
 			}
 		});
 		
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				list_updates.setBackground(Color.WHITE);
+				HashMap<Integer,DatabaseSnapshotEntry> hash = drive.getFilesBetweenTwoDates(timestamp1, timestamp2);
+				list_updates.removeAll();
+				SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
+				Map<Integer,DatabaseSnapshotEntry> map = new TreeMap<Integer,DatabaseSnapshotEntry>(hash);
+				for(Entry<Integer, DatabaseSnapshotEntry> entry: map.entrySet()){
+					java.util.Date time=new java.util.Date((long)entry.getValue().getModified()*1000);
+					list_updates.add("Date: " + dt.format(time));
+					list_updates.add("File Added: " + entry.getValue().getFilename() + " " + drive.getPathByDocId(entry.getValue().getDocId()));
+					list_updates.add("Path:  " + drive.getPathByDocId(entry.getValue().getDocId()));
+					list_updates.add("");
+				}
+			}
+		});
+
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				if(me.getClickCount() == 2 && !me.isConsumed()) {
@@ -371,8 +383,10 @@ public class DriveChrono {
 					me.consume();
 					btnFileContents.setVisible(true);
 					button.setVisible(true);
+					list.setBackground(Color.WHITE);
 					list.setVisible(true);
 					list.removeAll();
+					list_values.setBackground(Color.WHITE);
 					list_values.setVisible(true);
 					list_values.removeAll();
 					list.add("File Name"); 
@@ -394,7 +408,7 @@ public class DriveChrono {
 				}
 			}
 		});
-		
+
 		btnFileContents.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
@@ -403,18 +417,20 @@ public class DriveChrono {
 				drive.showFileContent(path,drive);
 			}
 		});
-		
-		
+
+
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				list.removeAll();
 				list_values.removeAll();
+				list.setBackground(Color.LIGHT_GRAY);
+				list_values.setBackground(Color.LIGHT_GRAY);
 				button.setVisible(false);
 				btnFileContents.setVisible(false);
 			}
 		});
 	}
-	
+
 	public DatabaseSnapshotEntry doMouseClicked(MouseEvent me, JTree tree, Drive drive) {
 		TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
 		System.out.println(tp.toString());

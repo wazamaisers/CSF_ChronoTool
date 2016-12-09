@@ -43,49 +43,70 @@ public class ChronoTool
 		Drive drive = new Drive(path_drive);
 		Skype skype = new Skype(path_skype);
 
-		String docxFile = "C:/sei la.docx";
-		String docFile = "C:/report.doc";
-		String xlsFile = "C:/Futebol.xls";
-		String xlsxFile = "C:/ubr.xlsx";
-		String confFile = "C:/ripd.conf";
-		String datFile = "C:/3-labeled.dat";
-		String imageFile = "C:/image.jpg";
-
-
-		String path = imageFile;
-
-		String file_extension = FilenameUtils.getExtension(path);
-		if(file_extension.equals("docx")){
-			String result = drive.readDocx(path);
-			System.out.println(result);
+//		String docxFile = "C:/sei la.docx";
+//		String docFile = "C:/report.doc";
+//		String xlsFile = "C:/Futebol.xls";
+//		String xlsxFile = "C:/ubr.xlsx";
+//		String confFile = "C:/ripd.conf";
+//		String datFile = "C:/3-labeled.dat";
+//		String imageFile = "C:/image.jpg";
+		
+		long bytes = 478391828L;
+		
+		long kilo = 1024L;
+		long mega = 1048576L;
+		double giga = 1073741824L;
+		String size = null;
+		if(bytes < 1024){
+			size = "" + bytes + " bytes";
 		}
-		else if(file_extension.equals("doc")){
-			String result = drive.readDoc(path);
-			System.out.println(result);
-
+		else if((kilo < bytes) && (bytes < mega)){
+			size = "" + (bytes/1024) + " Kbytes";
 		}
-		else if(file_extension.equals("xls")){
-			ArrayList<String> result = drive.readExcel(path,"xls");
-			for(String s: result){
-				System.out.println(s);
-			}
-		}
-		else if(file_extension.equals("xlsx")){
-			ArrayList<String> result = drive.readExcel(path,"xlsx");
-			for(String s: result){
-				System.out.println(s);
-			}
+		else if((mega < bytes) && (bytes < giga)){
+			size = "" + (bytes/(1024*1024)) + " Mbytes";
 		}
 		else{
-			try {
-				String result = drive.readFile(path);
-				System.out.println(result);
-				System.out.println("YAYA");
-			} catch (Exception e) {
-				System.out.println("not readable");
-				// TODO: handle exception
-			}
+			size = "" + (float) (bytes/(1024*1024))/1000 + " Gbytes";
 		}
+		
+		System.out.println(size);
+
+
+//		String path = imageFile;
+//
+//		String file_extension = FilenameUtils.getExtension(path);
+//		if(file_extension.equals("docx")){
+//			String result = drive.readDocx(path);
+//			System.out.println(result);
+//		}
+//		else if(file_extension.equals("doc")){
+//			String result = drive.readDoc(path);
+//			System.out.println(result);
+//
+//		}
+//		else if(file_extension.equals("xls")){
+//			ArrayList<String> result = drive.readExcel(path,"xls");
+//			for(String s: result){
+//				System.out.println(s);
+//			}
+//		}
+//		else if(file_extension.equals("xlsx")){
+//			ArrayList<String> result = drive.readExcel(path,"xlsx");
+//			for(String s: result){
+//				System.out.println(s);
+//			}
+//		}
+//		else{
+//			try {
+//				String result = drive.readFile(path);
+//				System.out.println(result);
+//				System.out.println("YAYA");
+//			} catch (Exception e) {
+//				System.out.println("not readable");
+//				// TODO: handle exception
+//			}
+//		}
 
 
 
