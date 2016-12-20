@@ -2,9 +2,6 @@ package Skype;
 
 import java.awt.Desktop;
 import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,34 +12,10 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.pdfbox.text.PDFTextStripperByArea;
-import org.apache.poi.POIXMLProperties.CoreProperties;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.extractor.WordExtractor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xslf.usermodel.XMLSlideShow;
-import org.apache.poi.xslf.usermodel.XSLFShape;
-import org.apache.poi.xslf.usermodel.XSLFSlide;
-import org.apache.poi.xslf.usermodel.XSLFTextShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-
 import Drive.Drive;
 import Drive.DriveFileContents;
 import Skype.Database.DatabaseCallsEntry;
@@ -62,6 +35,7 @@ public class Skype {
 	private HashMap<String,ArrayList<DatabaseCallsEntry>> _calls = new HashMap<String,ArrayList<DatabaseCallsEntry>>();
 	private HashMap<String,DatabaseContactsEntry> _user_profile = new HashMap<String,DatabaseContactsEntry>();
 
+	//Function to populate the database entrys and save them in java structures
 	public Skype(String path){
 		PopulateDatabase db = new PopulateDatabase(path);
 		_databaseLoaded = db.getDbCreated();
@@ -73,67 +47,24 @@ public class Skype {
 		_user_profile = db.getUserProfile();
 	}
 
+	//Function to alert the application that the database is loaded
 	public boolean getDatabaseLoaded(){
 		return _databaseLoaded;
 	}
 
-	public void testSkype(){
-		System.out.println("\n - - - Testes de links partilhados - - -\n");
-
-		for(Map.Entry<String,DatabaseSharedLinksEntry> entry: _shared_links.entrySet()){
-			System.out.println("Link: " + entry.getValue().getLink());
-			System.out.println("Time: " + entry.getValue().getTimestamp() + "\n");
-		}
-
-		System.out.println(" - - - Testes de ficheiros partilhados - - -\n");
-
-		for(Map.Entry<String,DatabaseSharedFilesStoredEntry> entry: _shared_files.entrySet()){
-			System.out.println("File Name: " + entry.getValue().getFileName());
-			System.out.println("Local Path: " + entry.getValue().getLocalPath());
-			System.out.println("User shared with: " + entry.getValue().getUserName());
-		}
-
-		System.out.println(" - - - Testes de contactos - - - \n");
-
-		for(Map.Entry<String,DatabaseContactsEntry> entry: _contacts.entrySet()){
-			System.out.println("Name: " + entry.getValue().getFullName());
-			System.out.println("Skypename: " + entry.getValue().getSkypeName());
-			System.out.println("Gender: " + entry.getValue().getGender());
-			System.out.println("City: " + entry.getValue().getCity());
-			System.out.println("Birthday: " + entry.getValue().getBirthday() + "\n");
-		}
-
-		System.out.println(" - - - Testes de chamadas - - - \n");
-
-		for(Map.Entry<String,ArrayList<DatabaseCallsEntry>> list: _calls.entrySet()){
-			for(DatabaseCallsEntry entry: list.getValue()){
-				System.out.println("Call with: " + entry.getDispname());
-				System.out.println("Skypename: " + entry.getIdentity());
-				System.out.println("Time: " + entry.getStartTimestamp() + "\n");
-			}
-		}
-		System.out.println(" - - - Testes de mensagens - - - \n");
-
-		for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> list: _messages.entrySet()){
-			System.out.println("Messages with: " + list.getKey());
-			for(DatabaseMessagesEntry entry: list.getValue()){
-				System.out.println("From: " + entry.getAuthor());
-				System.out.println("Time: " + entry.getTimestamp());
-				System.out.println("Message: " + entry.getMessage() + "\n");
-			}
-		}
-	}
-
+	//Function to get the avatar of the skype owner
 	public String getUserAvatarPath(String skypeusername){
 		String path = _user_profile.get(skypeusername).getAvatarImage();
 		return path;
 	}
-	
+
+	//Function to get the avatar of an user given his skype username
 	public String getAvatarPath(String skypeusername){
 		String path = _contacts.get(skypeusername).getAvatarImage();
 		return path;
 	}
-	
+
+	//Function to get the basic contact informations from the contacts database
 	public String[][] getBasicContactInfo(){
 		String[][] arrays = new String[_contacts.entrySet().size()][4];
 		int i = 0;
@@ -168,7 +99,7 @@ public class Skype {
 				else{
 					arrays[i][3] = "";
 				}
-				
+
 			}
 			catch(Exception e){
 				arrays[i][3] = "";
@@ -178,6 +109,7 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to get the skype name of the skype owner
 	public String getSkypeName(){
 		String skypeName = "";
 		for(Map.Entry<String,DatabaseContactsEntry> entry: _user_profile.entrySet()){
@@ -186,6 +118,7 @@ public class Skype {
 		return skypeName;
 	}
 
+	//Function to get the skype username of the skype owner
 	public String getSkypeUserName(){
 		String skypeUserName = "";
 		for(Map.Entry<String,DatabaseContactsEntry> entry: _user_profile.entrySet()){
@@ -194,14 +127,17 @@ public class Skype {
 		return skypeUserName;
 	}
 
+	//Function to get the profile of the skype owner
 	public HashMap<String,DatabaseContactsEntry> getUserProfile(){
 		return _user_profile;
 	}
-	
+
+	//Function to get the entries of all the contacts
 	public HashMap<String,DatabaseContactsEntry> getContacts(){
 		return _contacts;
 	}
 
+	//Function to organize the values to put in the table of all calls
 	public String[][] getAllCalls(){
 		int size = 0;
 		for(Map.Entry<String,ArrayList<DatabaseCallsEntry>> entry: _calls.entrySet()){
@@ -279,6 +215,7 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to organize the values to put in the table of all messages
 	public String[][] getAllMessages(){
 		int size = 0;
 		for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> entry: _messages.entrySet()){
@@ -360,50 +297,70 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to organize the values to put in the table of all shared links
 	public String[][] getAllLinks(){
 		int size = 0;
 		for(Map.Entry<String,DatabaseSharedLinksEntry> entry: _shared_links.entrySet()){
-			if(!(entry.getValue().getLink().charAt(0) == 'i')){
-				size++;
+			if(entry.getValue().getLink().charAt(0) == 'i'){
+				continue;
 			}
+			
+			if(entry.getValue().getLink().length()>=25){
+				if((entry.getValue().getLink().substring(0,25).equals("whttps://weu1-urlp.secure")) ||
+						(entry.getValue().getLink().substring(0,25).equals("whttps://neu1-urlp.secure"))){
+					continue;
+				}
+			}
+			size++;
+
 		}
 		String[][] arrays = new String[size][4];
 		int i = 0;
 		for(Map.Entry<String,DatabaseSharedLinksEntry> entry: _shared_links.entrySet()){
-			if(!(entry.getValue().getLink().charAt(0) == 'i')){
-				try{
-					arrays[i][0] = entry.getValue().getLink().substring(1);
-				}
-				catch(Exception e){
-					arrays[i][0] = "";
-				}
-
-				try{
-					arrays[i][1] = entry.getValue().getType();
-				}
-				catch(Exception e){
-					arrays[i][1] = "";
-				}
-				try{
-					java.util.Date time=new java.util.Date((long)entry.getValue().getTimestamp()*1000);
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-					arrays[i][2] = dateFormat.format(time);
-				}
-				catch(Exception e){
-					arrays[i][2] = "";
-				}
-				try{
-					arrays[i][3] = entry.getValue().getTimestamp().toString();
-				}
-				catch(Exception e){
-					arrays[i][3] = "";
-				}
-				i++;
+			if(entry.getValue().getLink().charAt(0) == 'i'){
+				continue;
 			}
+			if(entry.getValue().getLink().length()>=25){
+				if((entry.getValue().getLink().substring(0,25).equals("whttps://weu1-urlp.secure")) ||
+						(entry.getValue().getLink().substring(0,25).equals("whttps://neu1-urlp.secure"))){
+					continue;
+				}
+			}
+
+			try{
+				arrays[i][0] = entry.getValue().getLink().substring(1);
+			}
+			catch(Exception e){
+				arrays[i][0] = "";
+			}
+
+			try{
+				arrays[i][1] = entry.getValue().getType();
+			}
+			catch(Exception e){
+				arrays[i][1] = "";
+			}
+			try{
+				java.util.Date time=new java.util.Date((long)entry.getValue().getTimestamp()*1000);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				arrays[i][2] = dateFormat.format(time);
+			}
+			catch(Exception e){
+				arrays[i][2] = "";
+			}
+			try{
+				arrays[i][3] = entry.getValue().getTimestamp().toString();
+			}
+			catch(Exception e){
+				arrays[i][3] = "";
+			}
+			i++;
+
 		}
 		return arrays;
 	}
 
+	//Function to organize the values to put in the table of all shared files
 	public String[][] getAllFiles(){
 		String[][] arrays = new String[_shared_files.entrySet().size()][4];
 		int i = 0;
@@ -440,6 +397,7 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to transform the size from bytes to Kb, Mb or Gb
 	public String getSizeCorrect(long bytes){
 		long kilo = 1024L;
 		long mega = 1048576L;
@@ -460,10 +418,12 @@ public class Skype {
 		return size;
 	}
 
+	//Function to get the total number of contacts
 	public int getTotalContacts(){
 		return _contacts.size();
 	}
 
+	//Function to get the total number of calls
 	public int getTotalCalls(){
 		int size = 0;
 		for(Map.Entry<String,ArrayList<DatabaseCallsEntry>> entry: _calls.entrySet()){
@@ -476,6 +436,7 @@ public class Skype {
 		return size;
 	}
 
+	//Function to get the total number of messages
 	public int getTotalMessages(){
 		int size = 0;
 		for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> entry: _messages.entrySet()){
@@ -496,14 +457,17 @@ public class Skype {
 		return size;
 	}
 
+	//Function to get the total number of files
 	public int getTotalFiles(){
 		return _shared_files.size();
 	}
 
+	//Function to get the total number of links
 	public int getTotalLinks(){
 		return _shared_links.size();
 	}
 
+	//Function to get the list of all skype usernames
 	public ArrayList<String> getSkypeNamesList(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(Map.Entry<String,DatabaseContactsEntry> entry: _contacts.entrySet()){
@@ -512,6 +476,7 @@ public class Skype {
 		return list;
 	}
 
+	//Function to get the number of calls made in a certain period
 	public int getLastCallsByPeriod(String period){
 		java.util.Date now = new java.util.Date();
 		LocalDate now1 = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -535,6 +500,7 @@ public class Skype {
 		return calls;
 	}
 
+	//Function to get the number of messages made in a certain period
 	public int getLastMessagesByPeriod(String period){
 		java.util.Date now = new java.util.Date();
 		LocalDate now1 = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -558,6 +524,7 @@ public class Skype {
 		return calls;
 	}
 
+	//Function to get the top3 people that the user contact by call or message
 	public HashMap <String,HashMap<String,Integer>> getTop(String type){
 		HashMap <String,Integer> top1 = new HashMap <String,Integer>();
 		HashMap <String,Integer> top2 = new HashMap <String,Integer>();
@@ -575,6 +542,7 @@ public class Skype {
 		Integer total = 0;
 		if(type.equals("messages")){
 			for(Map.Entry<String,ArrayList<DatabaseMessagesEntry>> list: _messages.entrySet()){
+				total=0;
 				for(DatabaseMessagesEntry entry1: list.getValue()){
 					try{
 						if(entry1.getMessage().length()>=20){
@@ -608,6 +576,7 @@ public class Skype {
 					third = person;
 					trd = total;
 				}
+
 			}
 		}
 
@@ -646,6 +615,7 @@ public class Skype {
 		return ret;
 	}
 
+	//Function to organize the values to put in the table of all calls with a specific user
 	public String[][] getAllCallsByName(String skypeName){
 		int size = 0;
 		ArrayList<DatabaseCallsEntry> list = _calls.get(skypeName);
@@ -720,6 +690,7 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to organize the values to put in the table of all messages with a specific user
 	public String[][] getAllMessagesByName(String skypeName){
 		int size = 0;
 		ArrayList<DatabaseMessagesEntry> list = _messages.get(skypeName);
@@ -799,6 +770,7 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to organize the values to put in the table of all shared files with a specific user
 	public String[][] getAllFilesByName(String skypeName){
 		int size = 0;
 		for(Map.Entry<String,DatabaseSharedFilesStoredEntry> entry: _shared_files.entrySet()){
@@ -844,6 +816,7 @@ public class Skype {
 		return arrays;
 	}
 
+	//Function to show the content of a file given a path
 	public void showFileContent(String path){
 
 		String file_extension = FilenameUtils.getExtension(path);
@@ -894,7 +867,7 @@ public class Skype {
 						else{
 							new DriveFileContents(null,null,image);
 						}
-						
+
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(null, "File is not readable", "InfoBox: " + "Error reading file", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -908,6 +881,7 @@ public class Skype {
 		}
 	}
 
+	//Function to open the browser with the link clicked twice in the links list
 	public void links(String link){
 		try {
 			Desktop.getDesktop().browse(new URI(link));

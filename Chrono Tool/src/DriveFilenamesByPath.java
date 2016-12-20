@@ -64,6 +64,8 @@ public class DriveFilenamesByPath extends JFrame {
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
+		//// ELEMENTS OF THIS WINDOW ////
+		
 		Label label = new Label();
 		label.setBounds(450, 30, 550, 23);
 		label.setVisible(false);
@@ -189,6 +191,8 @@ public class DriveFilenamesByPath extends JFrame {
 		list = new List();
 		list.setBounds(35, 10, 257, 241);
 		list.setVisible(false);
+		
+		//// ACTIONS PREFORMED IN THE WINDOW ELEMENTS ////
 		
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

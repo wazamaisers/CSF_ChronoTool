@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javax.swing.SwingConstants;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -67,6 +66,8 @@ public class DriveExtensionsByPath extends JFrame {
 		frame.setBounds(100, 100, 450, 300);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
+		
+		//// ELEMENTS OF THIS WINDOW ////
 		
 		lblTypeAnExtension = new JLabel("Select an extension");
 		lblTypeAnExtension.setHorizontalAlignment(SwingConstants.CENTER);
@@ -198,6 +199,8 @@ public class DriveExtensionsByPath extends JFrame {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setBounds(172, 208, 89, 23);
 		frame.getContentPane().add(btnSearch);
+		
+		//// ACTIONS PREFORMED IN THE WINDOW ELEMENTS ////
 		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

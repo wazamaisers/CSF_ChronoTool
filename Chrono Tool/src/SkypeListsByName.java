@@ -40,12 +40,15 @@ public class SkypeListsByName {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String listType, Skype skype, String skypeName) {
-		frame = new JFrame();
+		frame = new JFrame("Skype - Lists By User");
 		frame.setBounds(100, 100, 800, 600);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 
 		try {
+			
+			//// CREATION OF THE TABLE FOR THE CALLS, IF THE CALLS BUTTON HAS BEEN PRESSED ////
+			
 			if(listType.equals("calls")){
 				String[] columnNames = {"Name", "Skype Name", "Caller", "Answered", "Time", "Timestamp"};
 				String[][] rowData = skype.getAllCallsByName(skypeName);
@@ -56,6 +59,7 @@ public class SkypeListsByName {
 				};
 
 				table.setAutoCreateRowSorter(true);
+				table.getRowSorter().toggleSortOrder(5);
 				table.getRowSorter().toggleSortOrder(5);
 				table.removeColumn(table.getColumnModel().getColumn(5));
 
@@ -72,6 +76,9 @@ public class SkypeListsByName {
 				scroll.setBounds(46, 47, 700, 500);
 				frame.getContentPane().add(scroll);
 			}
+			
+			//// CREATION OF THE TABLE FOR THE MESSAGES, IF THE MESSAGES BUTTON HAS BEEN PRESSED ////
+			
 			else if(listType.equals("messages")){
 				String[] columnNames = {"Chat With", "Author Skype Name", "Author Name", "Message", "Time","Timestamps"};
 				String[][] rowData = skype.getAllMessagesByName(skypeName);
@@ -81,6 +88,7 @@ public class SkypeListsByName {
 					}
 				};
 				table.setAutoCreateRowSorter(true);
+				table.getRowSorter().toggleSortOrder(5);
 				table.getRowSorter().toggleSortOrder(5);
 				table.removeColumn(table.getColumnModel().getColumn(5));
 
@@ -96,6 +104,9 @@ public class SkypeListsByName {
 				scroll.setBounds(46, 47, 700, 500);
 				frame.getContentPane().add(scroll);
 			}
+			
+			//// CREATION OF THE TABLE FOR THE FILES, IF THE FILES BUTTON HAS BEEN PRESSED ////
+			
 			else if(listType.equals("files")){
 				String[] columnNames = {"File Name", "Local Path", "User Sharing With", "Size"};
 				String[][] rowData = skype.getAllFilesByName(skypeName);

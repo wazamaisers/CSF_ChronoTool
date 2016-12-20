@@ -63,6 +63,8 @@ public class MenuDrive {
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
+		
+		//// ELEMENTS OF THIS WINDOW ////
 
 		JLabel lblDriveVersion = new JLabel("");
 		lblDriveVersion.setForeground(Color.BLACK);
@@ -164,18 +166,18 @@ public class MenuDrive {
 		JLabel lblChronological = new JLabel("Chronological");
 		lblChronological.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChronological.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblChronological.setBounds(1194, 490, 158, 33);
+		lblChronological.setBounds(1194, 474, 158, 33);
 		frame.getContentPane().add(lblChronological);
 
 		JLabel lblTimeline = new JLabel("Timeline");
 		lblTimeline.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTimeline.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblTimeline.setBounds(1194, 507, 158, 33);
+		lblTimeline.setBounds(1194, 491, 158, 33);
 		frame.getContentPane().add(lblTimeline);
 
 		Button button_7 = new Button("Start Chrono Tool");
 		button_7.setFont(new Font("Arial", Font.PLAIN, 15));
-		button_7.setBounds(1194, 548, 158, 57);
+		button_7.setBounds(1194, 532, 158, 57);
 		frame.getContentPane().add(button_7);
 
 		Button button_1 = new Button("Filenames (children)");
@@ -225,7 +227,6 @@ public class MenuDrive {
 		btnFileContents.setVisible(false);
 		frame.getContentPane().add(btnFileContents);
 
-		//create the tree by passing in the root node
 		JTree tree = new JTree(drive.buildTree());
 		tree.setBounds(45, 100, 585, 564);
 		
@@ -281,6 +282,19 @@ public class MenuDrive {
 			}
 		}
 		frame.getContentPane().add(list_7);
+		
+		Button button_5 = new Button("Main Menu");
+		button_5.setBounds(1282, 655, 70, 22);
+		frame.getContentPane().add(button_5);
+		
+		//// ACTIONS PREFORMED IN THE WINDOW ELEMENTS ////
+		
+		button_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new App();
+				frame.dispose();
+			}
+		});
 
 		buttonPath1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -383,10 +397,9 @@ public class MenuDrive {
 		});
 	}
 
+	// Function that returns the entry when the user clicks twice in an element of the tree
 	public DatabaseSnapshotEntry doMouseClicked(MouseEvent me, JTree tree, Drive drive) {
 		TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
-		System.out.println(tp.toString());
-		System.out.println(drive.getPathFromTreePath(tp));
 		String doc_id = drive.getDirectoryDocIdByPath(drive.getPathFromTreePath(tp));
 		DatabaseSnapshotEntry entry = drive.getEntryByDocId(doc_id);
 		return entry;

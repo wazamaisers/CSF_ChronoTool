@@ -62,6 +62,8 @@ public class DriveFilenamesByKw {
 		frame.setBounds(100, 100, 450, 300);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
+		
+		//// ELEMENTS OF THIS WINDOW ////
 
 		JLabel lblIntroduceAWord = new JLabel("Introduce a word or expression");
 		lblIntroduceAWord.setHorizontalAlignment(SwingConstants.CENTER);
@@ -162,6 +164,8 @@ public class DriveFilenamesByKw {
 		button = new JButton("Search");
 		button.setBounds(172, 162, 89, 23);
 		frame.getContentPane().add(button);
+		
+		//// ACTIONS PREFORMED IN THE WINDOW ELEMENTS ////
 		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

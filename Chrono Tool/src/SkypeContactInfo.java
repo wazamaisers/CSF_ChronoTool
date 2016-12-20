@@ -43,10 +43,12 @@ public class SkypeContactInfo {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String skypename, Skype skype) {
-		frame = new JFrame();
+		frame = new JFrame("Skype - Contact Information");
 		frame.setBounds(100, 100, 413, 543);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
+		
+		// Lists of the user available info
 		
 		List list = new List();
 		list.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -121,6 +123,7 @@ public class SkypeContactInfo {
 		getAvatar(skype.getContacts().get(skypename).getSkypeName(),skype);
 	}
 	
+	// Function to get avatar of the user from the database
 	public void getAvatar(String skypeUsername, Skype skype){
 		try {
 			String path = skype.getAvatarPath(skypeUsername);

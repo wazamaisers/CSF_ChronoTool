@@ -7,13 +7,9 @@ import Skype.Skype;
 import javax.swing.JFileChooser;
 import java.awt.Component;
 
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -162,6 +158,7 @@ public class App {
 				if(_skype.getDatabaseLoaded()){
 					btnDrive.setVisible(false);
 					btnSkype.setVisible(false);
+					btnChooseManually.setVisible(false);
 					lblSkype.setText("Skype database loaded!");
 					lblSkype.setVisible(true);
 					if(!btnStartApplication.isVisible()){
@@ -213,13 +210,17 @@ public class App {
 		});
 	}
 	
+	//Function to initialize menu Drive
 	public void mainMenuDrive(Drive drive){
 		new MenuDrive(drive);
 	}
+	
+	//Function to initialize menu Skype
 	public void mainMenuSkype(Skype skype){
 		new MenuSkype(skype);
 	}
 
+	//Function to show the File Chooser window
 	public String fileChooser(ActionEvent e){
 		String fileName = "";
 		JFileChooser fileChooser = new JFileChooser();

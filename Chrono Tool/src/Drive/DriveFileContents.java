@@ -40,11 +40,12 @@ public class DriveFileContents {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String string, ArrayList<String> array, Image image) {
-		frame = new JFrame("Google Drive - File Contents");
+		frame = new JFrame("File Contents");
 		frame.setBounds(50, 50, 1200, 650);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
+		// If it is a file with text, creates a textArea
 		if(!(string==null) || !(array==null)){
 			JTextArea textArea = new JTextArea();
 			textArea.setBounds(58, 37, 1100, 560);
@@ -67,6 +68,8 @@ public class DriveFileContents {
 				textArea.setText(str2);
 			}
 		}
+		
+		// If it is an image file, creates a label with an icon
 		else{
 			JLabel label = new JLabel(new ImageIcon(image));
 			label.setBounds(58, 37, 1100, 560);

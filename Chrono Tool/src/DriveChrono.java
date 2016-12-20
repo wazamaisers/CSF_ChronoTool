@@ -2,7 +2,6 @@ import java.awt.Button;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -26,17 +25,14 @@ import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.JTable;
 import java.awt.List;
 import java.awt.Color;
 
@@ -50,7 +46,6 @@ public class DriveChrono {
 	private HashMap<Integer,Long> _table2 = new HashMap<Integer,Long>();
 	private HashMap<Integer,Long> _table3 = new HashMap<Integer,Long>();
 	private DatabaseSnapshotEntry entrySelected;
-	private JTable table;
 	private long timestamp1;
 	private long timestamp2;
 
@@ -86,6 +81,8 @@ public class DriveChrono {
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
+		
+		//// ELEMENTS OF THIS WINDOW ////
 
 		java.awt.List list = new java.awt.List();
 		list.setBackground(Color.LIGHT_GRAY);
@@ -108,7 +105,6 @@ public class DriveChrono {
 		btnFileContents.setBounds(675, 210, 111, 23);
 		btnFileContents.setVisible(false);
 		frame.getContentPane().add(btnFileContents);
-
 
 		JLabel lblPeriod = new JLabel("Period:");
 		lblPeriod.setHorizontalAlignment(SwingConstants.CENTER);
@@ -149,7 +145,7 @@ public class DriveChrono {
 		rdbtnYearly.setBounds(33, 82, 109, 23);
 		frame.getContentPane().add(rdbtnYearly);
 
-		///////////////////////////////////////////////////////////////////////
+		//// INITIALIZATION OF THE SLIDERS ////
 
 		last = drive.getLastTime();
 		java.util.Date time=new java.util.Date((long)last*1000);
@@ -164,7 +160,7 @@ public class DriveChrono {
 		long totalYears = ChronoUnit.YEARS.between(time1, now1);
 		System.out.print(totalMonths + "\n");
 
-		/////////////////////////////////// WEEK SLIDER ///////////////////////////////////
+		//// WEEK SLIDER CREATION ////
 
 		LocalDate week = now1;
 		System.out.print(week + "\n");
@@ -194,7 +190,7 @@ public class DriveChrono {
 		weeksSlider.setVisible(false);
 		frame.getContentPane().add(weeksSlider);
 
-		///////////////////////// MONTHS SLIDER //////////////////////////////////
+		//// MONTHS SLIDER CREATION ////
 
 		LocalDate month = now1;
 		System.out.print(month + "\n");
@@ -221,7 +217,7 @@ public class DriveChrono {
 		monthsSlider.setVisible(false);
 		frame.getContentPane().add(monthsSlider);
 
-		///////////////////////// YEARS SLIDER ///////////////////////////////
+		//// YEARS SLIDER CREATION ////
 
 		LocalDate year = now1;
 		System.out.print(year + "\n");
@@ -243,7 +239,7 @@ public class DriveChrono {
 		yearsSlider.setVisible(false);
 		frame.getContentPane().add(yearsSlider);
 
-		/////////////////////////////////////////////////////////////////////////
+		//// ACTIONS PREFORMED IN THE WINDOW ELEMENTS ////
 
 		rdbtnWeekly.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

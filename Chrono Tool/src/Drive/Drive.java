@@ -47,6 +47,7 @@ public class Drive {
 	private DatabaseSyncConfigEntry _user_details = null;
 	private ArrayList<DatabaseSnapshotEntry> _final_list = new ArrayList<DatabaseSnapshotEntry>();
 
+	//Function to populate the database entrys and save them in java structures
 	public Drive(String path){
 
 		PopulateDatabase db = new PopulateDatabase(path);
@@ -56,10 +57,12 @@ public class Drive {
 		_user_details = db.getUserDetails();
 	}
 
+	//Function to alert the application that the database is loaded
 	public boolean getDatabaseLoaded(){
 		return _databaseLoaded;
 	}
 
+	//Function to get extensions given a path
 	public HashMap<String, Integer> getExtensions(String path){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -83,6 +86,7 @@ public class Drive {
 		return extensions;
 	}
 
+	//Function to get the files of a certain extension given a path
 	public ArrayList<DatabaseSnapshotEntry> getFilesByExtensionGivingPath(String path, String extension){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -101,6 +105,7 @@ public class Drive {
 		return extensions;
 	}
 
+	//Function to get the number of each extension in a folder and its children
 	public HashMap<String, Integer> getChildrenExtensions(String path){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -126,6 +131,7 @@ public class Drive {
 		return extensions;
 	}
 
+	//Function to get extensions given a path in that folder and its children
 	public ArrayList<DatabaseSnapshotEntry> getFilesByChildrenExtensionGivingPath(String path, String extension){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -145,6 +151,7 @@ public class Drive {
 		return extensions;
 	}
 
+	//Function to get all entries that are children of a certain entry by its doc_id
 	public ArrayList<DatabaseSnapshotEntry> getArrayOfChildren (String parent_doc_id){
 
 		ArrayList<DatabaseSnapshotEntry> empty_list = new ArrayList<DatabaseSnapshotEntry>();
@@ -153,6 +160,7 @@ public class Drive {
 		return _final_list;
 	}
 
+	//Auxiliar recursive function of the previous one
 	public void getArrayOfChildrenAux (String parent_doc_id){
 
 		List<DatabaseSnapshotEntry> initial_list = _database_schema.get(parent_doc_id);
@@ -167,6 +175,7 @@ public class Drive {
 		return;
 	}
 
+	//Function to get an entry by its doc_id
 	public DatabaseSnapshotEntry getEntryByDocId(String doc_id){
 
 		for(DatabaseSnapshotEntry entry: _database_entrys){
@@ -177,6 +186,7 @@ public class Drive {
 		return null;
 	}
 
+	//Function to get a folder doc_id by its path
 	public String getDirectoryDocIdByPath(String path){
 		String[] splited = path.split("/");
 		List<DatabaseSnapshotEntry> possible_entrys = new ArrayList<DatabaseSnapshotEntry>();
@@ -210,6 +220,7 @@ public class Drive {
 		return null;
 	}
 
+	//Function to get the path of an entry by its doc_id
 	public String getPathByDocId(String docId){
 		String path = "";
 		String parent = "";
@@ -234,25 +245,30 @@ public class Drive {
 		return path;
 	}
 
+	//Function to get files within a folder given the path to that folder
 	public List<DatabaseSnapshotEntry> getFilesWithinFolder(String path){
 		String doc_id = getDirectoryDocIdByPath(path);
 		List<DatabaseSnapshotEntry> files_list = _database_schema.get(doc_id);
 		return files_list;
 	}
 
+	//Function to get the user mail of the Drive owner
 	public String getUserMail(){
 		return _user_details.getUserEmail();
 	}
 
+	//Function to get the Drive version of the Drive owner
 	public String getDriveVersion(){
 		return _user_details.getVersion();
 	}
 
+	//Function to get a percentage
 	public float getPercentage(int questions, int correct) {
 		float proportionCorrect = ((float) correct) / ((float) questions);
 		return Math.round(proportionCorrect * 100);
 	}
 
+	//Function to get Drive activity by the times of the day
 	public HashMap<String, Integer> getTimes(){
 
 		ArrayList<Integer> timestamps = new ArrayList<Integer>();
@@ -307,6 +323,7 @@ public class Drive {
 		return _times;
 	}
 
+	//Function to get a path of an entry clicked twice by the user in the Drive Menu
 	public String getPathFromTreePath(TreePath tp){
 
 		String list = tp.toString();
@@ -340,12 +357,14 @@ public class Drive {
 		return path;
 	}
 
+	//Function to build the tree presented in the Drive Menu
 	public DefaultMutableTreeNode buildTree(){
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 		return buildTreeAux("root", root);
 	}
-
+	
+	//Auxiliar recursive function of the previous one
 	public DefaultMutableTreeNode buildTreeAux (String parent_doc_id, 
 			DefaultMutableTreeNode node){
 
@@ -364,12 +383,15 @@ public class Drive {
 		return node;
 	}
 
+	//Function to build the tree of all folders to present in the menus where the
+	//choice is made by path
 	public DefaultMutableTreeNode buildTreeOfDirs(){
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 		return buildTreeOfDirsAux("root", root);
 	}
 
+	//Auxiliar recursive function of the previous one
 	public DefaultMutableTreeNode buildTreeOfDirsAux (String parent_doc_id, 
 			DefaultMutableTreeNode node){
 
@@ -388,6 +410,7 @@ public class Drive {
 		return node;
 	}
 
+	//Function to get the total size of the Drive
 	public String getLocalDriveSize(){
 		long bytes = 0L;
 
@@ -397,6 +420,7 @@ public class Drive {
 		return getSizeCorrect(bytes);
 	}
 
+	//Function to transform the size from bytes to Kb, Mb or Gb
 	public String getSizeCorrect(long bytes){
 		long kilo = 1024L;
 		long mega = 1048576L;
@@ -417,6 +441,7 @@ public class Drive {
 		return size;
 	}
 
+	//Function to get the total number of files, documents and folder that are or not shared
 	public String getFileCount(String type, boolean sharedFlag){
 		String filecount = null;
 		long files = 0L;
@@ -459,6 +484,7 @@ public class Drive {
 		return filecount;
 	}
 
+	//Function to get the statistics of the top3 extensions in the Drive
 	public HashMap <String,Integer> getChildrenExtensionsStatistics(String path){
 		HashMap <String,Integer> top3 = new HashMap <String,Integer>();
 		HashMap <String,Integer> extensions =  getChildrenExtensions("root");
@@ -505,6 +531,7 @@ public class Drive {
 		return top3;
 	}
 
+	//Function to get entries by keyWord
 	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWord(String keyWord){
 
 		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
@@ -528,6 +555,7 @@ public class Drive {
 		return finalList;
 	}
 
+	//Function to get entries by keyWord in a certain path
 	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWordGivePath(String keyWord, String path){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -552,6 +580,7 @@ public class Drive {
 		return finalList;
 	}
 
+	//Function to get entries by keyWord in a certain path and its children folders and files
 	public ArrayList<DatabaseSnapshotEntry> getFilesByKeyWordChildrenGivePath(String keyWord, String path){
 
 		String doc_id = getDirectoryDocIdByPath(path);
@@ -577,6 +606,7 @@ public class Drive {
 		return finalList;
 	}
 
+	//Function to get the time of the first entry (root folder) of the Drive
 	public Integer getLastTime(){
 		Integer last = 2147483647;
 		for(DatabaseSnapshotEntry entry: _database_entrys){
@@ -587,26 +617,25 @@ public class Drive {
 		return last;
 	}
 
+	//Function to build the tree of the chrono tool mode
 	public DefaultMutableTreeNode buildTimedTree(Long timestamp, DefaultMutableTreeNode root1){
 
 		DefaultMutableTreeNode root = root1;
 		return buildTimedTreeAux("root", root, timestamp);
 	}
 
+	//Auxiliar recursive function of the previous one
 	public DefaultMutableTreeNode buildTimedTreeAux (String parent_doc_id, 
 			DefaultMutableTreeNode node, Long timestamp){
-		System.out.println("Entra aux");
 
 		List<DatabaseSnapshotEntry> initial_list = _database_schema.get(parent_doc_id);
 		for(DatabaseSnapshotEntry entry: initial_list){
 			if(_database_schema.containsKey(entry.getDocId()) && (long) entry.getModified() < timestamp){
-				System.out.println("Entra if");
 				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
 				buildTreeAux(entry.getDocId(),parent);
 				node.add(parent);
 			}
 			else if((long) entry.getModified() < timestamp){
-				System.out.println("Entra else if");
 				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(entry.getFilename());
 				node.add(parent);
 			}
@@ -614,6 +643,7 @@ public class Drive {
 		return node;
 	}
 
+	//Function to read .doc files given a path
 	public static String readDoc(String path){
 		String result = "";
 		try {
@@ -632,6 +662,7 @@ public class Drive {
 		return result;
 	}
 
+	//Function to read .docx files given a path
 	public static String readDocx(String path){
 		String result = "";
 		try {
@@ -655,6 +686,7 @@ public class Drive {
 		return result;
 	}
 
+	//Function to read .xls or .xlsx files given a path
 	public static ArrayList<String> readExcel(String path, String type){
 		ArrayList<String> result = new ArrayList<String>();
 		Iterator<Row> rowIterator;
@@ -711,6 +743,7 @@ public class Drive {
 
 	}
 
+	//Function to read .pdf files given a path
 	public static String readPdf(String path){
 		String result = "";
 		try {
@@ -731,6 +764,7 @@ public class Drive {
 		}
 	}
 	
+	//Function to read .ppt files given a path
 	public static String readPpt(String path){
 		String result = "";
 		try {
@@ -759,6 +793,7 @@ public class Drive {
 		return result;
 	}
 	
+	//Function to read image files given a path
 	public static Image readImage(String path){
 		Image image = null;
 		try {
@@ -771,6 +806,7 @@ public class Drive {
 		return image;
 	}
 
+	//Function to read files with text that are not from the previous types
 	public static String readFile(String path){
 		String result = "";
 		try {
@@ -785,6 +821,7 @@ public class Drive {
 		return result;
 	}
 
+	//Function to retrieve the content of a file given a path
 	public void showFileContent(String path, Drive drive){
 		String file_extension = FilenameUtils.getExtension(path);
 		if(file_extension.equals("docx")){
@@ -840,6 +877,7 @@ public class Drive {
 		}
 	}
 
+	//Function to retrieve the content of a specific entry
 	public String checkFileContent(DatabaseSnapshotEntry entry){
 		String drivePath = System.getenv("HOMEPATH") + "/Google Drive";
 		String path = drivePath + getPathByDocId(entry.getDocId()).substring(4);
@@ -895,6 +933,7 @@ public class Drive {
 		}
 	}
 
+	//Function to get an entry/entries by a key word
 	public ArrayList<DatabaseSnapshotEntry> getFilesByKwInContent(String keyWord, ArrayList<DatabaseSnapshotEntry> entrys){
 
 		ArrayList<DatabaseSnapshotEntry> finalList = new ArrayList<DatabaseSnapshotEntry>();
@@ -946,6 +985,7 @@ public class Drive {
 		return finalList;
 	}
 
+	//Function to get all files with their last modification within two timestamps
 	public HashMap<Integer,DatabaseSnapshotEntry> getFilesBetweenTwoDates(long timestamp1, long timestamp2){
 		HashMap<Integer,DatabaseSnapshotEntry> hash = new HashMap<Integer,DatabaseSnapshotEntry>();
 		for(DatabaseSnapshotEntry entry: _database_entrys){

@@ -47,12 +47,15 @@ public class SkypeLists {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String listType, Skype skype) {
-		frame = new JFrame();
+		frame = new JFrame("Skype - Full Lists");
 		frame.setBounds(100, 100, 800, 600);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
 		try {
+			
+			//// CREATION OF THE TABLE FOR THE CALLS, IF THE CALLS BUTTON HAS BEEN PRESSED ////
+			
 			if(listType.equals("calls")){
 				String[] columnNames = {"Name", "Skype Name", "Caller", "Answered", "Time", "Timestamp"};
 				String [][] rowData = skype.getAllCalls();
@@ -62,6 +65,7 @@ public class SkypeLists {
 					}
 				};
 				table.setAutoCreateRowSorter(true);
+				table.getRowSorter().toggleSortOrder(5);
 				table.getRowSorter().toggleSortOrder(5);
 				table.removeColumn(table.getColumnModel().getColumn(5));
 				
@@ -78,6 +82,9 @@ public class SkypeLists {
 				scroll.setBounds(46, 47, 700, 500);
 				frame.getContentPane().add(scroll);
 			}
+			
+			//// CREATION OF THE TABLE FOR THE MESSAGES, IF THE MESSAGES BUTTON HAS BEEN PRESSED ////
+			
 			else if(listType.equals("messages")){
 				String[] columnNames = {"Chat With", "Author Skype Name", "Author Name", "Message", "Time","Timestamps"};
 				String [][] rowData = skype.getAllMessages();
@@ -87,6 +94,7 @@ public class SkypeLists {
 					}
 				};
 				table.setAutoCreateRowSorter(true);
+				table.getRowSorter().toggleSortOrder(5);
 				table.getRowSorter().toggleSortOrder(5);
 				table.removeColumn(table.getColumnModel().getColumn(5));
 				
@@ -135,6 +143,9 @@ public class SkypeLists {
 					}
 				});
 			}
+			
+			//// CREATION OF THE TABLE FOR THE LINKS, IF THE LINKS BUTTON HAS BEEN PRESSED ////
+			
 			else if(listType.equals("links")){
 				String[] columnNames = {"Link", "Type", "Time","Timestamps"};
 				String [][] rowData = skype.getAllLinks();
@@ -144,6 +155,7 @@ public class SkypeLists {
 					}
 				};
 				table.setAutoCreateRowSorter(true);
+				table.getRowSorter().toggleSortOrder(3);
 				table.getRowSorter().toggleSortOrder(3);
 				table.removeColumn(table.getColumnModel().getColumn(3));
 				
@@ -168,6 +180,9 @@ public class SkypeLists {
 					}
 				});
 			}
+			
+			//// CREATION OF THE TABLE FOR THE FILES, IF THE FILES BUTTON HAS BEEN PRESSED ////
+			
 			else if(listType.equals("files")){
 				String[] columnNames = {"File Name", "Local Path", "User Sharing With", "Size"};
 				String [][] rowData = skype.getAllFiles();

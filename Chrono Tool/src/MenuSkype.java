@@ -64,6 +64,8 @@ public class MenuSkype {
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
+		//// ELEMENTS OF THIS WINDOW ////
+		
 		JLabel lblSkypeName = new JLabel("");
 		lblSkypeName.setForeground(Color.BLACK);
 		lblSkypeName.setBounds(45, 23, 585, 33);
@@ -399,6 +401,19 @@ public class MenuSkype {
 		lblListsByUser.setBounds(1194, 311, 158, 24);
 		frame.getContentPane().add(lblListsByUser);
 		
+		Button button_7 = new Button("Main Menu");
+		button_7.setBounds(1282, 655, 70, 22);
+		frame.getContentPane().add(button_7);
+		
+		//// ACTIONS PREFORMED IN THE WINDOW ELEMENTS ////
+		
+		button_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new App();
+				frame.dispose();
+			}
+		});
+		
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				if(me.getClickCount() == 2 && !me.isConsumed()) {
@@ -445,9 +460,16 @@ public class MenuSkype {
 			}
 		});
 		
+		button_8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SkypeListsByName("files",skype,choice.getSelectedItem());
+			}
+		});
+		
 		
 	}
 	
+	// Function to get avatar of the user from the database
 	public void getAvatar(String skypeUsername, Skype skype){
 		try {
 			String path = skype.getUserAvatarPath(skypeUsername);
